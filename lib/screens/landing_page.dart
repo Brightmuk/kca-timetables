@@ -49,6 +49,7 @@ class LandingPage extends StatelessWidget {
                       height: 70,
                     ),
                     ListTile(
+                        style: ListTileStyle.drawer,
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(
                         Icons.check,
@@ -59,6 +60,7 @@ class LandingPage extends StatelessWidget {
                           Text('Have your timetable in a more organised way'),
                     ),
                     ListTile(
+                        style: ListTileStyle.drawer,
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(
                         Icons.check,
@@ -69,6 +71,7 @@ class LandingPage extends StatelessWidget {
                           'Get reminded when your class is about to begin'),
                     ),
                     ListTile(
+                        style: ListTileStyle.drawer,
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(
                         Icons.check,

@@ -36,6 +36,17 @@ class _ScanScreenState extends State<ScanScreen> {
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
         ),
+        leading: IconButton(
+          padding: EdgeInsets.all(20),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Color.fromRGBO(3, 4, 94, 1),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -54,6 +65,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   height: 50,
                 ),
                 ListTile(
+                  style: ListTileStyle.drawer,
                   onTap: pickFile,
                   leading: const Icon(
                     Icons.document_scanner_outlined,
@@ -95,6 +107,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   height: 50,
                 ),
                 ListTile(
+                  style: ListTileStyle.drawer,
                   onTap: scanningDoc ? null : selectCourse,
                   leading: const Icon(
                     Icons.school_outlined,
@@ -113,6 +126,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   height: 50,
                 ),
                 ListTile(
+                  style: ListTileStyle.drawer,
                   onTap: scanningDoc ? null : selectPeriod,
                   leading: const Icon(
                     Icons.calendar_month_outlined,
@@ -198,6 +212,7 @@ class _ScanScreenState extends State<ScanScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
+          backgroundColor: Colors.white,
           builder: (context) => CourseSelector(
                 courses: courses!,
               ));

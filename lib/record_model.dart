@@ -5,11 +5,11 @@ import 'package:excel/excel.dart';
 class Record {
   final String day;
   final String time;
-  final String room;
+  final String venue;
   final String unitCode;
   final String unitName;
   final String lecturer;
-  final bool isVirtual;
+  final String type;
   final bool reminder;
   final String? classLink;
   final String? meetingPassCode;
@@ -18,11 +18,11 @@ class Record {
   Record({
     required this.day,
     required this.time,
-    required this.room,
+    required this.venue,
     required this.unitCode,
     required this.unitName,
     required this.lecturer,
-    required this.isVirtual,
+    required this.type,
     required this.reminder,
     this.classLink,
     this.meetingPassCode,
@@ -35,16 +35,20 @@ class Record {
 
   factory Record.fromSheet(List<Data?> row, int dayIndex) {
     return Record(
-      day: row[dayIndex]!.value,
-      time: row[dayIndex + 1]!.value,
-      room: row[dayIndex + 2]!.value,
-      unitCode: row[dayIndex + 3]!.value,
-      unitName: row[dayIndex + 4]!.value,
-      lecturer: row[dayIndex + 5]!.value,
+      day: row[dayIndex]!.value.toString().toUpperCase(),
+      time: row[dayIndex + 1]!.value.toString().toUpperCase(),
+      venue: row[dayIndex + 2]!.value.toString().toUpperCase(),
+      unitCode: row[dayIndex + 3]!.value.toString().toUpperCase(),
+      unitName: row[dayIndex + 4]!.value.toString().toUpperCase(),
+      lecturer: row[dayIndex + 5]!.value.toString().toUpperCase(),
+      meetingId: null,
+      meetingPassCode: null,
+      classLink: null,
       reminder: false,
-      isVirtual: false
+      type: row[dayIndex + 2]!.value.toString().toUpperCase()=='VIRTUAL'?'VIRTUAL':'IN PERSON'
     );
   }
+
 
   int get sortIndex {
     int timeValue;
@@ -77,11 +81,11 @@ class Record {
     return {
       'day': day,
       'time': time,
-      'room': room,
+      'room': venue,
       'unitCode': unitCode,
       'unitName': unitName,
       'lecturer': lecturer,
-      'isVirtual': isVirtual,
+      'type': type,
       'reminder': reminder,
       'classLink': classLink,
       'meetingPassCode': meetingPassCode,
@@ -93,11 +97,12 @@ class Record {
     return Record(
       day:map['day'] ?? '',
       time:map['time'] ?? '',
-      room:map['room'] ?? '',
+      venue:map['room'] ?? '',
       unitCode:map['unitCode'] ?? '',
       unitName:map['unitName'] ?? '',
      lecturer: map['lecturer'] ?? '',
-      isVirtual:map['isVirtual'] ?? false,
+      type:map['type'] ?? '',
+      
       reminder:map['reminder'] ?? false,
       classLink:map['classLink'] ?? '',
       meetingPassCode:map['meetingPassCode'] ?? '',
@@ -113,11 +118,11 @@ class Record {
     return other is Record &&
       other.day == day &&
       other.time == time &&
-      other.room == room &&
+      other.venue == venue &&
       other.unitCode == unitCode &&
       other.unitName == unitName &&
       other.lecturer == lecturer &&
-      other.isVirtual == isVirtual &&
+      other.type == type &&
       other.reminder == reminder &&
       other.classLink == classLink &&
       other.meetingPassCode == meetingPassCode &&
@@ -128,11 +133,11 @@ class Record {
   int get hashCode {
     return day.hashCode ^
       time.hashCode ^
-      room.hashCode ^
+      venue.hashCode ^
       unitCode.hashCode ^
       unitName.hashCode ^
       lecturer.hashCode ^
-      isVirtual.hashCode ^
+      type.hashCode ^
       reminder.hashCode ^
       classLink.hashCode ^
       meetingPassCode.hashCode ^
