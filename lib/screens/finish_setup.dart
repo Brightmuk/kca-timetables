@@ -2,6 +2,7 @@ import 'package:excel_reader/record_model.dart';
 import 'package:excel_reader/screens/single_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class FinishSetupScreen extends StatefulWidget {
   final String course;
@@ -19,9 +20,12 @@ class FinishSetupScreen extends StatefulWidget {
 }
 
 class _FinishSetupScreenState extends State<FinishSetupScreen> {
+  List<Record> _records=[];
+
   @override
   void initState() {
     super.initState();
+    _records=widget.records;
   }
 
   @override
@@ -51,8 +55,15 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
           ),
         leading: IconButton(
           padding: EdgeInsets.all(20),
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: ()async {
+                   var result = await showModalBottomSheet(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            context: context,
+            builder: (context) => const ConfirmPop());
+        if (result) {
+         Navigator.pop(context);
+        }
           },
           icon: const Icon(
             Icons.arrow_back_ios,
@@ -93,24 +104,34 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                 Expanded(
                     child: ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.records.length,
+                        itemCount: _records.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             style: ListTileStyle.drawer,
-                            title: Text(widget.records[index].unitName),
-                            subtitle: Text(widget.records[index].time),
-                            onTap: () {
-                              Navigator.push(
+                            title: Text(_records[index].unitName),
+                            subtitle: Text(_records[index].time),
+                            onTap: () async{
+                              var result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => SingleRecord(
-                                          record: widget.records[index])));
+                                          record: _records[index])));
+                              if(result!=null){
+                              
+                                setState(() {
+                                 int i=_records.indexWhere((record) => record.unitCode==result.unitCode);
+                          
+                                _records.removeAt(i);
+                                _records.insert(i, result);
+                                });
+                              }
+
                             },
                             leading: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  convertDay(widget.records[index].day),
+                                  convertDay(_records[index].day),
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ],
@@ -143,6 +164,10 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
         ),
       ),
     );
+  }
+
+  void save(){
+
   }
 
   String convertDay(String day) {
@@ -188,6 +213,8 @@ class ConfirmPop extends StatelessWidget {
               children: [
                 const SizedBox(),
                 MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
                   textColor: Colors.white,
                   onPressed: () {
                     Navigator.pop(context,true);
@@ -196,6 +223,8 @@ class ConfirmPop extends StatelessWidget {
                   color: Colors.redAccent,
                 ),
                 MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
                   textColor: Colors.white,
                   onPressed: () {
                     Navigator.pop(context,false);

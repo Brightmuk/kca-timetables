@@ -59,7 +59,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 const Text('Scan timetable document',
                     style: TextStyle(
                         color: Color.fromRGBO(3, 4, 94, 1),
-                        fontSize: 40,
+                        fontSize: 35,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(
                   height: 50,
@@ -174,7 +174,9 @@ class _ScanScreenState extends State<ScanScreen> {
   void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-    if (result != null) {
+    
+
+    if (result != null&&result.files.single.path!.endsWith('.xlsx')) {
       File file = File(result.files.single.path!);
       setState(() {
         excelFile = file;
@@ -183,7 +185,9 @@ class _ScanScreenState extends State<ScanScreen> {
       Future.delayed(const Duration(microseconds: 2000), () {
         readXlsx(file);
       });
-    } else {}
+    } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){
+        toast('Please select a valid spreadsheet document(.xlsx)');
+    }
   }
 
   void readXlsx(File file) {

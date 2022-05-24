@@ -14,22 +14,21 @@ class SingleRecord extends StatefulWidget {
 class _SingleRecordState extends State<SingleRecord> {
   String? _day;
   String? _time;
-  String? venue;
+  String? _venue;
   String? _lecturer;
-  String? _type;
   String? _link;
   String? _passCode;
   String? _meetingId;
   bool? _reminder;
+  int _reminderSchedule=5;
 
   void initState() {
     super.initState();
     _day = widget.record.day;
     _time = widget.record.time;
-    venue = widget.record.venue;
+    _venue = widget.record.venue;
     _lecturer = widget.record.lecturer;
     _link = widget.record.classLink;
-    _type = widget.record.type;
     _passCode = widget.record.meetingPassCode;
     _meetingId = widget.record.meetingId;
     _reminder = widget.record.reminder;
@@ -134,6 +133,20 @@ class _SingleRecordState extends State<SingleRecord> {
                 subtitle: Text(_time!),
               ),
               ListTile(
+                onTap: ()async{
+
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditVenue(venue: _venue!),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _venue=result;
+                      });
+                    }
+                },
                 style: ListTileStyle.drawer,
                 leading: Icon(Icons.room_outlined,
                     color: const Color.fromARGB(255, 201, 174, 20)),
@@ -142,9 +155,23 @@ class _SingleRecordState extends State<SingleRecord> {
                   Icons.arrow_forward_ios,
                   size: 15,
                 ),
-                subtitle: Text(venue!),
+                subtitle: Text(_venue!),
               ),
               ListTile(
+                  onTap: ()async{
+
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditLecturer(lecturer: _lecturer!),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _lecturer=result;
+                      });
+                    }
+                },
                 style: ListTileStyle.drawer,
                 leading: Icon(Icons.person_outline,
                     color: const Color.fromARGB(255, 201, 174, 20)),
@@ -156,17 +183,20 @@ class _SingleRecordState extends State<SingleRecord> {
                 subtitle: Text(_lecturer!),
               ),
               ListTile(
-                style: ListTileStyle.drawer,
-                leading: Icon(Icons.move_down,
-                    color: const Color.fromARGB(255, 201, 174, 20)),
-                title: Text('Type'),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15,
-                ),
-                subtitle: Text(_type!),
-              ),
-              ListTile(
+                onTap: ()async{
+
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditLink(meetingLink: _link??''),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _link=result;
+                      });
+                    }
+                },
                 style: ListTileStyle.drawer,
                 leading: Icon(Icons.link_outlined,
                     color: const Color.fromARGB(255, 201, 174, 20)),
@@ -178,8 +208,20 @@ class _SingleRecordState extends State<SingleRecord> {
                 ),
               ),
               ListTile(
-                onTap: (){
-                  
+                onTap: ()async{
+
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditCredentials(passCode:_passCode??'',meetingId:_meetingId??''),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _passCode=result['passCode'];
+                        _meetingId=result['meetingId'];
+                      });
+                    }
                 },
                 style: ListTileStyle.drawer,
                 leading: Icon(Icons.security_outlined,
@@ -205,11 +247,26 @@ class _SingleRecordState extends State<SingleRecord> {
                   }),
               AnimatedOpacity(
                 opacity: _reminder!?1:0,
+              
                 duration: Duration(milliseconds: 300),
                 child: ListTile(
+                onTap: ()async{
+
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditReminderSchedule(minutes: _reminderSchedule,),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _reminderSchedule=result;
+                      });
+                    }
+                },
                   style: ListTileStyle.drawer,
                   title: Text('Reminder schedule'),
-                  subtitle: Text('3 min'),
+                  subtitle: Text(scheduleStr(_reminderSchedule)),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
@@ -232,7 +289,20 @@ class _SingleRecordState extends State<SingleRecord> {
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Record _record = Record(
+                      unitCode: widget.record.unitCode,
+                      unitName: widget.record.unitName,
+                      day: _day!,
+                      time: _time!,
+                      venue: _venue!,
+                      lecturer: _lecturer!,
+                      meetingId: _meetingId,
+                      meetingPassCode: _passCode,
+                      classLink: _link,
+                      reminder: _reminder!,
+                      reminderSchedule: _reminderSchedule
+                      );
+                    Navigator.pop(context,_record);
                   }),
               SizedBox(
                 height: 30,
@@ -240,6 +310,13 @@ class _SingleRecordState extends State<SingleRecord> {
             ],
           ),
         ));
+  }
+    String scheduleStr(int minutes){
+    if(minutes>59){
+      return (minutes/60).toString()+' hours';
+    }else {
+      return minutes.toString()+' minutes';
+    }
   }
 }
 
