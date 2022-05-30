@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:excel_reader/screens/finish_setup.dart';
-import 'package:excel_reader/record_model.dart';
+import 'package:excel_reader/models/record_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
@@ -26,145 +26,176 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Color.fromARGB(255, 3, 4, 75),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-        leading: IconButton(
-          padding: EdgeInsets.all(20),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Color.fromRGBO(3, 4, 94, 1),
+        appBar: AppBar(
+          toolbarHeight: MediaQuery.of(context).size.height*0.1,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+              color: Color.fromARGB(255, 3, 4, 75),
+            ),
+            height: MediaQuery.of(context).size.height*0.1,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:[
+               
+                IconButton(
+            padding: EdgeInsets.all(20),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
+            Text('Scan timetable document',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold)),
+                                                                                IconButton(
+              padding: EdgeInsets.all(20),
+              onPressed: () {
+                
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+                color: Colors.transparent,
+              ),
+            ),
+    
+              ],
+            ),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Color.fromARGB(255, 3, 4, 75),
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
+          leading: Container(),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                const Text('Scan timetable document',
-                    style: TextStyle(
-                        color: Color.fromRGBO(3, 4, 94, 1),
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(
-                  height: 50,
-                ),
-                ListTile(
-                  style: ListTileStyle.drawer,
-                  onTap: pickFile,
-                  leading: const Icon(
-                    Icons.document_scanner_outlined,
-                    color: Color.fromRGBO(188, 175, 69, 0.3),
-                    size: 35,
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+    
+                  const SizedBox(
+                    height: 50,
                   ),
-                  title: const Text('Select the spreadsheet document'),
-                  subtitle: Text(excelFile != null
-                      ? getDocName(excelFile!.path)
-                      : 'No document selected'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ),
-                Visibility(
-                  visible: excelFile != null && scanningDoc,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: LinearProgressIndicator(
-                      backgroundColor: Color.fromRGBO(188, 175, 69, 0.3),
-                      color: Color.fromRGBO(3, 4, 94, 1),
+                  ListTile(
+                    style: ListTileStyle.drawer,
+                    onTap: pickFile,
+                    leading: const Icon(
+                      Icons.document_scanner_outlined,
+                      color: Color.fromRGBO(188, 175, 69, 0.3),
+                      size: 35,
+                    ),
+                    title: const Text('Select the spreadsheet document'),
+                    subtitle: Text(excelFile != null
+                        ? getDocName(excelFile!.path)
+                        : 'No document selected'),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Visibility(
+                  Visibility(
                     visible: excelFile != null && scanningDoc,
-                    child: Center(
-                        child: Text(
-                      excelFile != null
-                          ? 'Scanning ${getDocName(excelFile!.path)}'
-                          : '',
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
-                    ))),
-                const Divider(
-                  height: 50,
-                ),
-                ListTile(
-                  style: ListTileStyle.drawer,
-                  onTap: scanningDoc ? null : selectCourse,
-                  leading: const Icon(
-                    Icons.school_outlined,
-                    color: Color.fromRGBO(188, 175, 69, 0.3),
-                    size: 35,
-                  ),
-                  title: const Text('Select course'),
-                  subtitle:
-                      Text(course != null ? course! : 'No course selected'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ),
-                const Divider(
-                  height: 50,
-                ),
-                ListTile(
-                  style: ListTileStyle.drawer,
-                  onTap: scanningDoc ? null : selectPeriod,
-                  leading: const Icon(
-                    Icons.calendar_month_outlined,
-                    color: Color.fromRGBO(188, 175, 69, 0.3),
-                    size: 35,
-                  ),
-                  title: const Text('Select period'),
-                  subtitle:
-                      Text(period != null ? period! : 'No period selected'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ),
-                const Divider(
-                  height: 50,
-                ),
-              ]),
-              Positioned(
-                bottom: 50,
-                child: MaterialButton(
-                    disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.all(20),
-                    minWidth: MediaQuery.of(context).size.width * 0.9,
-                    color: const Color.fromARGB(255, 201, 174, 20),
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Color.fromRGBO(188, 175, 69, 0.3),
+                        color: Color.fromRGBO(3, 4, 94, 1),
+                      ),
                     ),
-                    onPressed:
-                        excelDoc != null && period != null && course != null
-                            ? convert
-                            : null),
-              )
-            ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Visibility(
+                      visible: excelFile != null && scanningDoc,
+                      child: Center(
+                          child: Text(
+                        excelFile != null
+                            ? 'Scanning ${getDocName(excelFile!.path)}'
+                            : '',
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ))),
+                  const Divider(
+                    height: 50,
+                  ),
+                  ListTile(
+                    style: ListTileStyle.drawer,
+                    onTap: scanningDoc ? null : selectCourse,
+                    leading: const Icon(
+                      Icons.school_outlined,
+                      color: Color.fromRGBO(188, 175, 69, 0.3),
+                      size: 35,
+                    ),
+                    title: const Text('Select course'),
+                    subtitle:
+                        Text(course != null ? course! : 'No course selected'),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ),
+                  const Divider(
+                    height: 50,
+                  ),
+                  ListTile(
+                    style: ListTileStyle.drawer,
+                    onTap: scanningDoc ? null : selectPeriod,
+                    leading: const Icon(
+                      Icons.calendar_month_outlined,
+                      color: Color.fromRGBO(188, 175, 69, 0.3),
+                      size: 35,
+                    ),
+                    title: const Text('Select period'),
+                    subtitle:
+                        Text(period != null ? period! : 'No period selected'),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ),
+                  const Divider(
+                    height: 50,
+                  ),
+                ]),
+                Positioned(
+                  bottom: 50,
+                  child: MaterialButton(
+                      disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding: const EdgeInsets.all(20),
+                      minWidth: MediaQuery.of(context).size.width * 0.9,
+                      color: const Color.fromARGB(255, 201, 174, 20),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed:
+                          excelDoc != null && period != null && course != null
+                              ? convert
+                              : null),
+                )
+              ],
+            ),
           ),
         ),
       ),
