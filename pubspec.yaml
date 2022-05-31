@@ -25,6 +25,9 @@ dependencies:
   rxdart: ^0.27.3
   flutter_native_timezone: ^2.0.0
   shared_preferences: ^2.0.13
+  url_launcher: ^6.1.2
+  admob_flutter: ^2.0.0
+  flutter_native_splash: ^2.1.6
 
 dev_dependencies:
   flutter_test:

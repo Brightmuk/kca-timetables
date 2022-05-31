@@ -232,6 +232,7 @@ void initState(){
                Text('Venue',style: TextStyle(fontWeight: FontWeight.bold),),
 
              RadioListTile(
+               activeColor: const Color.fromARGB(255, 201, 174, 20),
                title: Text('VIRTUAL'),
                value: 'VIRTUAL', 
                groupValue: venueValue, 
@@ -242,6 +243,7 @@ void initState(){
                }
                ),
                RadioListTile(
+                  activeColor: const Color.fromARGB(255, 201, 174, 20),
                  title: Text('IN PERSON'),
                value: 'IN PERSON', 
                groupValue: venueValue, 
@@ -381,6 +383,7 @@ class EditLink extends StatefulWidget {
 }
 
 class _EditLinkState extends State<EditLink> {
+        final _formKey = GlobalKey<FormState>();
   final TextEditingController _linkC = TextEditingController();
 
   @override
@@ -393,30 +396,33 @@ class _EditLinkState extends State<EditLink> {
   Widget build(BuildContext context) {
     return Container(
      margin: const EdgeInsets.symmetric(vertical: 20),
-            
+          height: MediaQuery.of(context).size.height*0.9,  
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Column(
-            children: [
-               Text('Meeting link',style: TextStyle(fontWeight: FontWeight.bold),),
-              SizedBox(height: 50,),
-
-              const ListTile(
-                title: Text('Meeting link'),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                    
-                    controller: _linkC,
-                    maxLength: 20,
-                    validator: (val) =>
-                        val!.isEmpty ? 'Enter a link' : null,
-                  ),
-              ),
-            ],
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                 Text('Meeting link',style: TextStyle(fontWeight: FontWeight.bold),),
+                SizedBox(height: 50,),
+          
+                const ListTile(
+                  title: Text('Meeting link'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                      
+                      controller: _linkC,
+                      maxLength: 20,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter a link' : null,
+                    ),
+                ),
+              ],
+            ),
           ),
 
             Positioned(
@@ -436,7 +442,9 @@ class _EditLinkState extends State<EditLink> {
                     onPressed:(){
                      
                       
+                      if(_formKey.currentState!.validate()){
                       Navigator.pop(context,_linkC.value.text);
+                      }
                     }
                         ),
               )
@@ -464,48 +472,52 @@ class _EditCredentialsState extends State<EditCredentials> {
       _meetingIdC.text=widget.meetingId;
       _passCodeC.text=widget.passCode;
     }
+      final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-     margin: const EdgeInsets.symmetric(vertical: 20),
-            
+       height: MediaQuery.of(context).size.height*0.9,  
+     margin: const EdgeInsets.symmetric(vertical: 20),  
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Column(
-            children: [
-               Text('Meeting Credentials',style: TextStyle(fontWeight: FontWeight.bold),),
-              SizedBox(height: 50,),
-
-              const ListTile(
-                title: Text('Meeting Id'),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                    
-                    controller: _meetingIdC,
-                    maxLength: 20,
-                    validator: (val) =>
-                        val!.isEmpty ? 'Enter a meetingId' : null,
-                  ),
-              ),
-              const ListTile(
-                title: Text('Meeting passcode'),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                    
-                    controller: _passCodeC,
-                    maxLength: 20,
-                    validator: (val) =>
-                        val!.isEmpty ? 'Enter a passcode' : null,
-                  ),
-              ),
-            ],
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                 Text('Meeting Credentials',style: TextStyle(fontWeight: FontWeight.bold),),
+                SizedBox(height: 50,),
+          
+                const ListTile(
+                  title: Text('Meeting Id'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                      
+                      controller: _meetingIdC,
+                      maxLength: 20,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter a meetingId' : null,
+                    ),
+                ),
+                const ListTile(
+                  title: Text('Meeting passcode'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                      
+                      controller: _passCodeC,
+                      maxLength: 20,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter a passcode' : null,
+                    ),
+                ),
+              ],
+            ),
           ),
 
             Positioned(
@@ -524,8 +536,10 @@ class _EditCredentialsState extends State<EditCredentials> {
                     ),
                     onPressed:(){
                      
-                      
+                      if(_formKey.currentState!.validate()){
                       Navigator.pop(context,{'meetingId':_meetingIdC.value.text,'passCode':_passCodeC.value.text});
+                      }
+
                     }
                         ),
               )

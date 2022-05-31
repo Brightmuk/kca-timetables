@@ -138,6 +138,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _day=result;
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -162,6 +163,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _time=result;
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -187,6 +189,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _venue=result;
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -212,6 +215,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _lecturer=result;
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -229,6 +233,7 @@ class _EditClassPageState extends State<EditClassPage> {
     
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
+                      isScrollControlled: true,
                       context: context, builder: (context)=>EditLink(meetingLink: _link??''),
                                 shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -237,6 +242,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _link=result;
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -254,6 +260,7 @@ class _EditClassPageState extends State<EditClassPage> {
     
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
+                      isScrollControlled: true,
                       context: context, builder: (context)=>EditCredentials(passCode:_passCode??'',meetingId:_meetingId??''),
                                 shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -263,6 +270,7 @@ class _EditClassPageState extends State<EditClassPage> {
                           _passCode=result['passCode'];
                           _meetingId=result['meetingId'];
                         });
+                        save();
                       }
                   },
                   style: ListTileStyle.drawer,
@@ -286,6 +294,7 @@ class _EditClassPageState extends State<EditClassPage> {
                       setState(() {
                         _reminder=val;
                       });
+                      save();
                     }),
                 AnimatedOpacity(
                   opacity: _reminder!?1:0,
@@ -304,6 +313,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         setState(() {
                           _reminderSchedule=result;
                         });
+                        save();
                       }
                   },
                     style: ListTileStyle.drawer,
@@ -318,20 +328,39 @@ class _EditClassPageState extends State<EditClassPage> {
                 const SizedBox(
                   height: 50,
                 ),
-                MaterialButton(
-                    disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.all(20),
-                    minWidth: MediaQuery.of(context).size.width * 0.9,
-                    color: const Color.fromARGB(255, 201, 174, 20),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () async{
-                       UnitClass _record = UnitClass(
+                Visibility(
+                  visible: !widget.editMode,
+                  child: MaterialButton(
+                      disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding: const EdgeInsets.all(20),
+                      minWidth: MediaQuery.of(context).size.width * 0.9,
+                      color: const Color.fromARGB(255, 201, 174, 20),
+                      child: const Text(
+                        'Done',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: save),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+    String scheduleStr(int minutes){
+    if(minutes>59){
+      return (minutes/60).toString()+' hours';
+    }else {
+      return minutes.toString()+' minutes';
+    }
+  }
+  void save()async{
+                           UnitClass _record = UnitClass(
                         unitCode: widget.record.unitCode,
                         unitName: widget.record.unitName,
                         day: _day!,
@@ -350,22 +379,6 @@ class _EditClassPageState extends State<EditClassPage> {
 
                       Navigator.pop(context,_record);
                       }
-
-                    }),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
-          )),
-    );
-  }
-    String scheduleStr(int minutes){
-    if(minutes>59){
-      return (minutes/60).toString()+' hours';
-    }else {
-      return minutes.toString()+' minutes';
-    }
   }
 }
 

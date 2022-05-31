@@ -1,5 +1,7 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/screens/join_meeting_screen.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
@@ -83,7 +85,19 @@ class HomePage extends StatelessWidget {
                               trailing: MaterialButton(
                                 disabledColor: Colors.grey,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                onPressed: _record.canJoinMeeting?(){}:null,
+                                onPressed: _record.canJoinMeeting?(){
+                                  if(_record.classLink!=null){
+                                    launchExternalUrl(_record.classLink!);
+                                  }else{
+                                  showModalBottomSheet(
+                      backgroundColor: Colors.white,
+                      context: context, builder: (context)=>JoinClassMeeting(unitClass: _record),
+                                shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      );
+                                  }
+
+                                }:null,
                                 color: const Color.fromARGB(255, 201, 174, 20),
                                 child: Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontSize: 13),),
                                 ),
@@ -101,33 +115,24 @@ class HomePage extends StatelessWidget {
                         
                         SizedBox(height: 40,),
 
-
-                        // Row(children: [
-                        //   SizedBox(width: MediaQuery.of(context).size.width*0.3, child: RadioListTile(title: Text('All'), activeColor: const Color.fromARGB(255, 201, 174, 20), value: '', groupValue: '', onChanged: (val){})),
-                        //   SizedBox(width: MediaQuery.of(context).size.width*0.32, child: RadioListTile(title: Text('In person'), activeColor: const Color.fromARGB(255, 201, 174, 20), value: '', groupValue: '', onChanged: (val){})),                          
-                        //   SizedBox(width: MediaQuery.of(context).size.width*0.3, child: RadioListTile(title: Text('Virtual'), activeColor: const Color.fromARGB(255, 201, 174, 20), value: '', groupValue: '', onChanged: (val){}))
-                        // ],),
                          WeeklyUnitTile(size: Size(200,200),color: Colors.pinkAccent,),
                         SizedBox(height: 40,),
-                        // ListTile(
-                        //   contentPadding: EdgeInsets.zero,
-                        //   leading: Text('IN PERSON CLASSES',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-                        //   trailing: Text('4 classes',style: TextStyle(color: Colors.grey,fontSize: 13),),
-                        // ),
-                        //  UnitTile(size: Size(150,150),color: Color.fromARGB(255, 3, 4, 75),),
-                        // SizedBox(height: 40,),
-                        // ListTile(
-                        //   contentPadding: EdgeInsets.zero,
-                        //   leading: Text('VIRTUAL CLASSES',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-                        //   trailing: Text('3 classes',style: TextStyle(color: Colors.grey,fontSize: 13),),
-                        // ),
-                        //  UnitTile(size: Size(150,150),color: Color.fromARGB(255, 3, 4, 75),),
-                        // SizedBox(height: 50,)
+
                       
                       ]),
                 ),
               ),
-      
+            Positioned(
+              bottom: 20,
+              child: AdmobBanner(
+                    adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+                    adSize: AdmobBannerSize.FULL_BANNER,
+                    listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+                      debugPrint(args.toString());
+                    },
+                    onBannerCreated: (AdmobBannerController controller) {},
+                  ),
+            )
             ],
           )
     );

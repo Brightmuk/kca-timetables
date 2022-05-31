@@ -102,7 +102,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       color: Color.fromRGBO(188, 175, 69, 0.3),
                       size: 35,
                     ),
-                    title: const Text('Select the spreadsheet document'),
+                    title: const Text('Select the spreadsheet document(.xlsx)'),
                     subtitle: Text(excelFile != null
                         ? getDocName(excelFile!.path)
                         : 'No document selected'),
