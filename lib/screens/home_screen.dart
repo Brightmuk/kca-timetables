@@ -1,8 +1,9 @@
-import 'package:excel_reader/models/record_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
-import 'package:excel_reader/screens/single_record.dart';
+import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/shared/functions.dart';
 import 'package:excel_reader/shared/unit_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,26 +52,48 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 20,),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Text('UPCOMING',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500,color: Color.fromARGB(255, 3, 4, 75)),),
-                          trailing: Text('In 3 hours',style: TextStyle(color: Colors.grey,fontSize: 13),),
-                        ),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: Text('BAC 1201',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300),),
-                        ),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          subtitle: Text('8.00AM-11.00AM',style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600)),
-                          title: Text('VIRTUAL',style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600),),
-                          trailing: MaterialButton(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            onPressed: (){},
-                            color: const Color.fromARGB(255, 201, 174, 20),
-                            child: Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontSize: 13),),
+                        StreamBuilder<UnitClass>(
+                          stream: TimeTableService(context: context).upcomingClass,
+                          builder: (context, snapshot) {
+                            if(!snapshot.hasData){
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            if(snapshot.hasError){
+                              return Center(child: Text('An error has occurred'),);
+                            }
+                            UnitClass _record = snapshot.data!;
+                            return Column(
+                              children: [
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Text('UPCOMING',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500,color: Color.fromARGB(255, 3, 4, 75)),),
+                                  trailing: Text(timeLeft(_record.time, _record.day),style: TextStyle(color: Colors.grey,fontSize: 13),),
+                                ),
+
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(_record.unitCode,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300),),
+                              subtitle: Text(_record.unitName.capitalise()),
                             ),
+                            ListTile(
+                              
+                              contentPadding: EdgeInsets.zero,
+                              subtitle: Text(_record.time,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600)),
+                              title: Text(_record.venue,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600),),
+                              trailing: MaterialButton(
+                                disabledColor: Colors.grey,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                onPressed: _record.canJoinMeeting?(){}:null,
+                                color: const Color.fromARGB(255, 201, 174, 20),
+                                child: Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontSize: 13),),
+                                ),
+                            ),
+                              ],
+                            );
+                          }
                         ),
+
+
                         Divider(height: 20,),
                                 
 
@@ -120,7 +143,7 @@ class TodayUnitTile extends StatelessWidget {
     return SizedBox(
       height: size.height+70,
 
-      child: StreamBuilder<List<Record>>(
+      child: StreamBuilder<List<UnitClass>>(
         stream: TimeTableService(context: context,day:weekDay).recordsStream,
         builder: (context, snapshot) {
           if(!snapshot.hasData){
@@ -134,7 +157,7 @@ class TodayUnitTile extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Text('TODAY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-              trailing: Text('2 classes',style: TextStyle(color: Colors.grey,fontSize: 13),),
+              trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
             ),
               SizedBox(
                 height: size.height,
@@ -146,69 +169,72 @@ class TodayUnitTile extends StatelessWidget {
                     return SizedBox(width: 20,);
                   },
                   itemBuilder: (context,index){
-                    Record record= snapshot.data![index];
-                      return GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SingleRecord(
-                                    editMode: true,
-                                      record: record)));
-
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3), // changes position of shadow
-                                  ),
-                                ],
-                              
-                            color: Color.fromARGB(255, 3, 4, 75),
-                            borderRadius: BorderRadius.circular(20),
-                           
-                          ),
-                          width:size.width,
-                          
-                          child: CustomPaint(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                                                            Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                        child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
-                                      Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
-                                    ],
-                                  ),
-                                             SizedBox(height: 60,),            
-                                 Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
-                                                       
-                                  Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
-                                  Row(
-                                    children: [
-                                      Text(record.time,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
-                                      SizedBox(width: 10,),
-                                      Text(' In 2hrs 5 min',style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
-                                    ],
-                                  )
-                                  
-                                ],
-                              ),
+                    UnitClass record= snapshot.data![index];
+                      return Opacity(
+                        opacity: record.isFulfiled?0.5:1,
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditClassPage(
+                                      editMode: true,
+                                        record: record)));
+                      
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                
+                              color: Color.fromARGB(255, 3, 4, 75),
+                              borderRadius: BorderRadius.circular(20),
+                             
                             ),
-                            painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
-                          )
-                          ),
+                            width:size.width,
+                            
+                            child: CustomPaint(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
+                                          child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
+                                        Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
+                                      ],
+                                    ),
+                                               SizedBox(height: 60,),            
+                                   Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                                                         
+                                    Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
+                                    Row(
+                                      children: [
+                                        Text(record.time,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
+                                        SizedBox(width: 10,),
+                                        Text(timeLeft(record.time, record.day),style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
+                                      ],
+                                    )
+                                    
+                                  ],
+                                ),
+                              ),
+                              painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
+                            )
+                            ),
+                        ),
                       );
                     }
                   ),
@@ -250,7 +276,7 @@ class WeeklyUnitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: size.height+100,
-      child: StreamBuilder<List<Record>>(
+      child: StreamBuilder<List<UnitClass>>(
         stream: TimeTableService(context: context).recordsStream,
         builder: (context, snapshot) {
           if(!snapshot.hasData){
@@ -264,7 +290,7 @@ class WeeklyUnitTile extends StatelessWidget {
               ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Text('WEEKLY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-              trailing: Text('7 classes',style: TextStyle(color: Colors.grey,fontSize: 13),),
+              trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
             ),
               SizedBox(
                 height: size.height+20,
@@ -276,13 +302,13 @@ class WeeklyUnitTile extends StatelessWidget {
                     return SizedBox(width: 20,);
                   },
                   itemBuilder: (context,index){
-                    Record record= snapshot.data![index];
+                    UnitClass record= snapshot.data![index];
                       return GestureDetector(
                         onTap: (){
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SingleRecord(
+                                  builder: (context) => EditClassPage(
                                     editMode: true,
                                       record: record)));
                         },
@@ -316,7 +342,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                                                    Row(
+                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(

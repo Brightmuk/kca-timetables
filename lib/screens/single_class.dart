@@ -1,19 +1,19 @@
-import 'package:excel_reader/models/record_model.dart';
-import 'package:excel_reader/screens/edit_listing_details.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class SingleRecord extends StatefulWidget {
+class EditClassPage extends StatefulWidget {
   final bool editMode;
-  final Record record;
-  const SingleRecord({Key? key, required this.record,required this.editMode}) : super(key: key);
+  final UnitClass record;
+  const EditClassPage({Key? key, required this.record,required this.editMode}) : super(key: key);
 
   @override
-  _SingleRecordState createState() => _SingleRecordState();
+  _EditClassPageState createState() => _EditClassPageState();
 }
 
-class _SingleRecordState extends State<SingleRecord> {
+class _EditClassPageState extends State<EditClassPage> {
   String? _day;
   String? _time;
   String? _venue;
@@ -65,10 +65,10 @@ class _SingleRecordState extends State<SingleRecord> {
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
-              Text('Edit Unit',
+              Text('Edit Class',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 30,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold)),
                                                                                   IconButton(
                 padding: EdgeInsets.all(20),
@@ -331,7 +331,7 @@ class _SingleRecordState extends State<SingleRecord> {
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () async{
-                       Record _record = Record(
+                       UnitClass _record = UnitClass(
                         unitCode: widget.record.unitCode,
                         unitName: widget.record.unitName,
                         day: _day!,

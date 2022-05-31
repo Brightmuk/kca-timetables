@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:excel_reader/screens/finish_setup.dart';
-import 'package:excel_reader/models/record_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
@@ -56,7 +56,7 @@ class _ScanScreenState extends State<ScanScreen> {
             Text('Scan timetable document',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 30,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold)),
                                                                                 IconButton(
               padding: EdgeInsets.all(20),
@@ -321,13 +321,13 @@ class _ScanScreenState extends State<ScanScreen> {
     //Step 4: loop through records to get the values
     // toast(dayIndex!.rowIndex.toString());
     try {
-      List<Record> _records = [];
+      List<UnitClass> _records = [];
       int startIndex = dayIndex!.rowIndex + 1;
       int lastRecordIndex =
           startIndex + 9 > sheet.maxRows ? sheet.maxRows : startIndex + 9;
       for (var i = startIndex; i < lastRecordIndex; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
-          _records.add(Record.fromSheet(sheet.rows[i], dayIndex.columnIndex));
+          _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex));
         }
       }
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));

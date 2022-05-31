@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:excel/excel.dart';
 
-class Record {
+class UnitClass {
   final String day;
   final String? course;
   final String time;
@@ -16,7 +16,7 @@ class Record {
   final String? meetingPassCode;
   final String? meetingId;
 
-  Record({
+  UnitClass({
     required this.day,
     this.course,
     required this.time,
@@ -39,8 +39,8 @@ class Record {
   ///unit code,unit name,lecturer so  we assume it will always be the case
   ///therefore the index is relatively constant
 
-  factory Record.fromSheet(List<Data?> row, int dayIndex) {
-    return Record(
+  factory UnitClass.fromSheet(List<Data?> row, int dayIndex) {
+    return UnitClass(
       day: row[dayIndex]!.value.toString().toUpperCase(),
       course:null,
       time: row[dayIndex + 1]!.value.toString().toUpperCase(),
@@ -56,6 +56,22 @@ class Record {
     );
   }
 
+
+bool get isFulfiled{
+    int timeValue;
+      int hourOfDay = DateTime.now().hour;
+    try {
+      timeValue = int.parse(time.split('-')[0]);
+    } catch (e) {
+      timeValue = 0;
+    }
+    return (hourOfDay*100)>timeValue;
+      
+}
+
+bool get canJoinMeeting{
+  return venue=='VIRTUAL';
+}
 
   int get sortIndex {
     int timeValue;
@@ -101,8 +117,8 @@ class Record {
     };
   }
 
-  factory Record.fromMap(Map<String, dynamic> map) {
-    return Record(
+  factory UnitClass.fromMap(Map<String, dynamic> map) {
+    return UnitClass(
       day: map['day'] ?? '',
       course: map['course'],
       time: map['time'] ?? '',
@@ -118,7 +134,7 @@ class Record {
     );
   }
 
-  Record copyWith({
+  UnitClass copyWith({
     String? day,
     String? course,
     String? time,
@@ -132,7 +148,7 @@ class Record {
     String? meetingPassCode,
     String? meetingId,
   }) {
-    return Record(
+    return UnitClass(
       day: day ?? this.day,
       course: course ?? this.course,
       time: time ?? this.time,
@@ -150,7 +166,7 @@ class Record {
 
   String toJson() => json.encode(toMap());
 
-  factory Record.fromJson(String source) => Record.fromMap(json.decode(source));
+  factory UnitClass.fromJson(String source) => UnitClass.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -161,7 +177,7 @@ class Record {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is Record &&
+    return other is UnitClass &&
       other.day == day &&
       other.course == course &&
       other.time == time &&

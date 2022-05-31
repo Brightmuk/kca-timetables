@@ -1,6 +1,7 @@
-import 'package:excel_reader/models/record_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/services/local_data.dart';
+import 'package:excel_reader/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -16,12 +17,12 @@ class TimeTableService{
 
   ///Save  a record
   ///
-  Future<bool> saveTimeTable({required List<Record> records, required String course}) async {
+  Future<bool> saveTimeTable({required List<UnitClass> records, required String course}) async {
     bool returnValue = true;
 
     try{
         for (var r in records) {
-         Record _record = r.copyWith(course: course);
+         UnitClass _record = r.copyWith(course: course);
           await db
         .collection(recordCollection)
         .doc(_record.unitCode)
@@ -33,11 +34,11 @@ class TimeTableService{
      toast('An error occurred');
       returnValue = false;
     }
-    LocalData().setNotFirst();
+    await LocalData().setNotFirst();
     return returnValue;
   }
 
-  Future<bool> editRecord({required Record record}) async {
+  Future<bool> editRecord({required UnitClass record}) async {
     bool returnValue = true;
     try{
         await db
@@ -45,7 +46,7 @@ class TimeTableService{
         .doc(record.unitCode)
         .set(record.toMap());
      
-      toast('Record saved');
+      toast('Class details updated');
       returnValue = true;
     }catch(e){    
      toast('An error occurred');
@@ -55,17 +56,19 @@ class TimeTableService{
   }
 
   ///Get record list
-  Stream<List<Record>> get recordsStream {
-    return db.collection(recordCollection).stream
-    .where((r) => day!=null?r['day']==day:true)
+  Stream<List<UnitClass>> get recordsStream {
+    return db.collection(recordCollection)
+    .stream
+        .where((r) => day!=null?r['day']==day:true)
     .map(recordList);
   }
 
-    List<Record>_records = [];
+
+    List<UnitClass>_records = [];
     ///Yield the list from stream
-  List<Record> recordList(Map<String, dynamic> query) {
-    final item = Record.fromMap(query);
-    Iterable<Record> record = _records.where((r) => r.unitCode==item.unitCode);
+  List<UnitClass> recordList(Map<String, dynamic> query) {
+    final item = UnitClass.fromMap(query);
+    Iterable<UnitClass> record = _records.where((r) => r.unitCode==item.unitCode);
     if(record.isEmpty){
       _records.add(item);
     }else{
@@ -74,6 +77,23 @@ class TimeTableService{
     }
 _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     return _records;
+  }
+
+    //upcoming
+  Stream<UnitClass> get upcomingClass {
+    return db.collection(recordCollection)
+    .stream
+    .map(upcomingList);
+  }
+      List<UnitClass> upcomingRecords = [];
+  UnitClass upcomingList(Map<String, dynamic> query) {
+
+    final item = UnitClass.fromMap(query);
+    upcomingRecords.add(item);
+    upcomingRecords.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
+    UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>timeIndex);
+
+    return result;
   }
 
 }

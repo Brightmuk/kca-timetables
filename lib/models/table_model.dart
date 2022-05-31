@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:excel_reader/models/record_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
 
 class TimeTable {
   final String name;
-  final List<Record> records;
+  final List<UnitClass> records;
 
   const TimeTable({
     required this.name,
@@ -25,7 +25,7 @@ class TimeTable {
   factory TimeTable.fromMap(Map<String, dynamic> map) {
     return TimeTable(
       name: map['name'] ?? '',
-      records: List<Record>.from(map['records']?.map((x) => Record.fromMap(x))),
+      records: List<UnitClass>.from(map['records']?.map((x) => UnitClass.fromMap(x))),
     );
   }
 

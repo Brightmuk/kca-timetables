@@ -1,6 +1,6 @@
-import 'package:excel_reader/models/record_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/home_screen.dart';
-import 'package:excel_reader/screens/single_record.dart';
+import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ import 'package:overlay_support/overlay_support.dart';
 class FinishSetupScreen extends StatefulWidget {
   final String course;
   final String period;
-  final List<Record> records;
+  final List<UnitClass> records;
   const FinishSetupScreen(
       {Key? key,
       required this.records,
@@ -22,7 +22,7 @@ class FinishSetupScreen extends StatefulWidget {
 }
 
 class _FinishSetupScreenState extends State<FinishSetupScreen> {
-  List<Record> _records=[];
+  List<UnitClass> _records=[];
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
               Text('Finish setup',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 30,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold)),
                                                   IconButton(
               padding: EdgeInsets.all(20),
@@ -152,7 +152,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                                 var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SingleRecord(
+                                        builder: (context) => EditClassPage(
                                           editMode: false,
                                             record: _records[index])));
                                 if(result!=null){

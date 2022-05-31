@@ -10,6 +10,6 @@ class LocalData{
   }
   Future<void> setNotFirst()async{
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setBool(firstTime, true);
+    _prefs.setBool(firstTime, false);
   }
 }
