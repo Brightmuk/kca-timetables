@@ -1,4 +1,4 @@
-package com.example.excel_reader
+package com.brightdesigns.kcatimetables
 
 import io.flutter.embedding.android.FlutterActivity
 

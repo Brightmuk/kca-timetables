@@ -21,20 +21,20 @@ dependencies:
   file_picker: ^4.5.1
   overlay_support: ^1.2.1
   localstore: ^1.2.3
-  flutter_local_notifications: ^9.4.1
-  rxdart: ^0.27.3
+  android_alarm_manager_plus: ^2.0.5
   flutter_native_timezone: ^2.0.0
   shared_preferences: ^2.0.13
   url_launcher: ^6.1.2
-  admob_flutter: ^2.0.0
-  flutter_native_splash: ^2.1.6
+
+  # rxdart: ^0.27.3
+  # flutter_local_notifications: ^9.4.1
+  # admob_flutter: ^2.0.0
+  # flutter_native_splash: ^2.1.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   
-
-
   flutter_lints: ^1.0.0
 
 flutter:
@@ -44,6 +44,7 @@ flutter:
 
   assets:
     - assets/tt.xlsx
+    - assets/images/
 
 
   # fonts:

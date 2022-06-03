@@ -53,7 +53,7 @@ class _ScanScreenState extends State<ScanScreen> {
               color: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
-            Text('Scan timetable document',
+            const Text('Scan timetable document',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

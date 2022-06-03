@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:excel_reader/shared/functions.dart';
 
 class UnitClass {
   final String day;
@@ -70,13 +71,16 @@ bool get isFulfiled{
 }
 
 bool get canJoinMeeting{
-  return venue=='VIRTUAL';
+  int today = DateTime.now().weekday;
+  int startTime = int.parse(time.substring(0,4));
+
+  return timeIndex>=startTime&&venue=='VIRTUAL'&&dayIndex(day)== today;
 }
 
   int get sortIndex {
     int timeValue;
     try {
-      timeValue = int.parse(time.split('-')[0]);
+      timeValue = int.parse(time.substring(5,9));
     } catch (e) {
       timeValue = 0;
     }

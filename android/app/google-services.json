@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "669793719470",
+    "project_id": "kcatimetables",
+    "storage_bucket": "kcatimetables.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669793719470:android:a249fae25e9faf3f36093f",
+        "android_client_info": {
+          "package_name": "com.brightdesigns.kcatimetables"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669793719470-0f3qgfugg5nmpav2518qjosrkiop77pd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrBEBQM5ug4PB2-_hGhaQUm7ddmanzSxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669793719470-0f3qgfugg5nmpav2518qjosrkiop77pd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

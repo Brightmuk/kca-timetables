@@ -91,7 +91,7 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     final item = UnitClass.fromMap(query);
     upcomingRecords.add(item);
     upcomingRecords.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
-    UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>timeIndex);
+    UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>timeIndex,orElse: ()=>upcomingRecords.first);
 
     return result;
   }

@@ -72,13 +72,13 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
-              Text('Finish setup',
+              const Text('Finish setup',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold)),
                                                   IconButton(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               onPressed: () {
                 
               },

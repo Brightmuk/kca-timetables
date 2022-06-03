@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:admob_flutter/admob_flutter.dart';
+// import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/screens/home_screen.dart';
 import 'package:excel_reader/screens/landing_page.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
@@ -13,7 +13,7 @@ import 'package:overlay_support/overlay_support.dart';
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
 
-  Admob.initialize();
+  // Admob.initialize();
   runApp(const MyApp());
 }
 

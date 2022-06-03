@@ -17,36 +17,45 @@ void launchExternalUrl(String url) async {
   int hourOfDay = DateTime.now().hour;
 
   return (weekDay*10000)+(hourOfDay*100);
+
 }
 
 
 
 String timeLeft(String time,String day){
-  int timeValue;
+  int startTime;
+  int endTime;
+  try {
+    endTime=int.parse(time.substring(5,9));
+  } catch (e) {
+    endTime = 0;
+  }
   try {
     List val = time.split(" ");
-    timeValue=int.parse(time.substring(val[0].length-4,val[0].length));
+    startTime=int.parse(val[0]);
   } catch (e) {
-    timeValue = 0;
+    startTime = 0;
   }
   DateTime now = DateTime.now();
   int recordDay = dayIndex(day);
 
-  if(recordDay-now.weekday>1){
-    return 'In ${now.weekday-recordDay} days ';
-  }else if(recordDay-now.weekday==1){
-    return 'Tomorrow';
-  }else if(recordDay-now.weekday<1&&timeValue>(now.hour*100)){
-    return 'In ${timeValue-(now.hour*100)} hours';
-  }else if(recordDay-now.weekday<1&&timeValue-(now.hour*100)<0){
-    return 'done';
-  }else if(recordDay-now.weekday<1&&timeValue-(now.hour*100)<1){
-    return 'in minutes';
-  }else if(timeValue==(now.hour*100)){
+if(recordDay-now.weekday==0&&(now.hour*100)>=startTime&&(now.hour*100)<endTime){
     return 'Ongoing';
-  }else{
-    return '';
   }
+if(recordDay-now.weekday==0&&startTime-(now.hour*100)==1){
+    return 'in ${60-now.minute} minutes';
+  }
+if(recordDay-now.weekday==0&&startTime-(now.hour*100)>100){
+      return 'In ${(startTime-now.hour)/100} hours';
+}
+if(recordDay-now.weekday==1){
+    return 'Tomorrow';
+  }
+if(recordDay-now.weekday==0&&endTime<(now.hour*100)){
+    return 'done';
+  }
+
+return 'on $day';
 }
 
 

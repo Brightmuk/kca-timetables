@@ -1,11 +1,15 @@
-import 'package:admob_flutter/admob_flutter.dart';
+// import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/screens/join_meeting_screen.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
+import 'package:excel_reader/screens/settings.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/shared/app_colors.dart';
+import 'package:excel_reader/shared/app_widgets.dart';
 import 'package:excel_reader/shared/functions.dart';
+import 'package:excel_reader/shared/text_styles.dart';
 import 'package:excel_reader/shared/unit_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,21 +27,19 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-          icon: Icon(Icons.settings_outlined,color: Color.fromARGB(255, 3, 4, 75),),
+          icon: const Icon(Icons.settings_outlined,color: primaryThemeColor,),
           onPressed: (){
-            
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
           },
         ),
         ],
-        leading: IconButton(
-          icon: Icon(Icons.menu_outlined,color: Color.fromARGB(255, 3, 4, 75),),
-          onPressed: (){
-            
-          },
+        leading: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Image.asset('assets/images/logo_alternate.png'),
         ),
         backgroundColor: Colors.white,
         systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Color.fromARGB(255, 3, 4, 75),
+          statusBarColor: primaryThemeColor,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
         ),
@@ -58,30 +60,30 @@ class HomePage extends StatelessWidget {
                           stream: TimeTableService(context: context).upcomingClass,
                           builder: (context, snapshot) {
                             if(!snapshot.hasData){
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: circularLoader);
                             }
                             if(snapshot.hasError){
-                              return Center(child: Text('An error has occurred'),);
+                              return Center(child: Text('An error has occurred',style: normalTextStyle,),);
                             }
                             UnitClass _record = snapshot.data!;
                             return Column(
                               children: [
                                 ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  leading: Text('UPCOMING',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500,color: Color.fromARGB(255, 3, 4, 75)),),
-                                  trailing: Text(timeLeft(_record.time, _record.day),style: TextStyle(color: Colors.grey,fontSize: 13),),
+                                  leading: const Text('UPCOMING',style: titleTextStyle,),
+                                  trailing: Text(timeLeft(_record.time, _record.day),style: minorTextStyle,),
                                 ),
 
                             ListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: Text(_record.unitCode,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300),),
-                              subtitle: Text(_record.unitName.capitalise()),
+                              title: Text(_record.unitCode,style: majorTextStyle,),
+                              subtitle: Text(_record.unitName.capitalise(),style: TextStyle(fontSize: 14,color: Colors.grey[600]),),
                             ),
                             ListTile(
                               
                               contentPadding: EdgeInsets.zero,
-                              subtitle: Text(_record.time,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600)),
-                              title: Text(_record.venue,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600),),
+                              subtitle: Text(_record.time,style: tileTitleTextStyle),
+                              title: Text(_record.venue,style: tileTitleTextStyle,),
                               trailing: MaterialButton(
                                 disabledColor: Colors.grey,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -98,8 +100,8 @@ class HomePage extends StatelessWidget {
                                   }
 
                                 }:null,
-                                color: const Color.fromARGB(255, 201, 174, 20),
-                                child: Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontSize: 13),),
+                                color: secondaryThemeColor,
+                                child: const Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13),),
                                 ),
                             ),
                               ],
@@ -108,31 +110,31 @@ class HomePage extends StatelessWidget {
                         ),
 
 
-                        Divider(height: 20,),
+                        const Divider(height: 20,),
                                 
 
                         TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
                         
-                        SizedBox(height: 40,),
+                        const SizedBox(height: 40,),
 
-                         WeeklyUnitTile(size: Size(200,200),color: Colors.pinkAccent,),
-                        SizedBox(height: 40,),
+                         const WeeklyUnitTile(size: Size(200,200),color: Colors.pinkAccent,),
+                        const SizedBox(height: 40,),
 
                       
                       ]),
                 ),
               ),
-            Positioned(
-              bottom: 20,
-              child: AdmobBanner(
-                    adUnitId: 'ca-app-pub-1360540534588513/5000702124',
-                    adSize: AdmobBannerSize.FULL_BANNER,
-                    listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-                      debugPrint(args.toString());
-                    },
-                    onBannerCreated: (AdmobBannerController controller) {},
-                  ),
-            )
+            // Positioned(
+            //   bottom: 20,
+            //   child: AdmobBanner(
+            //         adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+            //         adSize: AdmobBannerSize.FULL_BANNER,
+            //         listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+            //           debugPrint(args.toString());
+            //         },
+            //         onBannerCreated: (AdmobBannerController controller) {},
+            //       ),
+            // )
             ],
           )
     );
@@ -152,26 +154,26 @@ class TodayUnitTile extends StatelessWidget {
         stream: TimeTableService(context: context,day:weekDay).recordsStream,
         builder: (context, snapshot) {
           if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: circularLoader);
           }
           if(snapshot.hasError){
-            return Center(child: Text('An error has occurred'),);
+            return Center(child: Text('An error has occurred',style: normalTextStyle,),);
           }
           return Column(
             children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Text('TODAY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-              trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
+              leading: const Text('TODAY',style: titleTextStyle,),
+              trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
             ),
               SizedBox(
                 height: size.height,
                 child: ListView.separated(
                   itemCount: snapshot.data!.length,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context,index){
-                    return SizedBox(width: 20,);
+                    return const SizedBox(width: 20,);
                   },
                   itemBuilder: (context,index){
                     UnitClass record= snapshot.data![index];
@@ -194,11 +196,11 @@ class TodayUnitTile extends StatelessWidget {
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 5,
                                       blurRadius: 7,
-                                      offset: Offset(0, 3), // changes position of shadow
+                                      offset: const Offset(0, 3), // changes position of shadow
                                     ),
                                   ],
                                 
-                              color: Color.fromARGB(255, 3, 4, 75),
+                              color: primaryThemeColor,
                               borderRadius: BorderRadius.circular(20),
                              
                             ),
@@ -215,21 +217,21 @@ class TodayUnitTile extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                          child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
+                                          child: Text(record.unitCode,style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
                                         Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
                                       ],
                                     ),
-                                               SizedBox(height: 60,),            
-                                   Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                                  const SizedBox(height: 60,),            
+                                   Text(record.unitName.capitalise(),style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
                                                          
-                                    Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
+                                    Text(record.venue,style: const TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
                                     Row(
                                       children: [
-                                        Text(record.time,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
-                                        SizedBox(width: 10,),
-                                        Text(timeLeft(record.time, record.day),style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
+                                        Text(record.time,style: const TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
+                                        const SizedBox(width: 10,),
+                                        Text(timeLeft(record.time, record.day),style: const TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
                                       ],
                                     )
                                     
