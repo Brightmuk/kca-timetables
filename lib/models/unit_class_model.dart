@@ -16,6 +16,7 @@ class UnitClass {
   final String? classLink;
   final String? meetingPassCode;
   final String? meetingId;
+  final int accentColor;
 
   UnitClass({
     required this.day,
@@ -31,6 +32,7 @@ class UnitClass {
     this.classLink,
     this.meetingPassCode,
     this.meetingId,
+    required this.accentColor
   });
 
   String get id{
@@ -40,10 +42,11 @@ class UnitClass {
   ///unit code,unit name,lecturer so  we assume it will always be the case
   ///therefore the index is relatively constant
 
-  factory UnitClass.fromSheet(List<Data?> row, int dayIndex) {
+  factory UnitClass.fromSheet(List<Data?> row, int dayIndex,String courseName) {
     return UnitClass(
+      accentColor: 0xff050851,
       day: row[dayIndex]!.value.toString().toUpperCase(),
-      course:null,
+      course:courseName,
       time: row[dayIndex + 1]!.value.toString().toUpperCase(),
       venue: row[dayIndex + 2]!.value.toString().toUpperCase(),
       unitCode: row[dayIndex + 3]!.value.toString().toUpperCase(),
@@ -107,6 +110,7 @@ bool get canJoinMeeting{
   Map<String, dynamic> toMap() {
     return {
       'day': day,
+      'accentColor':accentColor,
       'course': course,
       'time': time,
       'venue': venue,
@@ -123,6 +127,7 @@ bool get canJoinMeeting{
 
   factory UnitClass.fromMap(Map<String, dynamic> map) {
     return UnitClass(
+      accentColor: map['accentColor']??0xff050851,
       day: map['day'] ?? '',
       course: map['course'],
       time: map['time'] ?? '',
@@ -165,6 +170,7 @@ bool get canJoinMeeting{
       classLink: classLink ?? this.classLink,
       meetingPassCode: meetingPassCode ?? this.meetingPassCode,
       meetingId: meetingId ?? this.meetingId,
+      accentColor: accentColor
     );
   }
 

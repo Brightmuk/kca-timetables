@@ -1,4 +1,4 @@
-// import 'package:admob_flutter/admob_flutter.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/screens/join_meeting_screen.dart';
@@ -7,6 +7,7 @@ import 'package:excel_reader/screens/settings.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
+import 'package:excel_reader/shared/app_drawer.dart';
 import 'package:excel_reader/shared/app_widgets.dart';
 import 'package:excel_reader/shared/functions.dart';
 import 'package:excel_reader/shared/text_styles.dart';
@@ -15,15 +16,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel_reader/models/string_extension.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key, }) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    key:_scaffoldKey,
       extendBody: true,
       backgroundColor: Colors.white,
+      
       appBar: AppBar(
+        title: FutureBuilder<TimeTable>(
+          future: TimeTableService(context: context).getClassTimetable(),
+          builder: (context, snapshot) {
+            if(snapshot.hasData){
+            return Text(snapshot.data!.name,style: titleTextStyle.copyWith(color: primaryThemeColor),);
+            }else{
+              return Text('',style: titleTextStyle.copyWith(color: primaryThemeColor),);
+            }
+
+          }
+        ),
         elevation: 0,
         actions: [
           IconButton(
@@ -33,10 +54,10 @@ class HomePage extends StatelessWidget {
           },
         ),
         ],
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset('assets/images/logo_alternate.png'),
-        ),
+        leading: IconButton(icon: Icon(Icons.menu,color: primaryThemeColor,)
+        ,onPressed: (){
+          _scaffoldKey.currentState!.openDrawer();
+        },),
         backgroundColor: Colors.white,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: primaryThemeColor,
@@ -44,6 +65,7 @@ class HomePage extends StatelessWidget {
           statusBarBrightness: Brightness.light,
         ),
       ),
+          drawer: AppDrawer(),
       body: Stack(
             alignment: Alignment.center,
             children: [
@@ -51,9 +73,17 @@ class HomePage extends StatelessWidget {
 
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                child: RefreshIndicator(
+                 
+                  color: primaryThemeColor,
+                  onRefresh: ()async{
+                      setState(() {
+                        
+                      });
+                  
+                  },
+                  child: ListView(
+                      
                       children: [
                         SizedBox(height: 20,),
                         StreamBuilder<UnitClass>(
@@ -73,7 +103,7 @@ class HomePage extends StatelessWidget {
                                   leading: const Text('UPCOMING',style: titleTextStyle,),
                                   trailing: Text(timeLeft(_record.time, _record.day),style: minorTextStyle,),
                                 ),
-
+                
                             ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(_record.unitCode,style: majorTextStyle,),
@@ -95,10 +125,10 @@ class HomePage extends StatelessWidget {
                       backgroundColor: Colors.white,
                       context: context, builder: (context)=>JoinClassMeeting(unitClass: _record),
                                 shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       );
                                   }
-
+                
                                 }:null,
                                 color: secondaryThemeColor,
                                 child: const Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13),),
@@ -108,33 +138,33 @@ class HomePage extends StatelessWidget {
                             );
                           }
                         ),
-
-
+                
+                
                         const Divider(height: 20,),
                                 
-
+                
                         TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
                         
                         const SizedBox(height: 40,),
-
+                
                          const WeeklyUnitTile(size: Size(200,200),color: Colors.pinkAccent,),
                         const SizedBox(height: 40,),
-
+                
                       
                       ]),
                 ),
               ),
-            // Positioned(
-            //   bottom: 20,
-            //   child: AdmobBanner(
-            //         adUnitId: 'ca-app-pub-1360540534588513/5000702124',
-            //         adSize: AdmobBannerSize.FULL_BANNER,
-            //         listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-            //           debugPrint(args.toString());
-            //         },
-            //         onBannerCreated: (AdmobBannerController controller) {},
-            //       ),
-            // )
+            Positioned(
+              bottom: 20,
+              child: AdmobBanner(
+                    adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+                    adSize: AdmobBannerSize.FULL_BANNER,
+                    listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+                      debugPrint(args.toString());
+                    },
+                    onBannerCreated: (AdmobBannerController controller) {},
+                  ),
+            )
             ],
           )
     );
@@ -153,18 +183,37 @@ class TodayUnitTile extends StatelessWidget {
       child: StreamBuilder<List<UnitClass>>(
         stream: TimeTableService(context: context,day:weekDay).recordsStream,
         builder: (context, snapshot) {
+          // if(snapshot.connectionState==ConnectionState.waiting){
+          //   return const Center(child: circularLoader);
+          // }
           if(!snapshot.hasData){
-            return const Center(child: circularLoader);
+            return Column(
+              
+              children: [
+               ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Text('TODAY',style: titleTextStyle,),
+              trailing: Text('no classe(s)',style: minorTextStyle,),
+            ),
+            SizedBox(height: 50,),
+                      Icon(Icons.celebration_outlined,color: secondaryThemeColor,size: 40,),
+                                SizedBox(height: 20,),
+          Text('You have no class today',style:titleTextStyle),
+
+
+            ],);
           }
           if(snapshot.hasError){
             return Center(child: Text('An error has occurred',style: normalTextStyle,),);
           }
+
           return Column(
             children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Text('TODAY',style: titleTextStyle,),
               trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
+
             ),
               SizedBox(
                 height: size.height,
@@ -184,9 +233,7 @@ class TodayUnitTile extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditClassPage(
-                                      editMode: true,
-                                        record: record)));
+                                    builder: (context) => EditClassPage(record: record)));
                       
                           },
                           child: Container(
@@ -200,7 +247,7 @@ class TodayUnitTile extends StatelessWidget {
                                     ),
                                   ],
                                 
-                              color: primaryThemeColor,
+                              color: Color(record.accentColor),
                               borderRadius: BorderRadius.circular(20),
                              
                             ),
@@ -315,9 +362,7 @@ class WeeklyUnitTile extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EditClassPage(
-                                    editMode: true,
-                                      record: record)));
+                                  builder: (context) => EditClassPage(record: record)));
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +381,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                       ),
                                     ],
                                   
-                                color: Color.fromARGB(255, 3, 4, 75),
+                                color: Color(record.accentColor),
                                 borderRadius: BorderRadius.circular(10),
                                
                               ),
@@ -359,7 +404,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                       Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
                                     ],
                                   ),
-                                                            SizedBox(height: 60,),
+                                    SizedBox(height: 60,),
                                      Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.bold),),
                                       Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12),),
                                 

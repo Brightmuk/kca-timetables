@@ -1,13 +1,15 @@
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/shared/accent_color_selector.dart';
+import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class EditClassPage extends StatefulWidget {
-  final bool editMode;
   final UnitClass record;
-  const EditClassPage({Key? key, required this.record,required this.editMode}) : super(key: key);
+  const EditClassPage({Key? key, required this.record}) : super(key: key);
 
   @override
   _EditClassPageState createState() => _EditClassPageState();
@@ -22,7 +24,8 @@ class _EditClassPageState extends State<EditClassPage> {
   String? _passCode;
   String? _meetingId;
   bool? _reminder;
-  int _reminderSchedule=5;
+  int? _accentColor;
+  int? _reminderSchedule;
 
   void initState() {
     super.initState();
@@ -34,6 +37,8 @@ class _EditClassPageState extends State<EditClassPage> {
     _passCode = widget.record.meetingPassCode;
     _meetingId = widget.record.meetingId;
     _reminder = widget.record.reminder;
+    _reminderSchedule=widget.record.reminderSchedule??5;
+    _accentColor=widget.record.accentColor;
   }
 
   @override
@@ -73,7 +78,7 @@ class _EditClassPageState extends State<EditClassPage> {
                                                                                   IconButton(
                 padding: EdgeInsets.all(20),
                 onPressed: () {
-                  
+                  save();
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
@@ -104,251 +109,255 @@ class _EditClassPageState extends State<EditClassPage> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
+          body: ListView(
+            children: [
     
-                const SizedBox(
-                  height: 50,
-                ),
-                Text(
+              const SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: Text(
                   widget.record.unitName,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Text(
                   widget.record.unitCode,
                   style: TextStyle(color: Colors.grey),
                 ),
-                const Divider(
-                  height: 50,
-                ),
-                ListTile(
-                  onTap: ()async{
+              ),
+              const Divider(
+                height: 50,
+              ),
+              ListTile(
+                onTap: ()async{
     
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditDay(current: _day!),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _day=result;
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: Icon(Icons.calendar_today_outlined,
-                      color: const Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Day'),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(_day!),
-                ),
-                ListTile(
-                  onTap: ()async{
-                   var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditTime(current: _time!),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _time=result;
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: Icon(Icons.watch_outlined,
-                      color: const Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Time'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(_time!),
-                ),
-                ListTile(
-                  onTap: ()async{
-    
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditVenue(venue: _venue!),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _venue=result;
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: const Icon(Icons.room_outlined,
-                      color: Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Venue'),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(_venue!),
-                ),
-                ListTile(
-                    onTap: ()async{
-    
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditLecturer(lecturer: _lecturer!),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _lecturer=result;
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: Icon(Icons.person_outline,
-                      color: const Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Lecturer'),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(_lecturer!),
-                ),
-                ListTile(
-                  onTap: ()async{
-    
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      context: context, builder: (context)=>EditLink(meetingLink: _link??''),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _link=result;
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: const Icon(Icons.link_outlined,
-                      color: Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Meeting link'),
-                  subtitle: Text(_link ?? 'No link'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ),
-                ListTile(
-                  onTap: ()async{
-    
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      context: context, builder: (context)=>EditCredentials(passCode:_passCode??'',meetingId:_meetingId??''),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _passCode=result['passCode'];
-                          _meetingId=result['meetingId'];
-                        });
-                        save();
-                      }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: Icon(Icons.security_outlined,
-                      color: const Color.fromARGB(255, 201, 174, 20)),
-                  title: Text('Meeting credentials'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(
-                      'Meeting Id: ${_meetingId ?? 'No meeting Id'} | Passcode: ${_passCode ?? 'No passcode'}'),
-                ),
-                Divider(),
-                SwitchListTile(
-                    activeColor: const Color.fromARGB(255, 201, 174, 20),
-                    title: Text('Reminder'),
-                    subtitle: Text('Get reminded when class is about to start'),
-                    value: _reminder!,
-                    onChanged: (val) {
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>EditDay(current: _day!),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
                       setState(() {
-                        _reminder=val;
+                        _day=result;
                       });
                       save();
-                    }),
-                AnimatedOpacity(
-                  opacity: _reminder!?1:0,
-                
-                  duration: Duration(milliseconds: 300),
-                  child: ListTile(
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading: Icon(Icons.calendar_today_outlined,
+                    color: Color(_accentColor!)),
+                title: Text('Day'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                subtitle: Text(_day!),
+              ),
+              ListTile(
+                onTap: ()async{
+                 var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditTime(current: _time!),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _time=result;
+                      });
+                      save();
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading: Icon(Icons.watch_outlined,
+                    color: Color(_accentColor!)),
+                title: Text('Time'),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                subtitle: Text(_time!),
+              ),
+              ListTile(
+                onTap: ()async{
+    
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>EditVenue(venue: _venue!),
+                              shape:
+                              
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _venue=result;
+                      });
+                      save();
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading:  Icon(Icons.room_outlined,
+                    color: Color(_accentColor!)),
+                title: Text('Venue'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                subtitle: Text(_venue!),
+              ),
+              ListTile(
                   onTap: ()async{
     
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditReminderSchedule(minutes: _reminderSchedule,),
-                                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                      if(result!=null){
-                        setState(() {
-                          _reminderSchedule=result;
-                        });
-                        save();
-                      }
-                  },
-                    style: ListTileStyle.drawer,
-                    title: const Text('Reminder schedule'),
-                    subtitle: Text(scheduleStr(_reminderSchedule)),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                    ),
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>EditLecturer(lecturer: _lecturer!),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _lecturer=result;
+                      });
+                      save();
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading: Icon(Icons.person_outline,
+                    color: Color(_accentColor!)),
+                title: Text('Lecturer'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                subtitle: Text(_lecturer!),
+              ),
+              ListTile(
+                onTap: ()async{
+    
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>EditLink(meetingLink: _link??''),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _link=result;
+                      });
+                      save();
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading:Icon(Icons.link_outlined,
+                    color: Color(_accentColor!)),
+                title: Text('Meeting link'),
+                subtitle: Text(_link ?? 'No link'),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+              ),
+              ListTile(
+                onTap: ()async{
+    
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>EditCredentials(passCode:_passCode??'',meetingId:_meetingId??''),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _passCode=result['passCode'];
+                        _meetingId=result['meetingId'];
+                      });
+                      save();
+                    }
+                },
+                style: ListTileStyle.drawer,
+                leading: Icon(Icons.security_outlined,
+                    color: Color(_accentColor!)),
+                title: Text('Meeting credentials'),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                subtitle: Text(
+                    'Meeting Id: ${_meetingId ?? 'No meeting Id'} | Passcode: ${_passCode ?? 'No passcode'}'),
+              ),
+              Divider(),
+              SwitchListTile(
+                  activeColor: Color(_accentColor!),
+                  title: Text('Reminder'),
+                  subtitle: Text('Get reminded when class is about to start'),
+                  value: _reminder!,
+                  onChanged: (val) {
+                    setState(() {
+                      _reminder=val;
+                    });
+                    save();
+                  }),
+              AnimatedOpacity(
+                opacity: _reminder!?1:0,
+              
+                duration: Duration(milliseconds: 500),
+                child: ListTile(
+                onTap: ()async{
+    
+                  var result = await showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    context: context, builder: (context)=>EditReminderSchedule(minutes: _reminderSchedule!,),
+                              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    );
+                    if(result!=null){
+                      setState(() {
+                        _reminderSchedule=result;
+                      });
+                      save();
+                    }
+                },
+                  style: ListTileStyle.drawer,
+                  title: const Text('Reminder schedule'),
+                  subtitle: Text(scheduleStr(_reminderSchedule!)),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
                   ),
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
-                Visibility(
-                  visible: !widget.editMode,
-                  child: MaterialButton(
-                      disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.all(20),
-                      minWidth: MediaQuery.of(context).size.width * 0.9,
-                      color: const Color.fromARGB(255, 201, 174, 20),
-                      child: const Text(
-                        'Done',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: save),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
+              ),
+              const Divider(height: 30,),
+              Center(child: Text('Accent color',style: tileTitleTextStyle,)),
+    
+              const SizedBox(
+                height: 20,
+              ),
+              AccentColorSelector(currentColor: _accentColor!, onChange: (val){
+                setState(() {
+                  _accentColor=val;
+                });
+                save();
+              },),
+    
+              const SizedBox(
+                height: 50,
+              ),
+    
+              SizedBox(
+                height: 30,
+              ),
+            ],
           )),
     );
   }
@@ -360,25 +369,23 @@ class _EditClassPageState extends State<EditClassPage> {
     }
   }
   void save()async{
-                           UnitClass _record = UnitClass(
-                        unitCode: widget.record.unitCode,
-                        unitName: widget.record.unitName,
-                        day: _day!,
-                        time: _time!,
-                        venue: _venue!,
-                        lecturer: _lecturer!,
-                        meetingId: _meetingId,
-                        meetingPassCode: _passCode,
-                        classLink: _link,
-                        reminder: _reminder!,
-                        reminderSchedule: _reminderSchedule
-                        );
-                      if(widget.editMode){
-                        await TimeTableService(context: context).editRecord(record: _record);
-                      }else{
-
-                      Navigator.pop(context,_record);
-                      }
+      UnitClass _record = UnitClass(
+        accentColor: _accentColor!,
+      unitCode: widget.record.unitCode,
+      unitName: widget.record.unitName,
+      day: _day!,
+      time: _time!,
+      venue: _venue!,
+      lecturer: _lecturer!,
+      meetingId: _meetingId,
+      meetingPassCode: _passCode,
+      classLink: _link,
+      reminder: _reminder!,
+      reminderSchedule: _reminderSchedule
+      );
+    
+      await TimeTableService(context: context).editRecord(record: _record);
+    
   }
 }
 

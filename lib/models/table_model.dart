@@ -6,26 +6,45 @@ import 'package:excel_reader/models/unit_class_model.dart';
 
 class TimeTable {
   final String name;
-  final List<UnitClass> records;
-
-  const TimeTable({
+  final String period;
+  final String course;
+  final DateTime date;
+  TimeTable({
     required this.name,
-    required this.records,
+    required this.period,
+    required this.course,
+    required this.date,
   });
 
-
+  TimeTable copyWith({
+    String? name,
+    String? period,
+    String? course,
+    DateTime? date,
+  }) {
+    return TimeTable(
+      name: name ?? this.name,
+      period: period ?? this.period,
+      course: course ?? this.course,
+      date: date ?? this.date,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'records': records.map((x) => x.toMap()).toList(),
+      'period': period,
+      'course': course,
+      'date': date.millisecondsSinceEpoch,
     };
   }
 
   factory TimeTable.fromMap(Map<String, dynamic> map) {
     return TimeTable(
       name: map['name'] ?? '',
-      records: List<UnitClass>.from(map['records']?.map((x) => UnitClass.fromMap(x))),
+      period: map['period'] ?? '',
+      course: map['course'] ?? '',
+      date: DateTime.fromMillisecondsSinceEpoch(map['date']),
     );
   }
 
@@ -34,7 +53,9 @@ class TimeTable {
   factory TimeTable.fromJson(String source) => TimeTable.fromMap(json.decode(source));
 
   @override
-  String toString() => 'TimeTable(name: $name, records: $records)';
+  String toString() {
+    return 'TimeTable(name: $name, period: $period, course: $course, date: $date)';
+  }
 
   @override
   bool operator ==(Object other) {
@@ -42,9 +63,16 @@ class TimeTable {
   
     return other is TimeTable &&
       other.name == name &&
-      listEquals(other.records, records);
+      other.period == period &&
+      other.course == course &&
+      other.date == date;
   }
 
   @override
-  int get hashCode => name.hashCode ^ records.hashCode;
+  int get hashCode {
+    return name.hashCode ^
+      period.hashCode ^
+      course.hashCode ^
+      date.hashCode;
+  }
 }

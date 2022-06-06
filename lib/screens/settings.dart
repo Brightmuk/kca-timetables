@@ -2,6 +2,7 @@ import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({ Key? key }) : super(key: key);
@@ -11,6 +12,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool notificationsRing=false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,9 +81,73 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             ),
-            body: Column(children: [
-              
-            ],)
+            body: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(children: [
+                  SizedBox(height: 30,),
+                  ListTile(
+                    title: Text('General',style: tileTitleTextStyle.copyWith(color: secondaryThemeColor),), 
+                               
+                  ) ,
+                  Divider(height: 10,),
+                  ListTile(
+                    onTap: (){
+
+                    },
+                    title: Text('About',style: tileTitleTextStyle,),
+                    trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                  
+                  ),
+                  ListTile(
+                   onTap: (){
+                      
+                    },
+                    title: Text('Help',style: tileTitleTextStyle,),
+                    trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                  ),
+                  SizedBox(height: 30,),
+                  ListTile(
+                    title: Text('Notifications',style: tileTitleTextStyle.copyWith(color: secondaryThemeColor),), 
+                               
+                  ) ,
+                  Divider(height: 10,),
+                  SwitchListTile(
+                    activeTrackColor: secondaryThemeColor.withOpacity(0.5),
+                    activeColor: secondaryThemeColor,
+                    title: Text('Ring',style: tileTitleTextStyle,),
+                    value: notificationsRing,
+                    onChanged: (val){
+                      setState(() {
+                        notificationsRing=val;
+                      });
+                    },             
+                  )           
+                ],),
+                Positioned(
+                  bottom: 50,
+                  child:  FutureBuilder<PackageInfo>(
+                future: PackageInfo.fromPlatform(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    String version = snapshot.data!.version;
+                    return Text(
+                      'VERSION $version',
+                      style: TextStyle(color: Colors.grey[700], fontSize: 15,fontWeight: FontWeight.w400),
+                    );
+                  } else {
+                    return Container();
+                  }
+                })
+            )
+              ],
+            )
       ),
     );
   }

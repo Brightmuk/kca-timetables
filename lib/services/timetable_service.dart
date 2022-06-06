@@ -14,24 +14,43 @@ class TimeTableService{
   final db = Localstore.instance;
 
   static const String recordCollection = 'recordCollection';
+  static const String tableCollection = 'tableCollection';
+
+
+  Future<void> saveTableDetails({required String name,required String period,required String course})async{
+         await db
+        .collection(tableCollection)
+        .doc('classTimetable')
+        .set({
+          'name':name,
+          'period':period,
+          'course':course,
+          'date':DateTime.now().millisecondsSinceEpoch
+        });
+  }
+  Future<TimeTable> getClassTimetable(){
+    return db.collection(tableCollection)
+    .doc('classTimetable')
+    .get().then((value) => TimeTable.fromMap(value!));
+  }
 
   ///Save  a record
-  ///
-  Future<bool> saveTimeTable({required List<UnitClass> records, required String course}) async {
+ 
+  Future<bool> saveTimeTable({required String tableName,required String period, required List<UnitClass> records, required String course}) async {
     bool returnValue = true;
 
     try{
-        for (var r in records) {
-         UnitClass _record = r.copyWith(course: course);
+        for (var _record in records) {
           await db
         .collection(recordCollection)
         .doc(_record.unitCode)
         .set(_record.toMap());
      }
+     await saveTableDetails(name: tableName,course: course, period:period);
       toast('Timetable saved');
       returnValue = true;
     }catch(e){    
-     toast('An error occurred');
+     toast(e.toString());
       returnValue = false;
     }
     await LocalData().setNotFirst();
@@ -49,7 +68,9 @@ class TimeTableService{
       toast('Class details updated');
       returnValue = true;
     }catch(e){    
-     toast('An error occurred');
+      toast(e.toString());
+    //  toast('An error occurred');
+     
       returnValue = false;
     }
     return returnValue;
@@ -67,6 +88,7 @@ class TimeTableService{
     List<UnitClass>_records = [];
     ///Yield the list from stream
   List<UnitClass> recordList(Map<String, dynamic> query) {
+    try{
     final item = UnitClass.fromMap(query);
     Iterable<UnitClass> record = _records.where((r) => r.unitCode==item.unitCode);
     if(record.isEmpty){
@@ -77,6 +99,11 @@ class TimeTableService{
     }
 _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     return _records;
+    }catch(e){
+      print(e.toString());
+      return [];
+    }
+
   }
 
     //upcoming

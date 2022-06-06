@@ -4,6 +4,7 @@ import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
+import 'package:excel_reader/services/timetable_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
@@ -53,7 +54,7 @@ class _ScanScreenState extends State<ScanScreen> {
               color: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
-            const Text('Scan timetable document',
+            const Text('Scan class timetable',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -213,7 +214,7 @@ class _ScanScreenState extends State<ScanScreen> {
         excelFile = file;
         scanningDoc = true;
       });
-      Future.delayed(const Duration(microseconds: 2000), () {
+      Future.delayed(const Duration(microseconds: 500), () {
         readXlsx(file);
       });
     } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){
@@ -284,7 +285,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  void convert() {
+  void convert() async{
     Sheet? sheet;
     CellIndex? periodIndex;
     CellIndex? dayIndex;
@@ -327,21 +328,23 @@ class _ScanScreenState extends State<ScanScreen> {
           startIndex + 9 > sheet.maxRows ? sheet.maxRows : startIndex + 9;
       for (var i = startIndex; i < lastRecordIndex; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
-          _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex));
+          _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
         }
       }
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
+    var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), records: _records,course:course!);
+    if(result){
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FinishSetupScreen(
-                    records: _records,
-                    course: course!,
-                    period: period!,
-                  )));
+        context,
+        MaterialPageRoute(
+            builder: (context) => FinishSetupScreen()));
+
+    }
+
     } catch (e) {
       toast('The period was not found / has an invalid format');
     }
   }
+
 }

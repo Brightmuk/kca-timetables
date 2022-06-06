@@ -137,6 +137,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
   }
   void save()async{
     UnitClass _record = UnitClass(
+      accentColor:  widget.unitClass.accentColor ,
       unitCode: widget.unitClass.unitCode,
       unitName: widget.unitClass.unitName,
       day: widget.unitClass.day,

@@ -1,5 +1,7 @@
+import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 
 
@@ -31,7 +33,7 @@ class _EditDayState extends State<EditDay> {
   Widget build(BuildContext context) {
     return Container(
             margin: const EdgeInsets.symmetric(vertical: 20),
-            
+            height: MediaQuery.of(context).size.height*0.6,
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
@@ -39,13 +41,22 @@ class _EditDayState extends State<EditDay> {
            
             Column(
               children: [
-                Text('Day',style: TextStyle(fontWeight: FontWeight.bold),),
+                                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Day',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 50,),
                 Expanded(
                   child: ListView.builder(
                     itemCount: days.length,
                       itemBuilder: (context,index){
                         return RadioListTile(
-                          title: Text(days[index]),
+                          title: Text(days[index],style: tileTitleTextStyle,),
                           activeColor: const Color.fromARGB(255, 201, 174, 20),
                           value: days[index], 
                           groupValue: groupValue,
@@ -61,6 +72,7 @@ class _EditDayState extends State<EditDay> {
                 ),
               ],
             ),
+           
        Positioned(
                 bottom: 50,
                 child: MaterialButton(
@@ -122,8 +134,16 @@ class _EditTimeState extends State<EditTime> {
         children: [
           Column(
             children: [
-               Text('Time',style: TextStyle(fontWeight: FontWeight.bold),),
-              SizedBox(height: 50,),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Time',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 50,),
              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -214,26 +234,38 @@ void initState(){
   
   if(widget.venue!='VIRTUAL'){
     _venueC.text=widget.venue;
-  }
+    venueValue='IN PERSON';
+  }else{
   venueValue=widget.venue;
+  }
+
 }
 
   @override
   Widget build(BuildContext context) {
     return Container(
      margin: const EdgeInsets.symmetric(vertical: 20),
-            
+    height: MediaQuery.of(context).size.height*0.9,   
+
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Column(
             children: [
-               Text('Venue',style: TextStyle(fontWeight: FontWeight.bold),),
-
+            Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Venue',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 50,),
              RadioListTile(
                activeColor: const Color.fromARGB(255, 201, 174, 20),
-               title: Text('VIRTUAL'),
+               title: Text('VIRTUAL',style: tileTitleTextStyle,),
                value: 'VIRTUAL', 
                groupValue: venueValue, 
                onChanged: (val){
@@ -244,10 +276,11 @@ void initState(){
                ),
                RadioListTile(
                   activeColor: const Color.fromARGB(255, 201, 174, 20),
-                 title: Text('IN PERSON'),
+                 title: Text('IN PERSON',style: tileTitleTextStyle,),
                value: 'IN PERSON', 
                groupValue: venueValue, 
                onChanged: (val){
+
                  setState(() {
                    venueValue=val! as String?;
                  });
@@ -256,7 +289,7 @@ void initState(){
               Visibility(
                 visible: venueValue!='VIRTUAL',
                 child: const ListTile(
-                  title: Text('Physical venue'),
+                  title: Text('Physical venue',style: tileTitleTextStyle,),
                 ),
               ),
               Visibility(
@@ -321,18 +354,26 @@ class _EditLecturerState extends State<EditLecturer> {
   Widget build(BuildContext context) {
     return Container(
      margin: const EdgeInsets.symmetric(vertical: 20),
-            
+             height: MediaQuery.of(context).size.height*0.9,   
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Column(
             children: [
-               Text('Lecturer',style: TextStyle(fontWeight: FontWeight.bold),),
-              SizedBox(height: 50,),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Lecturer',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 50,),
 
               const ListTile(
-                title: Text('Lecturer\'s Name'),
+                title: Text('Lecturer\'s Name',style: tileTitleTextStyle,),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -404,19 +445,28 @@ class _EditLinkState extends State<EditLink> {
           Form(
             key: _formKey,
             child: Column(
+              
               children: [
-                 Text('Meeting link',style: TextStyle(fontWeight: FontWeight.bold),),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Meeting link',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
                 SizedBox(height: 50,),
           
                 const ListTile(
-                  title: Text('Meeting link'),
+                  title: Text('Meeting link',style: tileTitleTextStyle,),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                       
                       controller: _linkC,
-                      maxLength: 20,
+                      
                       validator: (val) =>
                           val!.isEmpty ? 'Enter a link' : null,
                     ),
@@ -487,31 +537,39 @@ class _EditCredentialsState extends State<EditCredentials> {
             key: _formKey,
             child: Column(
               children: [
-                 Text('Meeting Credentials',style: TextStyle(fontWeight: FontWeight.bold),),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Meeting credentials',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
                 SizedBox(height: 50,),
           
                 const ListTile(
-                  title: Text('Meeting Id'),
+                  title: Text('Meeting Id',style: tileTitleTextStyle,),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                       
                       controller: _meetingIdC,
-                      maxLength: 20,
+                      
                       validator: (val) =>
                           val!.isEmpty ? 'Enter a meetingId' : null,
                     ),
                 ),
                 const ListTile(
-                  title: Text('Meeting passcode'),
+                  title: Text('Meeting passcode',style: tileTitleTextStyle,),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                       
                       controller: _passCodeC,
-                      maxLength: 20,
+                     
                       validator: (val) =>
                           val!.isEmpty ? 'Enter a passcode' : null,
                     ),
@@ -578,14 +636,23 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
         children: [
           Column(
             children: [
-               Text('Reminder Schedule',style: TextStyle(fontWeight: FontWeight.bold),),
+                                Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30,),
+                     Text('Reminder schedule',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 20,),
               
               ListTile(
                 subtitle: Text('Get a reminder ${scheduleStr(minutes)} before the class starts'),
               ),
              RadioListTile(
                activeColor: const Color.fromARGB(255, 201, 174, 20),
-               title: Text('5 minutes '),
+               title: Text('5 minutes ',style: tileTitleTextStyle,),
                value: 5, 
                groupValue: minutes, 
                onChanged: (int? val){
@@ -596,7 +663,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                ),
               RadioListTile(
                 activeColor: const Color.fromARGB(255, 201, 174, 20),
-                title: Text('30 minutes '),
+                title: Text('30 minutes ',style: tileTitleTextStyle,),
                value: 30, 
                groupValue: minutes, 
                onChanged: (int? val){
@@ -607,7 +674,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                ),
                RadioListTile(
                  activeColor: const Color.fromARGB(255, 201, 174, 20),
-                 title: Text('1 hour '),
+                 title: Text('1 hour ',style: tileTitleTextStyle,),
                value: 60, 
                groupValue: minutes, 
                onChanged: (int? val){
@@ -618,7 +685,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                ),
               RadioListTile(
                 activeColor: const Color.fromARGB(255, 201, 174, 20),
-                title: Text('2 hours '),
+                title: Text('2 hours ',style: tileTitleTextStyle,),
                value: 120, 
                groupValue: minutes, 
                onChanged: (int? val){
