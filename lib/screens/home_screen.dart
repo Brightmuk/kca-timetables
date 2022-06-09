@@ -15,6 +15,7 @@ import 'package:excel_reader/shared/unit_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel_reader/models/string_extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, }) : super(key: key);
@@ -29,64 +30,64 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    key:_scaffoldKey,
-      extendBody: true,
-      backgroundColor: Colors.white,
-      
-      appBar: AppBar(
-        title: FutureBuilder<TimeTable>(
-          future: TimeTableService(context: context).getClassTimetable(),
-          builder: (context, snapshot) {
-            if(snapshot.hasData){
-            return Text(snapshot.data!.name,style: titleTextStyle.copyWith(color: primaryThemeColor),);
-            }else{
-              return Text('',style: titleTextStyle.copyWith(color: primaryThemeColor),);
-            }
-
-          }
-        ),
-        elevation: 0,
-        actions: [
-          IconButton(
-          icon: const Icon(Icons.settings_outlined,color: primaryThemeColor,),
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
-          },
-        ),
-        ],
-        leading: IconButton(icon: Icon(Icons.menu,color: primaryThemeColor,)
-        ,onPressed: (){
-          _scaffoldKey.currentState!.openDrawer();
-        },),
+        key:_scaffoldKey,
+        extendBody: true,
         backgroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: primaryThemeColor,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
+
+        appBar: AppBar(
+          title: FutureBuilder<TimeTable>(
+              future: TimeTableService(context: context).getClassTimetable(),
+              builder: (context, snapshot) {
+                if(snapshot.hasData){
+                  return Text(snapshot.data!.name,style: titleTextStyle.copyWith(color: primaryThemeColor),);
+                }else{
+                  return Text('',style: titleTextStyle.copyWith(color: primaryThemeColor),);
+                }
+
+              }
+          ),
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings_outlined,color: primaryThemeColor,),
+              onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
+              },
+            ),
+          ],
+          leading: IconButton(icon: Icon(Icons.menu,color: primaryThemeColor,)
+            ,onPressed: (){
+              _scaffoldKey.currentState!.openDrawer();
+            },),
+          backgroundColor: Colors.white,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: primaryThemeColor,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.light,
+          ),
         ),
-      ),
-          drawer: AppDrawer(),
-      body: Stack(
-            alignment: Alignment.center,
-            children: [
+        drawer: AppDrawer(),
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
 
 
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: RefreshIndicator(
-                 
-                  color: primaryThemeColor,
-                  onRefresh: ()async{
-                      setState(() {
-                        
-                      });
-                  
-                  },
-                  child: ListView(
-                      
-                      children: [
-                        SizedBox(height: 20,),
-                        StreamBuilder<UnitClass>(
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: RefreshIndicator(
+
+                color: primaryThemeColor,
+                onRefresh: ()async{
+                  setState(() {
+
+                  });
+
+                },
+                child: ListView(
+
+                    children: [
+                      SizedBox(height: 20.sp,),
+                      StreamBuilder<UnitClass>(
                           stream: TimeTableService(context: context).upcomingClass,
                           builder: (context, snapshot) {
                             if(!snapshot.hasData){
@@ -103,70 +104,69 @@ class _HomePageState extends State<HomePage> {
                                   leading: const Text('UPCOMING',style: titleTextStyle,),
                                   trailing: Text(timeLeft(_record.time, _record.day),style: minorTextStyle,),
                                 ),
-                
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(_record.unitCode,style: majorTextStyle,),
-                              subtitle: Text(_record.unitName.capitalise(),style: TextStyle(fontSize: 14,color: Colors.grey[600]),),
-                            ),
-                            ListTile(
-                              
-                              contentPadding: EdgeInsets.zero,
-                              subtitle: Text(_record.time,style: tileTitleTextStyle),
-                              title: Text(_record.venue,style: tileTitleTextStyle,),
-                              trailing: MaterialButton(
-                                disabledColor: Colors.grey,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                onPressed: _record.canJoinMeeting?(){
-                                  if(_record.classLink!=null){
-                                    launchExternalUrl(_record.classLink!);
-                                  }else{
-                                  showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      context: context, builder: (context)=>JoinClassMeeting(unitClass: _record),
-                                shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      );
-                                  }
-                
-                                }:null,
-                                color: secondaryThemeColor,
-                                child: const Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13),),
+
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(_record.unitCode,style: majorTextStyle,),
+                                  subtitle: Text(_record.unitName.capitalise(),style: TextStyle(fontSize: 14,color: Colors.grey[600]),),
                                 ),
-                            ),
+                                ListTile(
+
+                                  contentPadding: EdgeInsets.zero,
+                                  subtitle: Text(_record.time,style: tileTitleTextStyle),
+                                  title: Text(_record.venue,style: tileTitleTextStyle,),
+                                  trailing: MaterialButton(
+                                    disabledColor: Colors.grey,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                    onPressed: _record.canJoinMeeting?(){
+                                      if(_record.classLink!=null){
+                                        launchExternalUrl(_record.classLink!);
+                                      }else{
+                                        showModalBottomSheet(
+                                          backgroundColor: Colors.white,
+                                          context: context, builder: (context)=>JoinClassMeeting(unitClass: _record),
+                                          shape:
+                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                        );
+                                      }
+
+                                    }:null,
+                                    color: secondaryThemeColor,
+                                    child: const Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13),),
+                                  ),
+                                ),
                               ],
                             );
                           }
-                        ),
-                
-                
-                        const Divider(height: 20,),
-                                
-                
-                        TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
-                        
-                        const SizedBox(height: 40,),
-                
-                         const WeeklyUnitTile(size: Size(200,200),color: Colors.pinkAccent,),
-                        const SizedBox(height: 40,),
-                
-                      
-                      ]),
-                ),
+                      ),
+
+
+                      Divider(height: 20.sp,),
+
+
+                      TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
+
+
+                      WeeklyUnitTile(size: Size(170.sp,170.sp),color: Colors.pinkAccent,),
+                      SizedBox(height: 40.sp,),
+
+
+                    ]),
               ),
+            ),
             Positioned(
-              bottom: 20,
+              bottom: 10,
               child: AdmobBanner(
-                    adUnitId: 'ca-app-pub-1360540534588513/5000702124',
-                    adSize: AdmobBannerSize.FULL_BANNER,
-                    listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-                      debugPrint(args.toString());
-                    },
-                    onBannerCreated: (AdmobBannerController controller) {},
-                  ),
+                adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+                adSize: AdmobBannerSize.FULL_BANNER,
+                listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+                  debugPrint(args.toString());
+                },
+                onBannerCreated: (AdmobBannerController controller) {},
+              ),
             )
-            ],
-          )
+          ],
+        )
     );
   }
 }
@@ -178,66 +178,66 @@ class TodayUnitTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: size.height+70,
+      height: size.height+80.sp,
 
       child: StreamBuilder<List<UnitClass>>(
-        stream: TimeTableService(context: context,day:weekDay).recordsStream,
-        builder: (context, snapshot) {
-          // if(snapshot.connectionState==ConnectionState.waiting){
-          //   return const Center(child: circularLoader);
-          // }
-          if(!snapshot.hasData){
+          stream: TimeTableService(context: context,day:weekDay).recordsStream,
+          builder: (context, snapshot) {
+            // if(snapshot.connectionState==ConnectionState.waiting){
+            //   return const Center(child: circularLoader);
+            // }
+            if(!snapshot.hasData){
+              return Column(
+
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Text('TODAY',style: titleTextStyle,),
+                    trailing: Text('no classe(s)',style: minorTextStyle,),
+                  ),
+                  SizedBox(height: 50.sp,),
+                  Icon(Icons.celebration_outlined,color: secondaryThemeColor,size: 40,),
+                  SizedBox(height: 20.sp,),
+                  Text('You have no class today',style:titleTextStyle),
+
+
+                ],);
+            }
+            if(snapshot.hasError){
+              return Center(child: Text('An error has occurred',style: normalTextStyle,),);
+            }
+
             return Column(
-              
               children: [
-               ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Text('TODAY',style: titleTextStyle,),
-              trailing: Text('no classe(s)',style: minorTextStyle,),
-            ),
-            SizedBox(height: 50,),
-                      Icon(Icons.celebration_outlined,color: secondaryThemeColor,size: 40,),
-                                SizedBox(height: 20,),
-          Text('You have no class today',style:titleTextStyle),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Text('TODAY',style: titleTextStyle,),
+                  trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
 
+                ),
+                SizedBox(
+                  height: size.height,
+                  child: ListView.separated(
+                      itemCount: snapshot.data!.length,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (context,index){
+                        return const SizedBox(width: 20,);
+                      },
+                      itemBuilder: (context,index){
+                        UnitClass record= snapshot.data![index];
+                        return Opacity(
+                          opacity: record.isFulfiled?0.5:1,
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditClassPage(record: record)));
 
-            ],);
-          }
-          if(snapshot.hasError){
-            return Center(child: Text('An error has occurred',style: normalTextStyle,),);
-          }
-
-          return Column(
-            children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Text('TODAY',style: titleTextStyle,),
-              trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
-
-            ),
-              SizedBox(
-                height: size.height,
-                child: ListView.separated(
-                  itemCount: snapshot.data!.length,
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  separatorBuilder: (context,index){
-                    return const SizedBox(width: 20,);
-                  },
-                  itemBuilder: (context,index){
-                    UnitClass record= snapshot.data![index];
-                      return Opacity(
-                        opacity: record.isFulfiled?0.5:1,
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditClassPage(record: record)));
-                      
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
@@ -246,61 +246,61 @@ class TodayUnitTile extends StatelessWidget {
                                       offset: const Offset(0, 3), // changes position of shadow
                                     ),
                                   ],
-                                
-                              color: Color(record.accentColor),
-                              borderRadius: BorderRadius.circular(20),
-                             
-                            ),
-                            width:size.width,
-                            
-                            child: CustomPaint(
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+
+                                  color: Color(record.accentColor),
+                                  borderRadius: BorderRadius.circular(20),
+
+                                ),
+                                width:size.width,
+
+                                child: CustomPaint(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                          child: Text(record.unitCode,style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
-                                        Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                                padding: const EdgeInsets.all(5),
+                                                decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
+                                                child: Text(record.unitCode,style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
+                                            Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
+                                          ],
+                                        ),
+                                        SizedBox(height: 60.sp,),
+                                        Text(record.unitName.capitalise(),style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+
+                                        Text(record.venue,style: const TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
+                                        Row(
+                                          children: [
+                                            Text(record.time,style: const TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
+                                            SizedBox(width: 10.sp,),
+                                            Text(timeLeft(record.time, record.day),style: const TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
+                                          ],
+                                        )
+
                                       ],
                                     ),
-                                  const SizedBox(height: 60,),            
-                                   Text(record.unitName.capitalise(),style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
-                                                         
-                                    Text(record.venue,style: const TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
-                                    Row(
-                                      children: [
-                                        Text(record.time,style: const TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
-                                        const SizedBox(width: 10,),
-                                        Text(timeLeft(record.time, record.day),style: const TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
-                                      ],
-                                    )
-                                    
-                                  ],
-                                ),
-                              ),
-                              painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
-                            )
+                                  ),
+                                  painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
+                                )
                             ),
-                        ),
-                      );
-                    }
+                          ),
+                        );
+                      }
                   ),
-              ),
-            ],
-          );
-        }
+                ),
+              ],
+            );
+          }
       ),
     );
   }
   String get weekDay{
-  int weekDay=DateTime.now().weekday;
+    int weekDay=DateTime.now().weekday;
     switch (weekDay) {
       case 1:
         return 'MONDAY';
@@ -317,7 +317,7 @@ class TodayUnitTile extends StatelessWidget {
       default:
         return 'None';
     }
-  
+
   }
 }
 
@@ -329,49 +329,49 @@ class WeeklyUnitTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: size.height+100,
+      height: size.height+150.sp,
       child: StreamBuilder<List<UnitClass>>(
-        stream: TimeTableService(context: context).recordsStream,
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator());
-          }
-          if(snapshot.hasError){
-            return Center(child: Text('An error has occurred'),);
-          }
-          return Column(
-            children: [
-              ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Text('WEEKLY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-              trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
-            ),
-              SizedBox(
-                height: size.height+20,
-                child: ListView.separated(
-                  itemCount: snapshot.data!.length,
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  separatorBuilder: (context,index){
-                    return SizedBox(width: 20,);
-                  },
-                  itemBuilder: (context,index){
-                    UnitClass record= snapshot.data![index];
-                      return GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditClassPage(record: record)));
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                      
-                            Text(record.day,style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
-                            SizedBox(height: 5,),
-                            Container(
-                              decoration: BoxDecoration(
+          stream: TimeTableService(context: context).recordsStream,
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return Center(child: CircularProgressIndicator());
+            }
+            if(snapshot.hasError){
+              return Center(child: Text('An error has occurred'),);
+            }
+            return Column(
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Text('WEEKLY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
+                  trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                ),
+                SizedBox(
+                  height: size.height+50.sp,
+                  child: ListView.separated(
+                      itemCount: snapshot.data!.length,
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (context,index){
+                        return SizedBox(width: 20.sp,);
+                      },
+                      itemBuilder: (context,index){
+                        UnitClass record= snapshot.data![index];
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditClassPage(record: record)));
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+
+                              Text(record.day,style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
+                              SizedBox(height: 5.sp,),
+                              Container(
+                                  decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.5),
@@ -380,50 +380,50 @@ class WeeklyUnitTile extends StatelessWidget {
                                         offset: Offset(0, 3), // changes position of shadow
                                       ),
                                     ],
-                                  
-                                color: Color(record.accentColor),
-                                borderRadius: BorderRadius.circular(10),
-                               
-                              ),
-                              width:size.width,
-                              height: size.height,
-                              child: CustomPaint(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                        child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 250, 250, 250),fontSize: 15,fontWeight: FontWeight.bold),)),
-                                      Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
-                                    ],
+
+                                    color: Color(record.accentColor),
+                                    borderRadius: BorderRadius.circular(10),
+
                                   ),
-                                    SizedBox(height: 60,),
-                                     Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.bold),),
-                                      Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12),),
-                                
-                                      Text(record.time,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12),)
-                                    ],
-                                  ),
-                                ),
-                                painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
-                              )
+                                  width:size.width,
+                                  height: size.height,
+                                  child: CustomPaint(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
+                                                  child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 250, 250, 250),fontSize: 15,fontWeight: FontWeight.bold),)),
+                                              Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
+                                            ],
+                                          ),
+                                          SizedBox(height: 60.sp,),
+                                          Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.bold),),
+                                          Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12),),
+
+                                          Text(record.time,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12),)
+                                        ],
+                                      ),
+                                    ),
+                                    painter: UnitPainter(color: Colors.white.withOpacity(0.1)),
+                                  )
                               ),
-                          ],
-                        ),
-                      );
-                    }
+                            ],
+                          ),
+                        );
+                      }
                   ),
-              ),
-            ],
-          );
-        }
+                ),
+              ],
+            );
+          }
       ),
     );
   }

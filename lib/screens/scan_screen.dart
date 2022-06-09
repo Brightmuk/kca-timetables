@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
@@ -42,35 +43,35 @@ class _ScanScreenState extends State<ScanScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:[
-               
+
                 IconButton(
-            padding: EdgeInsets.all(20),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-          ),
-            const Text('Scan class timetable',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
-                                                                                IconButton(
-              padding: EdgeInsets.all(20),
-              onPressed: () {
-                
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                size: 20,
-                color: Colors.transparent,
-              ),
-            ),
-    
+                  padding: EdgeInsets.all(20),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
+                const Text('Scan class timetable',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                IconButton(
+                  padding: EdgeInsets.all(20),
+                  onPressed: () {
+
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: Colors.transparent,
+                  ),
+                ),
+
               ],
             ),
           ),
@@ -78,7 +79,7 @@ class _ScanScreenState extends State<ScanScreen> {
           backgroundColor: Colors.white,
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Color.fromARGB(255, 3, 4, 75),
-            statusBarIconBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.light,
             statusBarBrightness: Brightness.light,
           ),
           leading: Container(),
@@ -91,9 +92,9 @@ class _ScanScreenState extends State<ScanScreen> {
               alignment: Alignment.center,
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-    
-                  const SizedBox(
-                    height: 50,
+
+                  SizedBox(
+                    height: 50.sp,
                   ),
                   ListTile(
                     style: ListTileStyle.drawer,
@@ -122,20 +123,20 @@ class _ScanScreenState extends State<ScanScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 5,
+                  SizedBox(
+                    height: 5.sp,
                   ),
                   Visibility(
                       visible: excelFile != null && scanningDoc,
                       child: Center(
                           child: Text(
-                        excelFile != null
-                            ? 'Scanning ${getDocName(excelFile!.path)}'
-                            : '',
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
-                      ))),
-                  const Divider(
-                    height: 50,
+                            excelFile != null
+                                ? 'Scanning ${getDocName(excelFile!.path)}'
+                                : '',
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
+                          ))),
+                  Divider(
+                    height: 50.sp,
                   ),
                   ListTile(
                     style: ListTileStyle.drawer,
@@ -147,14 +148,14 @@ class _ScanScreenState extends State<ScanScreen> {
                     ),
                     title: const Text('Select course'),
                     subtitle:
-                        Text(course != null ? course! : 'No course selected'),
+                    Text(course != null ? course! : 'No course selected'),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
                   ),
-                  const Divider(
-                    height: 50,
+                  Divider(
+                    height: 50.sp,
                   ),
                   ListTile(
                     style: ListTileStyle.drawer,
@@ -166,18 +167,18 @@ class _ScanScreenState extends State<ScanScreen> {
                     ),
                     title: const Text('Select period'),
                     subtitle:
-                        Text(period != null ? period! : 'No period selected'),
+                    Text(period != null ? period! : 'No period selected'),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
                   ),
-                  const Divider(
-                    height: 50,
+                  Divider(
+                    height: 50.sp,
                   ),
                 ]),
                 Positioned(
-                  bottom: 50,
+                  bottom: 5,
                   child: MaterialButton(
                       disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                       shape: RoundedRectangleBorder(
@@ -191,9 +192,9 @@ class _ScanScreenState extends State<ScanScreen> {
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       onPressed:
-                          excelDoc != null && period != null && course != null
-                              ? convert
-                              : null),
+                      excelDoc != null && period != null && course != null
+                          ? convert
+                          : null),
                 )
               ],
             ),
@@ -206,7 +207,7 @@ class _ScanScreenState extends State<ScanScreen> {
   void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-    
+
 
     if (result != null&&result.files.single.path!.endsWith('.xlsx')) {
       File file = File(result.files.single.path!);
@@ -218,7 +219,7 @@ class _ScanScreenState extends State<ScanScreen> {
         readXlsx(file);
       });
     } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){
-        toast('Please select a valid spreadsheet document(.xlsx)');
+      toast('Please select a valid spreadsheet document(.xlsx)');
     }
   }
 
@@ -246,12 +247,12 @@ class _ScanScreenState extends State<ScanScreen> {
     if (excelFile != null) {
       var result = await showModalBottomSheet(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
           backgroundColor: Colors.white,
           builder: (context) => CourseSelector(
-                courses: courses!,
-              ));
+            courses: courses!,
+          ));
       if (result != null) {
         setState(() {
           course = result;
@@ -272,11 +273,11 @@ class _ScanScreenState extends State<ScanScreen> {
       var result = await showModalBottomSheet(
           backgroundColor: Colors.white,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
           builder: (context) => PeriodSelector(
-                courseType: course!,
-              ));
+            courseType: course!,
+          ));
       if (result != null) {
         setState(() {
           period = result;
@@ -325,7 +326,7 @@ class _ScanScreenState extends State<ScanScreen> {
       List<UnitClass> _records = [];
       int startIndex = dayIndex!.rowIndex + 1;
       int lastRecordIndex =
-          startIndex + 9 > sheet.maxRows ? sheet.maxRows : startIndex + 9;
+      startIndex + 9 > sheet.maxRows ? sheet.maxRows : startIndex + 9;
       for (var i = startIndex; i < lastRecordIndex; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
           _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
@@ -333,14 +334,14 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
-    var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), records: _records,course:course!);
-    if(result){
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => FinishSetupScreen()));
+      var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), records: _records,course:course!);
+      if(result){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FinishSetupScreen()));
 
-    }
+      }
 
     } catch (e) {
       toast('The period was not found / has an invalid format');

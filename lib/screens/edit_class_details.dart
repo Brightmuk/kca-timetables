@@ -2,7 +2,7 @@ import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 enum EditDetailType { day, time, venue, lecturer, type, link, credentials }
@@ -33,7 +33,7 @@ class _EditDayState extends State<EditDay> {
   Widget build(BuildContext context) {
     return Container(
             margin: const EdgeInsets.symmetric(vertical: 20),
-            height: MediaQuery.of(context).size.height*0.6,
+            height: MediaQuery.of(context).size.height*0.7,
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
@@ -41,16 +41,16 @@ class _EditDayState extends State<EditDay> {
            
             Column(
               children: [
-                                 Row(
+                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Day',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
                 Expanded(
                   child: ListView.builder(
                     itemCount: days.length,
@@ -70,11 +70,12 @@ class _EditDayState extends State<EditDay> {
                       }
                       ),
                 ),
+                SizedBox(height: 30.sp,),
               ],
             ),
            
        Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -137,13 +138,13 @@ class _EditTimeState extends State<EditTime> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Time',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -152,19 +153,19 @@ class _EditTimeState extends State<EditTime> {
                 Column(
                   children: [
                     Text('Start time',style:TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 10.sp,),
                     Text(timeString(start)+' hrs',),
                   ],
                 ),
                 Column(
                   children: [
                     Text('End time',style:TextStyle(fontWeight: FontWeight.bold) ,),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10.sp,),
                     Text(timeString(end)+' hrs'),
                   ],
                 )
               ],),
-               SizedBox(height: 50,),
+               SizedBox(height: 50.sp,),
               RangeSlider(
                 max: 2100,
                 min: 0700,
@@ -179,11 +180,12 @@ class _EditTimeState extends State<EditTime> {
                   });
                 }
                 ),
+                SizedBox(height: 30.sp,),
             ],
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -256,13 +258,13 @@ void initState(){
             Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Venue',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
              RadioListTile(
                activeColor: const Color.fromARGB(255, 201, 174, 20),
                title: Text('VIRTUAL',style: tileTitleTextStyle,),
@@ -309,7 +311,7 @@ void initState(){
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -364,13 +366,13 @@ class _EditLecturerState extends State<EditLecturer> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Lecturer',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
 
               const ListTile(
                 title: Text('Lecturer\'s Name',style: tileTitleTextStyle,),
@@ -380,7 +382,7 @@ class _EditLecturerState extends State<EditLecturer> {
                 child: TextFormField(
                     
                     controller: _lecC,
-                    maxLength: 20,
+                   
                     validator: (val) =>
                         val!.isEmpty ? 'Enter a name' : null,
                   ),
@@ -389,7 +391,7 @@ class _EditLecturerState extends State<EditLecturer> {
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -450,13 +452,13 @@ class _EditLinkState extends State<EditLink> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Meeting link',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
           
                 const ListTile(
                   title: Text('Meeting link',style: tileTitleTextStyle,),
@@ -476,7 +478,7 @@ class _EditLinkState extends State<EditLink> {
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -540,13 +542,13 @@ class _EditCredentialsState extends State<EditCredentials> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Meeting credentials',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 50,),
+                SizedBox(height: 30.sp,),
           
                 const ListTile(
                   title: Text('Meeting Id',style: tileTitleTextStyle,),
@@ -579,7 +581,7 @@ class _EditCredentialsState extends State<EditCredentials> {
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(
@@ -629,7 +631,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
   Widget build(BuildContext context) {
     return Container(
      margin: const EdgeInsets.symmetric(vertical: 20),
-            
+         height: MediaQuery.of(context).size.height*0.7,    
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
@@ -639,13 +641,13 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                                 Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     SizedBox(width: 30,),
+                     SizedBox(width: 30.sp,),
                      Text('Reminder schedule',style: TextStyle(fontWeight: FontWeight.bold),),
                     IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
                    ],
                  ),
                  Divider(),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.sp,),
               
               ListTile(
                 subtitle: Text('Get a reminder ${scheduleStr(minutes)} before the class starts'),
@@ -699,7 +701,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
           ),
 
             Positioned(
-                bottom: 50,
+                bottom: 0,
                 child: MaterialButton(
                     disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
                     shape: RoundedRectangleBorder(

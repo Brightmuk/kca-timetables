@@ -13,7 +13,7 @@ class _CourseSelectorState extends State<CourseSelector> {
   @override
   Widget build(BuildContext context) {
     return Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 20),
       color: Colors.white,
       child: ListView.builder(
           itemCount: widget.courses.length,

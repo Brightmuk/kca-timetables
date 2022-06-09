@@ -35,9 +35,7 @@ class UnitClass {
     required this.accentColor
   });
 
-  String get id{
-    return unitCode+day;
-  }
+
   ///According to the timetables, the order of fields is day,time, room
   ///unit code,unit name,lecturer so  we assume it will always be the case
   ///therefore the index is relatively constant
@@ -78,6 +76,13 @@ bool get canJoinMeeting{
   int startTime = int.parse(time.substring(0,4));
 
   return timeIndex>=startTime&&venue=='VIRTUAL'&&dayIndex(day)== today;
+}
+
+int get startHour{
+  return  int.parse(time.substring(0,2));
+}
+int get startMinute{
+  return  int.parse(time.substring(2,4));
 }
 
   int get sortIndex {

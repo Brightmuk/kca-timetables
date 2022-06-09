@@ -7,6 +7,7 @@ import 'package:excel_reader/shared/confirm_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FinishSetupScreen extends StatefulWidget {
 
@@ -38,35 +39,35 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:[
-               
+
                 IconButton(
-            padding: EdgeInsets.all(20),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-          ),
-            const Text('Finish setup',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
-              IconButton(
-            padding: const EdgeInsets.all(20),
-            onPressed: () {
-              
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.transparent,
-            ),
-          ),
-        
+                  padding: EdgeInsets.all(20),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
+                const Text('Finish setup',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                IconButton(
+                  padding: const EdgeInsets.all(20),
+                  onPressed: () {
+
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: Colors.transparent,
+                  ),
+                ),
+
               ],
             ),
           ),
@@ -77,118 +78,123 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.light,
           ),
-        leading: IconButton(
-          padding: EdgeInsets.all(20),
-          onPressed: ()async {
+          leading: IconButton(
+            padding: EdgeInsets.all(20),
+            onPressed: ()async {
               Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Color.fromRGBO(3, 4, 94, 1),
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Color.fromRGBO(3, 4, 94, 1),
+            ),
           ),
-        ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Column(children: [
-
-                const SizedBox(
-                  height: 50,
+              ListView(children: [
+              
+                SizedBox(
+                  height: 50.sp,
                 ),
                 FutureBuilder<TimeTable>(
-                  future: TimeTableService(context: context).getClassTimetable(),
-                  builder: (context, snapshot) {
-                    if(snapshot.hasData){
-                    TimeTable? table = snapshot.data;
-                    return Column(
-                      children: [
-                        Text(
-                          table!.course,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                              Text(
-                        table.period,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      ],
-                    );
-                    }else{
-                      return Container();
-                    }
-
-
-                  }
-                ),
-
-                const Divider(
-                  height: 50,
-                ),
-                Expanded(
-                  child: StreamBuilder<List<UnitClass>>(
-        stream: TimeTableService(context: context).recordsStream,
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator());
-          }
-          if(snapshot.hasError){
-            return Center(child: Text('An error has occurred'),);
-          }
-                      List<UnitClass>? _records = snapshot.data;
-
-                        return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _records!.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                style: ListTileStyle.drawer,
-                                title: Text(_records[index].unitName),
-                                subtitle: Text(_records[index].time),
-                                onTap: () {
-                                Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditClassPage(record: _records[index])));
-                        
-                                },
-                                leading: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      convertDay(_records[index].day),
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                                trailing: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 15,
-                                ),
-                              );
-                            });
+                    future: TimeTableService(context: context).getClassTimetable(),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData){
+                        TimeTable? table = snapshot.data;
+                        return Column(
+                          children: [
+                            Text(
+                              table!.course,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              table.period,
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        );
+                      }else{
+                        return Container();
                       }
-                    ))
+              
+              
+                    }
+                ),
+              
+                Divider(
+                  height: 50.sp,
+                ),
+                StreamBuilder<List<UnitClass>>(
+                    stream: TimeTableService(context: context).recordsStream,
+                    builder: (context, snapshot) {
+                      if(!snapshot.hasData){
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if(snapshot.hasError){
+                        return Center(child: Text('An error has occurred'),);
+                      }
+                      List<UnitClass>? _records = snapshot.data;
+              
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: _records!.length,
+
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              style: ListTileStyle.drawer,
+                              title: Text(_records[index].unitName),
+                              subtitle: Text(_records[index].time),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditClassPage(record: _records[index])));
+              
+                              },
+                              leading: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    convertDay(_records[index].day),
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              trailing: const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
+                              ),
+                            );
+                          });
+                    }
+                ),
+                    SizedBox(height: 100.sp,)
               ]),
               Positioned(
-                bottom: 50,
-                child: MaterialButton(
-                    disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.all(20),
-                    minWidth: MediaQuery.of(context).size.width * 0.9,
-                    color: const Color.fromARGB(255, 201, 174, 20),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: (){
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>const HomePage()), (Route<dynamic> route) => false);
-                    }),
+                bottom: 0,
+                child: Container(
+                  color: Colors.white,
+                  child: MaterialButton(
+                      disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding: const EdgeInsets.all(20),
+                      minWidth: MediaQuery.of(context).size.width * 0.9,
+                      color: const Color.fromARGB(255, 201, 174, 20),
+                      child: const Text(
+                        'Done',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: (){
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>const HomePage()), (Route<dynamic> route) => false);
+                      }),
+                ),
               )
             ],
           ),

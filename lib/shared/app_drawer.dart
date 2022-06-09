@@ -5,6 +5,7 @@ import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/confirm_action.dart';
 import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({ Key? key }) : super(key: key);
@@ -88,6 +89,7 @@ class AppDrawer extends StatelessWidget {
             ),
             title: const Text('Exam Timetable'),
             onTap: () {
+              toast('Coming soon');
               Navigator.pop(context);
             },
           ),
