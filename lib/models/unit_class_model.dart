@@ -58,6 +58,24 @@ class UnitClass {
     );
   }
 
+  factory UnitClass.defaultClass(){
+    return UnitClass(
+      accentColor: 0xff050851,
+      day: dayFromWeekday(DateTime.now().weekday),
+      course:'COURSE NAME',
+      time: '0800-1100 HRS',
+      venue: 'VIRTUAL',
+      unitCode: 'UNIT CODE',
+      unitName: 'UNIT NAME',
+      lecturer: 'LECTURER\'S NAME',
+      meetingId: null,
+      reminderSchedule: null,
+      meetingPassCode: null,
+      classLink: null,
+      reminder: false,
+    );
+  }
+
 
 bool get isFulfiled{
     int timeValue;

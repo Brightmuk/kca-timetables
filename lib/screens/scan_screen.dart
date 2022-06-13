@@ -176,6 +176,25 @@ class _ScanScreenState extends State<ScanScreen> {
                   Divider(
                     height: 50.sp,
                   ),
+                  Text('Or'),
+                  SizedBox(height: 50.sp,),
+                  ListTile(
+                    
+                    style: ListTileStyle.drawer,
+                    onTap: (){},
+                    leading: const Icon(
+                      Icons.manage_search,
+                      color: Color.fromRGBO(188, 175, 69, 0.3),
+                      size: 35,
+                    ),
+                    title: const Text('Manual setup'),
+                    subtitle:
+                    Text('Setup the timetable manually'),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ),
                 ]),
                 Positioned(
                   bottom: 5,
@@ -215,7 +234,7 @@ class _ScanScreenState extends State<ScanScreen> {
         excelFile = file;
         scanningDoc = true;
       });
-      Future.delayed(const Duration(microseconds: 500), () {
+      Future.delayed(const Duration(microseconds: 1000), () {
         readXlsx(file);
       });
     } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){
@@ -334,7 +353,7 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
-      var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), records: _records,course:course!);
+      var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
       if(result){
         Navigator.push(
             context,

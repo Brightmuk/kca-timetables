@@ -1,5 +1,8 @@
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
+import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/confirm_action.dart';
@@ -44,7 +47,7 @@ class AppDrawer extends StatelessWidget {
                   title: Text(table.course,style: tileTitleTextStyle,),
                   subtitle: Text(table.period,style: tileSubtitleTextStyle,),
                 ),
-                const Divider()
+                
               ],
             );
             }else{
@@ -53,6 +56,35 @@ class AppDrawer extends StatelessWidget {
 
           }
         ),
+        StreamBuilder<List<UnitClass>>(
+          stream: TimeTableService(context: context).unitsStream,
+          builder: (context, snapshot) {
+            int count = snapshot.hasData?snapshot.data!.length:0;
+            return ListTile(
+              leading: Text('$count unit(s)',style: tileTitleTextStyle,),
+              
+              trailing: MaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                onPressed: ()async{
+                  UnitClass unit = UnitClass.defaultClass();
+                  await TimeTableService(context: context).saveUnit(unit);
+              
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditClassPage(unit: unit))
+                      );
+
+
+              },
+              color: secondaryThemeColor,
+              child: Text('ADD UNIT',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13)),
+              ),
+            );
+          }
+        ),
+        const Divider(),
           ListTile(
             leading: Icon(
               Icons.pages_outlined,
@@ -90,7 +122,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Exam Timetable'),
             onTap: () {
               toast('Coming soon');
-              Navigator.pop(context);
+              
             },
           ),
         ],

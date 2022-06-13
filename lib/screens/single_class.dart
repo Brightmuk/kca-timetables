@@ -5,15 +5,18 @@ import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/accent_color_selector.dart';
+import 'package:excel_reader/shared/confirm_action.dart';
 import 'package:excel_reader/shared/text_styles.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class EditClassPage extends StatefulWidget {
-  final UnitClass record;
-  const EditClassPage({Key? key, required this.record}) : super(key: key);
+  final UnitClass unit;
+  const EditClassPage({Key? key, required this.unit}) : super(key: key);
 
   @override
   _EditClassPageState createState() => _EditClassPageState();
@@ -33,24 +36,43 @@ class _EditClassPageState extends State<EditClassPage> {
 
   void initState() {
     super.initState();
-    _day = widget.record.day;
-    _time = widget.record.time;
-    _venue = widget.record.venue;
-    _lecturer = widget.record.lecturer;
-    _link = widget.record.classLink;
-    _passCode = widget.record.meetingPassCode;
-    _meetingId = widget.record.meetingId;
-    _reminder = widget.record.reminder;
-    _reminderSchedule=widget.record.reminderSchedule??5;
-    _accentColor=widget.record.accentColor;
+    _day = widget.unit.day;
+    _time = widget.unit.time;
+    _venue = widget.unit.venue;
+    _lecturer = widget.unit.lecturer;
+    _link = widget.unit.classLink;
+    _passCode = widget.unit.meetingPassCode;
+    _meetingId = widget.unit.meetingId;
+    _reminder = widget.unit.reminder;
+    _reminderSchedule=widget.unit.reminderSchedule??5;
+    _accentColor=widget.unit.accentColor;
   }
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            actions: [
+              IconButton(onPressed: ()async{
+              var result = await showModalBottomSheet(
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              context: context,
+              builder: (context) => const ConfirmAction(text: 'Are you sure you want to delete this unit?'));
+                if(result){
+                if(!await TimeTableService(context: context).deleteUnit(widget.unit)){
+                  toast('Sorry, an error occurred');
+                }else{
+                  toast('Unit deleted');
+                  Navigator.pop(context);
+                  }
+                }
+
+              }, icon: Icon(Icons.delete))
+            ],
             toolbarHeight: MediaQuery.of(context).size.height*0.1,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -121,7 +143,7 @@ class _EditClassPageState extends State<EditClassPage> {
               ),
               Center(
                 child: Text(
-                  widget.record.unitName,
+                  widget.unit.unitName,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -130,7 +152,7 @@ class _EditClassPageState extends State<EditClassPage> {
               ),
               Center(
                 child: Text(
-                  widget.record.unitCode,
+                  widget.unit.unitCode,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -316,7 +338,7 @@ class _EditClassPageState extends State<EditClassPage> {
                     if(val){
                       setReminder();
                     }else{
-                      await NotificationService().cancelReminder(widget.record.sortIndex);
+                      await NotificationService().cancelReminder(widget.unit.sortIndex);
                     }
                   }),
               AnimatedOpacity(
@@ -402,17 +424,17 @@ int get reminderMins{
 
 Future<void> setReminder()async{
     await NotificationService().zonedScheduleNotification(
-      id: widget.record.sortIndex, 
+      id: widget.unit.sortIndex, 
       title: 'Class is about to start', 
-      description: 'Your ${widget.record.unitName} class is starting in $timeFormatStr', 
-      payload: "{'unitCode':${widget.record.unitCode}}", 
+      description: 'Your ${widget.unit.unitName} class is starting in $timeFormatStr', 
+      payload: "{'unitCode':${widget.unit.unitCode}}", 
       date: getDate());
 }
 
 DateTime getDate(){
   DateTime now = DateTime.now();
   return DateTime(
-    now.year,now.month,now.day, widget.record.startHour+reminderHrs,widget.record.startMinute+reminderMins
+    now.year,now.month,now.day, widget.unit.startHour-reminderHrs,widget.unit.startMinute-reminderMins
     );
 }
 
@@ -426,8 +448,8 @@ DateTime getDate(){
   void save()async{
     UnitClass _record = UnitClass(
         accentColor: _accentColor!,
-        unitCode: widget.record.unitCode,
-        unitName: widget.record.unitName,
+        unitCode: widget.unit.unitCode,
+        unitName: widget.unit.unitName,
         day: _day!,
         time: _time!,
         venue: _venue!,

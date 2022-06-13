@@ -129,7 +129,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                   height: 50.sp,
                 ),
                 StreamBuilder<List<UnitClass>>(
-                    stream: TimeTableService(context: context).recordsStream,
+                    stream: TimeTableService(context: context).unitsStream,
                     builder: (context, snapshot) {
                       if(!snapshot.hasData){
                         return Center(child: CircularProgressIndicator());
@@ -153,7 +153,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditClassPage(record: _records[index])));
+                                        builder: (context) => EditClassPage(unit: _records[index])));
               
                               },
                               leading: Column(

@@ -181,7 +181,7 @@ class TodayUnitTile extends StatelessWidget {
       height: size.height+80.sp,
 
       child: StreamBuilder<List<UnitClass>>(
-          stream: TimeTableService(context: context,day:weekDay).recordsStream,
+          stream: TimeTableService(context: context,day:weekDay).unitsStream,
           builder: (context, snapshot) {
             // if(snapshot.connectionState==ConnectionState.waiting){
             //   return const Center(child: circularLoader);
@@ -233,7 +233,7 @@ class TodayUnitTile extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => EditClassPage(record: record)));
+                                      builder: (context) => EditClassPage(unit: record)));
 
                             },
                             child: Container(
@@ -331,7 +331,7 @@ class WeeklyUnitTile extends StatelessWidget {
     return SizedBox(
       height: size.height+150.sp,
       child: StreamBuilder<List<UnitClass>>(
-          stream: TimeTableService(context: context).recordsStream,
+          stream: TimeTableService(context: context).unitsStream,
           builder: (context, snapshot) {
             if(!snapshot.hasData){
               return Center(child: CircularProgressIndicator());
@@ -362,7 +362,7 @@ class WeeklyUnitTile extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditClassPage(record: record)));
+                                    builder: (context) => EditClassPage(unit: record)));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

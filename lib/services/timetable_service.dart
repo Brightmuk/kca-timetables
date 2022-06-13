@@ -36,15 +36,12 @@ class TimeTableService{
 
   ///Save  a record
  
-  Future<bool> saveTimeTable({required String tableName,required String period, required List<UnitClass> records, required String course}) async {
+  Future<bool> saveTimeTable({required String tableName,required String period, required List<UnitClass> units, required String course}) async {
     bool returnValue = true;
 
     try{
-        for (var _record in records) {
-          await db
-        .collection(recordCollection)
-        .doc(_record.unitCode)
-        .set(_record.toMap());
+        for (var _unit in units) {
+          await saveUnit(_unit);
      }
      await saveTableDetails(name: tableName,course: course, period:period);
       toast('Timetable saved');
@@ -55,6 +52,33 @@ class TimeTableService{
     }
     await LocalData().setNotFirst();
     return returnValue;
+  }
+
+  Future<bool> saveUnit(UnitClass unit)async{
+        try{
+        await db
+        .collection(recordCollection)
+        .doc(unit.unitCode)
+        .set(unit.toMap());
+    
+      return true;
+    }catch(e){    
+     toast('An error occurred');
+      return false;
+    }
+  }
+
+  Future<bool> deleteUnit(UnitClass unit)async{
+    try{
+    await  db
+        .collection(recordCollection)
+        .doc(unit.unitCode)
+        .delete();
+        return true;
+    }catch(e){
+      toast('Sorry an eror occurred');
+      return false;
+    }
   }
 
   Future<bool> editRecord({required UnitClass record}) async {
@@ -77,7 +101,7 @@ class TimeTableService{
   }
 
   ///Get record list
-  Stream<List<UnitClass>> get recordsStream {
+  Stream<List<UnitClass>> get unitsStream {
     return db.collection(recordCollection)
     .stream
         .where((r) => day!=null?r['day']==day:true)
