@@ -133,8 +133,22 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                 StreamBuilder<List<UnitClass>>(
                     stream: TimeTableService(context: context).unitsStream,
                     builder: (context, snapshot) {
-                      if(!snapshot.hasData){
-                        return Center(child: CircularProgressIndicator());
+                      if(snapshot.connectionState==ConnectionState.waiting){
+                              return MaterialButton(
+                                onPressed: (){
+                                  showModalBottomSheet(
+                                    backgroundColor: Colors.white,
+                                    isScrollControlled: true,
+                                    context: context, builder: (context)=>const AddUnit(),
+                                    shape:
+                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                Icon(Icons.add,color: secondaryThemeColor,),SizedBox(width: 5,),Text('Add unit',style: TextStyle(color: secondaryThemeColor),)
+                              ]),);
                       }
                       if(snapshot.hasError){
                         return Center(child: Text('An error has occurred'),);

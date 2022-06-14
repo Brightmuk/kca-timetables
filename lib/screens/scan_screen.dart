@@ -6,6 +6,7 @@ import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
+import 'package:excel_reader/shared/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
@@ -27,6 +28,8 @@ class _ScanScreenState extends State<ScanScreen> {
   String? period;
   bool scanningDoc = false;
   bool isAuto = true;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _courseNameC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
-                const Text('Scan class timetable',
+                const Text('Create class timetable',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -102,19 +105,22 @@ class _ScanScreenState extends State<ScanScreen> {
                   SwitchListTile(
                     activeColor: secondaryThemeColor,
                     activeTrackColor: secondaryThemeColor.withOpacity(0.5),
-                    title: Text(isAuto?'Auto setup':'Manual setup'),
+                    title: const Text('Auto setup'),
                     subtitle:
-                    Text(isAuto?'Scan from excel':'Setup the timetable manually'),
+                    Text(isAuto?'Scan from excel (KCA university timetable formats only)':'Setup the timetable manually'),
                     value: isAuto, onChanged: (val){
                       setState(() {
                         isAuto=val;
                       });
                     }
                     ),
-                  isAuto?Divider(
+                    Divider(
                     height: 50.sp,
-                  ):Container(),
-                  isAuto?ListTile(
+                  ),
+                    isAuto?Column(
+                      children: [
+
+                  ListTile(
                     style: ListTileStyle.drawer,
                     onTap: pickFile,
                     leading: const Icon(
@@ -130,8 +136,8 @@ class _ScanScreenState extends State<ScanScreen> {
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
-                  ):Container(),
-                  isAuto?Visibility(
+                  ),
+                  Visibility(
                     visible: excelFile != null && scanningDoc,
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -140,7 +146,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         color: Color.fromRGBO(3, 4, 94, 1),
                       ),
                     ),
-                  ):Container(),
+                  ),
                   SizedBox(
                     height: 5.sp,
                   ),
@@ -153,10 +159,9 @@ class _ScanScreenState extends State<ScanScreen> {
                                 : '',
                             style: const TextStyle(color: Colors.grey, fontSize: 13),
                           ))),
-                  isAuto?Divider(
+                 Divider(
                     height: 50.sp,
-                  ):Container(),
-                  isAuto?ListTile(
+                  ),ListTile(
                     style: ListTileStyle.drawer,
                     onTap: scanningDoc ? null : selectCourse,
                     leading: const Icon(
@@ -171,11 +176,11 @@ class _ScanScreenState extends State<ScanScreen> {
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
-                  ):Container(),
-                  isAuto?Divider(
+                  ),
+                  Divider(
                     height: 50.sp,
-                  ):Container(),
-                  isAuto?ListTile(
+                  ),
+                  ListTile(
                     style: ListTileStyle.drawer,
                     onTap: scanningDoc ? null : selectPeriod,
                     leading: const Icon(
@@ -190,12 +195,55 @@ class _ScanScreenState extends State<ScanScreen> {
                       Icons.arrow_forward_ios,
                       size: 15,
                     ),
-                  ):Container(),
+                  ),
                   Divider(
                     height: 50.sp,
                   ),
 
-
+                
+                    ],):
+                    Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10.sp,),
+                          TextFormField(
+                           
+                            controller: _courseNameC,
+                            cursorColor: primaryThemeColor,
+                            decoration: AppStyles().textFieldDecoration(
+                                label: 'Course Name', hintText: 'Bachelors'),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return 'Course name is required';
+                              }
+                            },
+                          ),
+                          SizedBox(height: 20.sp,),
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            style: ListTileStyle.drawer,
+                            onTap:  selectManualPeriod,
+                            leading: const Icon(
+                              Icons.calendar_month_outlined,
+                              color: Color.fromRGBO(188, 175, 69, 0.3),
+                              size: 35,
+                            ),
+                            title: const Text('Select period'),
+                            subtitle:
+                            Text(period != null ? period! : 'No period selected'),
+                            trailing: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 15,
+                            ),
+                          ),
+                          
+                          ],
+                        ),
+                      ),
+                    ),
                 ]),
                 Positioned(
                   bottom: 5,
@@ -284,6 +332,22 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  void selectManualPeriod()async{
+          var result = await showModalBottomSheet(
+          backgroundColor: Colors.white,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          context: context,
+          builder: (context) => const PeriodSelector(
+            courseType: 'Bachelors',
+          ));
+      if (result != null) {
+        setState(() {
+          period = result;
+        });
+      }
+  }
+
   void selectPeriod() async {
     if (excelFile == null) {
       toast('Please select the timetable document first');
@@ -308,11 +372,14 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void convert() async{
     if(!isAuto){
+      if(_formKey.currentState!.validate()){
+      await TimeTableService(context: context).saveTableDetails(name: 'Custom timetable', period: period??'', course: _courseNameC.value.text);
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => FinishSetupScreen())
+            builder: (context) => const FinishSetupScreen())
         );
+      }
       return;
     }
     Sheet? sheet;

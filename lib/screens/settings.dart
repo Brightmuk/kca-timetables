@@ -4,6 +4,7 @@ import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({ Key? key }) : super(key: key);
@@ -14,6 +15,13 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool notificationsRing=false;
+    final Uri _playStoreUrl =
+      Uri.parse('market://details?id=com.brightdesigns.kcatimetables');
+  final Uri _donateUrl = Uri.parse(
+      "https://www.paypal.com/donate/?hosted_button_id=Q2HUSVA4CCTTN");
+  final Uri _privacyUrl = Uri.parse('https://brightdesigns.space/privacy.html');
+  final Uri _helpUrl = Uri.parse('https://brightdesigns.space/#contact');
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   IconButton(
                     padding: const EdgeInsets.all(20),
                     onPressed: () {
-
+                      
                     },
                     icon: const Icon(
                       Icons.arrow_back_ios,
@@ -86,23 +94,23 @@ class _SettingsPageState extends State<SettingsPage> {
             alignment: Alignment.center,
             children: [
               Column(children: [
-                SizedBox(height: 30,),
-                ListTile(
-                  title: Text('NOTIFICATIONS',style: tileTitleTextStyle.copyWith(color: secondaryThemeColor),),
+                // SizedBox(height: 30,),
+                // ListTile(
+                //   title: Text('NOTIFICATIONS',style: tileTitleTextStyle.copyWith(color: secondaryThemeColor),),
 
-                ) ,
-                Divider(height: 10,),
-                SwitchListTile(
-                  activeTrackColor: secondaryThemeColor.withOpacity(0.5),
-                  activeColor: secondaryThemeColor,
-                  title: Text('Ring',style: tileTitleTextStyle,),
-                  value: notificationsRing,
-                  onChanged: (val){
-                    setState(() {
-                      notificationsRing=val;
-                    });
-                  },
-                ),
+                // ) ,
+                // Divider(height: 10,),
+                // SwitchListTile(
+                //   activeTrackColor: secondaryThemeColor.withOpacity(0.5),
+                //   activeColor: secondaryThemeColor,
+                //   title: Text('Ring',style: tileTitleTextStyle,),
+                //   value: notificationsRing,
+                //   onChanged: (val){
+                //     setState(() {
+                //       notificationsRing=val;
+                //     });
+                //   },
+                // ),
                 
                 SizedBox(height: 30,),
                 ListTile(
@@ -113,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 ListTile(
                   onTap: (){
-                    NotificationService().showTimeoutNotification(10);
+                   
                   },
                   title: Text('About',style: tileTitleTextStyle,),
                   trailing: const Icon(
@@ -124,9 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 ListTile(
                   onTap: (){
-                   NotificationService().zonedScheduleNotification(
-                     id:12,title:'Helo',description: 'Yeah nigga',payload: 'Love you',date: DateTime.now().add(const Duration(minutes: 1))
-                   );
+                    launchUrl(_helpUrl);
                   },
                   title: Text('Help',style: tileTitleTextStyle,),
                   trailing: const Icon(
@@ -136,9 +142,30 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 ListTile(
                   onTap: (){
-                   
+                    launchUrl(_privacyUrl);
+                  },
+                  title: Text('Terms / Privacy',style: tileTitleTextStyle,),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                ),
+                ListTile(
+                  onTap: (){
+                   launchUrl(_playStoreUrl);
                   },
                   title: const Text('Rate App',style: tileTitleTextStyle,),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+
+                ),
+               ListTile(
+                  onTap: (){
+                   launchUrl(_donateUrl);
+                  },
+                  title: const Text('Drop a gift',style: tileTitleTextStyle,),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
@@ -167,5 +194,8 @@ class _SettingsPageState extends State<SettingsPage> {
           )
       ),
     );
+  }
+    void _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) throw 'Could not launch $url';
   }
 }

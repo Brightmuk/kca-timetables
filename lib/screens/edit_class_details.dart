@@ -2,7 +2,10 @@ import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/shared/app_colors.dart';
+import 'package:excel_reader/shared/decorations.dart';
 import 'package:excel_reader/shared/text_styles.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -55,7 +58,8 @@ class _AddUnitState extends State<AddUnit> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
-                      
+                                          decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                       controller: _unitNameC,
                       
                       validator: (val) =>
@@ -68,7 +72,8 @@ class _AddUnitState extends State<AddUnit> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
-                      
+                                            decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                       controller: _unitCodeC,
                      
                       validator: (val) =>
@@ -488,7 +493,8 @@ class _EditLecturerState extends State<EditLecturer> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
-                    
+                      decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                     controller: _lecC,
                    
                     validator: (val) =>
@@ -574,7 +580,8 @@ class _EditLinkState extends State<EditLink> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
-                      
+                                            decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                       controller: _linkC,
                       
                       validator: (val) =>
@@ -664,7 +671,8 @@ class _EditCredentialsState extends State<EditCredentials> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
-                      
+                                            decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                       controller: _meetingIdC,
                       
                       validator: (val) =>
@@ -677,7 +685,8 @@ class _EditCredentialsState extends State<EditCredentials> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
-                      
+                                            decoration: AppStyles().textFieldDecoration(label: '',hintText: ''),
+                      cursorColor: secondaryThemeColor,
                       controller: _passCodeC,
                      
                       validator: (val) =>

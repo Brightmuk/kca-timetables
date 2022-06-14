@@ -102,6 +102,7 @@ class TimeTableService{
 
   ///Get record list
   Stream<List<UnitClass>> get unitsStream {
+
     return db.collection(recordCollection)
     .stream
         .where((r) => day!=null?r['day']==day:true)
