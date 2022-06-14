@@ -58,15 +58,15 @@ class UnitClass {
     );
   }
 
-  factory UnitClass.defaultClass(){
+  factory UnitClass.defaultClass(String defaultUnitName, String defaultUnitCode, String defaultCourseName){
     return UnitClass(
       accentColor: 0xff050851,
       day: dayFromWeekday(DateTime.now().weekday),
-      course:'COURSE NAME',
+      course:defaultCourseName,
       time: '0800-1100 HRS',
       venue: 'VIRTUAL',
-      unitCode: 'UNIT CODE',
-      unitName: 'UNIT NAME',
+      unitCode: defaultUnitCode,
+      unitName: defaultUnitName,
       lecturer: 'LECTURER\'S NAME',
       meetingId: null,
       reminderSchedule: null,

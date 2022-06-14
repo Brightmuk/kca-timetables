@@ -50,6 +50,7 @@ class _EditClassPageState extends State<EditClassPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppState _appState = Provider.of<AppState>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -66,6 +67,7 @@ class _EditClassPageState extends State<EditClassPage> {
                 if(!await TimeTableService(context: context).deleteUnit(widget.unit)){
                   toast('Sorry, an error occurred');
                 }else{
+                  _appState.reload();
                   toast('Unit deleted');
                   Navigator.pop(context);
                   }
@@ -346,7 +348,7 @@ class _EditClassPageState extends State<EditClassPage> {
 
                 duration: Duration(milliseconds: 500),
                 child: ListTile(
-                  onTap: ()async{
+                  onTap:_reminder!? ()async{
 
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
@@ -362,7 +364,7 @@ class _EditClassPageState extends State<EditClassPage> {
                       save();
                       setReminder();
                     }
-                  },
+                  }:null,
                   style: ListTileStyle.drawer,
                   title: const Text('Reminder schedule'),
                   subtitle: Text(scheduleStr(_reminderSchedule!)),

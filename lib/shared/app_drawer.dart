@@ -1,5 +1,6 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
@@ -66,15 +67,14 @@ class AppDrawer extends StatelessWidget {
               trailing: MaterialButton(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 onPressed: ()async{
-                  UnitClass unit = UnitClass.defaultClass();
-                  await TimeTableService(context: context).saveUnit(unit);
-              
                   Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditClassPage(unit: unit))
-                      );
+                  showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    context: context, builder: (context)=>const AddUnit(),
+                    shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  );
 
 
               },

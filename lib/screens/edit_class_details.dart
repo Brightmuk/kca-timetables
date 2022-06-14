@@ -1,3 +1,7 @@
+import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/single_class.dart';
+import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +10,110 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 enum EditDetailType { day, time, venue, lecturer, type, link, credentials }
+
+
+class AddUnit extends StatefulWidget {
+  const AddUnit({ Key? key}) : super(key: key);
+
+  @override
+  State<AddUnit> createState() => _AddUnitState();
+}
+
+class _AddUnitState extends State<AddUnit> {
+    final TextEditingController _unitCodeC = TextEditingController();
+    final TextEditingController _unitNameC = TextEditingController();
+
+    final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+       height: MediaQuery.of(context).size.height*0.9,  
+     margin: const EdgeInsets.symmetric(vertical: 20),  
+      color: Colors.white,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     SizedBox(width: 30.sp,),
+                     Text('New unit',style: TextStyle(fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.clear,size: 20,))
+                   ],
+                 ),
+                 Divider(),
+                SizedBox(height: 30.sp,),
+          
+                const ListTile(
+                  title: Text('Unit Name',style: tileTitleTextStyle,),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                      
+                      controller: _unitNameC,
+                      
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter unit name' : null,
+                    ),
+                ),
+                const ListTile(
+                  title: Text('Unit Code',style: tileTitleTextStyle,),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                      
+                      controller: _unitCodeC,
+                     
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter a unit code' : null,
+                    ),
+                ),
+              ],
+            ),
+          ),
+
+            Positioned(
+                bottom: 0,
+                child: MaterialButton(
+                    disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.all(20),
+                    minWidth: MediaQuery.of(context).size.width * 0.9,
+                    color: const Color.fromARGB(255, 201, 174, 20),
+                    child: const Text(
+                      'Next',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed:()async{
+                      
+                      TimeTable table = await TimeTableService(context: context).getClassTimetable();
+                      UnitClass unit = UnitClass.defaultClass(_unitNameC.value.text.toUpperCase(),_unitCodeC.value.text.toUpperCase(),table.course);
+                      await TimeTableService(context: context).saveUnit(unit);
+
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditClassPage(unit: unit))
+                      );
+
+                    }
+                        ),
+              )
+        ],
+      ),
+    );
+  }
+}
 
 
 class EditDay extends StatefulWidget {

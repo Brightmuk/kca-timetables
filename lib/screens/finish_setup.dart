@@ -1,8 +1,10 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/screens/home_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/confirm_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,9 +144,26 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                       return ListView.builder(
                           shrinkWrap: true,
                           physics: const ClampingScrollPhysics(),
-                          itemCount: _records!.length,
+                          itemCount: _records!.length+1,
 
                           itemBuilder: (context, index) {
+                            if(index==_records.length){
+                              return MaterialButton(
+                                onPressed: (){
+                                  showModalBottomSheet(
+                                    backgroundColor: Colors.white,
+                                    isScrollControlled: true,
+                                    context: context, builder: (context)=>const AddUnit(),
+                                    shape:
+                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                Icon(Icons.add,color: secondaryThemeColor,),SizedBox(width: 5,),Text('Add unit',style: TextStyle(color: secondaryThemeColor),)
+                              ]),);
+                            }else{
                             return ListTile(
                               style: ListTileStyle.drawer,
                               title: Text(_records[index].unitName),
@@ -170,10 +189,12 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                                 size: 15,
                               ),
                             );
+                            }
+
                           });
                     }
                 ),
-                    SizedBox(height: 100.sp,)
+                SizedBox(height: 100.sp,)
               ]),
               Positioned(
                 bottom: 0,

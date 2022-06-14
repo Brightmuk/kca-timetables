@@ -5,13 +5,8 @@ import 'package:flutter/material.dart';
 
 class AppState extends ChangeNotifier{
 
-  final List<UnitClass> allClasses = [];
-  final List<UnitClass> todayClasses = [];
-  
-
-  void deleteRecord(String recordId){
-    allClasses.removeWhere((r) => r.unitCode==recordId);
-    todayClasses.removeWhere((r) => r.unitCode==recordId);
+  void reload(){
     notifyListeners();
   }
+  
 }

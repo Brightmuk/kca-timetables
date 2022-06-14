@@ -5,10 +5,12 @@ import 'package:excel_reader/screens/home_screen.dart';
 import 'package:excel_reader/screens/landing_page.dart';
 import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/notification_service.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -23,7 +25,17 @@ void main() async{
   Admob.initialize();
 
 
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>.value(
+          value: AppState()
+          )
+    ],
+    child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
