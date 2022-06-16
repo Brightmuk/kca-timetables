@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({ Key? key }) : super(key: key);
@@ -121,7 +122,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 ListTile(
                   onTap: (){
-                   
+                   showDialog(
+                     barrierDismissible: false,
+                     context: context, builder: (_)=>const AboutUs()
+                     );
                   },
                   title: Text('About',style: tileTitleTextStyle,),
                   trailing: const Icon(
@@ -163,7 +167,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                ListTile(
                   onTap: (){
-                   launchUrl(_donateUrl);
+                    NotificationService().showTimeoutNotification(3000);
+                  //  launchUrl(_donateUrl);
                   },
                   title: const Text('Drop a gift',style: tileTitleTextStyle,),
                   trailing: const Icon(
@@ -197,5 +202,42 @@ class _SettingsPageState extends State<SettingsPage> {
   }
     void _launchUrl(Uri url) async {
     if (!await launchUrl(url)) throw 'Could not launch $url';
+  }
+}
+
+
+class AboutUs extends StatelessWidget {
+  const AboutUs({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      titlePadding: EdgeInsets.zero,
+      title: Container(
+          decoration: const BoxDecoration(
+            color: primaryThemeColor,
+            borderRadius:BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              )),
+          height: 100.sp,
+          
+          child: const Center(
+              child: Text('About KCA Timetables',
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)))),
+      content: const Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Text(
+            'KCA Timetables allows you to scan KCA University excel sheet timetables into a presentable view of the mobile app. Currently the app is tailored for KCA University timetables only.'),
+      ),
+      actions: [
+        MaterialButton(
+          child: const Text('CLOSE',style: TextStyle(color: secondaryThemeColor),),
+          onPressed: () {
+          Navigator.pop(context);
+        })
+      ],
+    );
   }
 }
