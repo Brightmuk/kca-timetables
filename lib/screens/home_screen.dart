@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel_reader/models/string_extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,7 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  
   @override
   Widget build(BuildContext context) {
     
@@ -126,7 +127,9 @@ class _HomePageState extends State<HomePage> {
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                         onPressed: _record.canJoinMeeting?(){
                                           if(_record.classLink!=null){
+
                                             launchExternalUrl(_record.classLink!);
+                                            
                                           }else{
                                             showModalBottomSheet(
                                               backgroundColor: Colors.white,
@@ -153,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                           TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
                 
                 
-                          WeeklyUnitTile(size: Size(170.sp,170.sp),color: Colors.pinkAccent,),
+                          WeeklyUnitTile(size: Size(180.sp,180.sp),color: Colors.pinkAccent,),
                           SizedBox(height: 40.sp,),
                 
                 
@@ -403,7 +406,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                       height: size.height,
                                       child: CustomPaint(
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
+                                          padding: EdgeInsets.all(15.0.sp),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -412,13 +415,13 @@ class WeeklyUnitTile extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Container(
-                                                      padding: EdgeInsets.all(5),
+                                                      padding: EdgeInsets.all(5.sp),
                                                       decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
                                                       child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 250, 250, 250),fontSize: 15,fontWeight: FontWeight.bold),)),
                                                   Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
                                                 ],
                                               ),
-                                              SizedBox(height: 60.sp,),
+                                              SizedBox(height: 50.sp,),
                                               Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.bold),),
                                               Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12),),
     

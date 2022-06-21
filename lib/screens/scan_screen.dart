@@ -283,7 +283,7 @@ class _ScanScreenState extends State<ScanScreen> {
         excelFile = file;
         scanningDoc = true;
       });
-      Future.delayed(const Duration(microseconds: 1000), () {
+      Future.delayed(const Duration(microseconds: 2000), () {
         readXlsx(file);
       });
     } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){

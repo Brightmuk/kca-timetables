@@ -34,14 +34,14 @@ class _LandingPageState extends State<LandingPage> {
             itemCount: pages.length,
             scrollDirection: Axis.horizontal,
             separatorBuilder: (context, index) {
-              return const SizedBox(
-                width: 10,
+              return SizedBox(
+                width: 10.sp,
               );
             },
             itemBuilder: (context, index) {
               return Container(
-                height: 20,
-                width: 20,
+                height: 20.sp,
+                width: 20.sp,
                 decoration: BoxDecoration(
                   color: currentIndex == index
                       ? secondaryThemeColor
@@ -71,13 +71,13 @@ class _LandingPageState extends State<LandingPage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height*0.1,
                   ),
-                  const Text('Welcome to \nKCA Timetables',
+                   Text('Welcome to \nKCA Timetables',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 40,
+                        fontSize: 35.sp,
                         fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: 10.sp,
                   ),
                   const Text('Its convenient, time saving and organised',
                       style: TextStyle(
@@ -106,7 +106,7 @@ class _LandingPageState extends State<LandingPage> {
 children: [
   Padding(
     padding: const EdgeInsets.all(20.0),
-    child: Text(texts[viewIndex],style: TextStyle(color: primaryThemeColor,fontSize: 30,fontWeight: FontWeight.bold),),
+    child: Text(texts[viewIndex],style: TextStyle(color: primaryThemeColor,fontSize: 25.sp,fontWeight: FontWeight.bold),),
   ),
   SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -117,7 +117,7 @@ children: [
                             viewIndex = index;
                           });
                         },
-                        height: 300,
+                        height: 250.sp,
                         aspectRatio: 16 / 9,
                         viewportFraction: 1,
                         initialPage: 0,
@@ -139,7 +139,7 @@ children: [
           ),
 
           Positioned(
-            bottom: 50,
+            bottom: 30.sp,
             child: MaterialButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
