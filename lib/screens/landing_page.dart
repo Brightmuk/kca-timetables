@@ -29,7 +29,7 @@ class _LandingPageState extends State<LandingPage> {
     Widget indicator(currentIndex) {
     return SizedBox(
         height: 10.sp,
-        width: pages.length * 30,
+        width: pages.length * 35,
         child: ListView.separated(
             itemCount: pages.length,
             scrollDirection: Axis.horizontal,
@@ -62,7 +62,7 @@ class _LandingPageState extends State<LandingPage> {
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height*0.3,
         flexibleSpace: SizedBox(
-          height: MediaQuery.of(context).size.height*0.3,
+          height: MediaQuery.of(context).size.height*0.33,
           width: MediaQuery.of(context).size.width,
           child: CustomPaint(
             child: Column(

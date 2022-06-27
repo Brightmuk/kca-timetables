@@ -52,7 +52,7 @@ class _AddUnitState extends State<AddUnit> {
                  Divider(),
                 SizedBox(height: 30.sp,),
           
-                const ListTile(
+                ListTile(
                   title: Text('Unit Name',style: tileTitleTextStyle,),
                 ),
                 Padding(
@@ -66,7 +66,7 @@ class _AddUnitState extends State<AddUnit> {
                           val!.isEmpty ? 'Enter unit name' : null,
                     ),
                 ),
-                const ListTile(
+               ListTile(
                   title: Text('Unit Code',style: tileTitleTextStyle,),
                 ),
                 Padding(
@@ -146,7 +146,7 @@ class _EditDayState extends State<EditDay> {
   Widget build(BuildContext context) {
     return Container(
             margin: const EdgeInsets.symmetric(vertical: 20),
-            height: MediaQuery.of(context).size.height*0.7,
+            height: MediaQuery.of(context).size.height*0.75,
       color: Colors.white,
       child: Stack(
         alignment: Alignment.center,
@@ -403,7 +403,7 @@ void initState(){
                ),
               Visibility(
                 visible: venueValue!='VIRTUAL',
-                child: const ListTile(
+                child: ListTile(
                   title: Text('Physical venue',style: tileTitleTextStyle,),
                 ),
               ),
@@ -487,7 +487,7 @@ class _EditLecturerState extends State<EditLecturer> {
                  Divider(),
                 SizedBox(height: 30.sp,),
 
-              const ListTile(
+              ListTile(
                 title: Text('Lecturer\'s Name',style: tileTitleTextStyle,),
               ),
               Padding(
@@ -574,7 +574,7 @@ class _EditLinkState extends State<EditLink> {
                  Divider(),
                 SizedBox(height: 30.sp,),
           
-                const ListTile(
+                ListTile(
                   title: Text('Meeting link',style: tileTitleTextStyle,),
                 ),
                 Padding(
@@ -665,7 +665,7 @@ class _EditCredentialsState extends State<EditCredentials> {
                  Divider(),
                 SizedBox(height: 30.sp,),
           
-                const ListTile(
+                ListTile(
                   title: Text('Meeting Id',style: tileTitleTextStyle,),
                 ),
                 Padding(
@@ -679,7 +679,7 @@ class _EditCredentialsState extends State<EditCredentials> {
                           val!.isEmpty ? 'Enter a meetingId' : null,
                     ),
                 ),
-                const ListTile(
+                ListTile(
                   title: Text('Meeting passcode',style: tileTitleTextStyle,),
                 ),
                 Padding(

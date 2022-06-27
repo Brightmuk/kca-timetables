@@ -53,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: Color.fromARGB(255, 255, 255, 255),
                     ),
                   ),
-                  const Text('Settings',
+                  Text('Settings',
                       style: headerTextStyle),
                   IconButton(
                     padding: const EdgeInsets.all(20),
@@ -158,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTap: (){
                    launchUrl(_playStoreUrl);
                   },
-                  title: const Text('Rate App',style: tileTitleTextStyle,),
+                  title: Text('Rate App',style: tileTitleTextStyle,),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
@@ -170,7 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     NotificationService().showTimeoutNotification(3000);
                   //  launchUrl(_donateUrl);
                   },
-                  title: const Text('Drop a gift',style: tileTitleTextStyle,),
+                  title: Text('Drop a gift',style: tileTitleTextStyle,),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     size: 15,

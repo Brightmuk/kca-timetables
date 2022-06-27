@@ -85,30 +85,40 @@ class AppDrawer extends StatelessWidget {
           }
         ),
         const Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.pages_outlined,
-              color: secondaryThemeColor,
-            ),
-            trailing: const Icon(
-            Icons.arrow_forward_ios,
-            size: 12,
-          ),
-            title: const Text('Scan class Timetable'),
-            onTap: ()async  {
-              var result = await showModalBottomSheet(
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              context: context,
-              builder: (context) => const ConfirmAction(text: 'This will overwrite the current class timetable data. Are you sure you want to rescan the timetable?'));
-                if (result) {
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ScanScreen()));
-                }
+          StreamBuilder<List<UnitClass>>(
+              stream: TimeTableService(context: context).unitsStream,
+              builder: (context, snapshot) {
+              return ListTile(
+                leading: Icon(
+                  Icons.pages_outlined,
+                  color: secondaryThemeColor,
+                ),
+                trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+              ),
+                title: const Text('Scan class Timetable'),
+                onTap: snapshot.hasData?()async  {
+                  List<UnitClass> classes = snapshot.data!;
+                  for(var cls in classes){
+                    await TimeTableService(context: context).deleteUnit(cls);
+                  }
 
-            },
+                  var result = await showModalBottomSheet(
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  context: context,
+                  builder: (context) => const ConfirmAction(text: 'This will overwrite the current class timetable data. Are you sure you want to rescan the timetable?'));
+                    if (result) {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ScanScreen()));
+                    }
+          
+                }:null,
+              );
+            }
           ),
           ListTile(
             leading: Icon(

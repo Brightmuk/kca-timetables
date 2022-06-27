@@ -64,7 +64,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
                 IconButton(
                   padding: EdgeInsets.all(20),
                   onPressed: () {
@@ -93,158 +93,170 @@ class _ScanScreenState extends State<ScanScreen> {
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
+            
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-
-                  SizedBox(
-                    height: 50.sp,
-                  ),
-                                    
-                  SwitchListTile(
-                    activeColor: secondaryThemeColor,
-                    activeTrackColor: secondaryThemeColor.withOpacity(0.5),
-                    title: const Text('Auto setup'),
-                    subtitle:
-                    Text(isAuto?'Scan from excel (KCA university timetable formats only)':'Setup the timetable manually'),
-                    value: isAuto, onChanged: (val){
-                      setState(() {
-                        isAuto=val;
-                      });
-                    }
-                    ),
-                    Divider(
-                    height: 50.sp,
-                  ),
-                    isAuto?Column(
-                      children: [
-
-                  ListTile(
-                    style: ListTileStyle.drawer,
-                    onTap: pickFile,
-                    leading: const Icon(
-                      Icons.document_scanner_outlined,
-                      color: Color.fromRGBO(188, 175, 69, 0.3),
-                      size: 35,
-                    ),
-                    title: const Text('Select the spreadsheet document(.xlsx)'),
-                    subtitle: Text(excelFile != null
-                        ? getDocName(excelFile!.path)
-                        : 'No document selected'),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                    ),
-                  ),
-                  Visibility(
-                    visible: excelFile != null && scanningDoc,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: LinearProgressIndicator(
-                        backgroundColor: Color.fromRGBO(188, 175, 69, 0.3),
-                        color: Color.fromRGBO(3, 4, 94, 1),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.sp,
-                  ),
-                  Visibility(
-                      visible: excelFile != null && scanningDoc,
-                      child: Center(
-                          child: Text(
-                            excelFile != null
-                                ? 'Scanning ${getDocName(excelFile!.path)}'
-                                : '',
-                            style: const TextStyle(color: Colors.grey, fontSize: 13),
-                          ))),
-                 Divider(
-                    height: 50.sp,
-                  ),ListTile(
-                    style: ListTileStyle.drawer,
-                    onTap: scanningDoc ? null : selectCourse,
-                    leading: const Icon(
-                      Icons.school_outlined,
-                      color: Color.fromRGBO(188, 175, 69, 0.3),
-                      size: 35,
-                    ),
-                    title: const Text('Select course'),
-                    subtitle:
-                    Text(course != null ? course! : 'No course selected'),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                    ),
-                  ),
-                  Divider(
-                    height: 50.sp,
-                  ),
-                  ListTile(
-                    style: ListTileStyle.drawer,
-                    onTap: scanningDoc ? null : selectPeriod,
-                    leading: const Icon(
-                      Icons.calendar_month_outlined,
-                      color: Color.fromRGBO(188, 175, 69, 0.3),
-                      size: 35,
-                    ),
-                    title: const Text('Select period'),
-                    subtitle:
-                    Text(period != null ? period! : 'No period selected'),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                    ),
-                  ),
-                  Divider(
-                    height: 50.sp,
-                  ),
-
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height*0.8,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 
-                    ],):
-                    Form(
-                      key: _formKey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
+                      SizedBox(
+                        height: 50.sp,
+                      ),
+                                        
+                      SwitchListTile(
+                        activeColor: secondaryThemeColor,
+                        activeTrackColor: secondaryThemeColor.withOpacity(0.5),
+                        title: const Text('Auto setup'),
+                        subtitle:
+                        Text(isAuto?'Scan from excel (KCA university timetable formats only)':'Setup the timetable manually'),
+                        value: isAuto, onChanged: (val){
+                          setState(() {
+                            isAuto=val;
+                          });
+                        }
+                        ),
+                        Divider(
+                        height: 50.sp,
+                      ),
+                        isAuto?Column(
                           children: [
-                            SizedBox(height: 10.sp,),
-                          TextFormField(
-                           
-                            controller: _courseNameC,
-                            cursorColor: primaryThemeColor,
-                            decoration: AppStyles().textFieldDecoration(
-                                label: 'Course Name', hintText: 'Bachelors'),
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Course name is required';
-                              }
-                            },
-                          ),
-                          SizedBox(height: 20.sp,),
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            style: ListTileStyle.drawer,
-                            onTap:  selectManualPeriod,
-                            leading: const Icon(
-                              Icons.calendar_month_outlined,
-                              color: Color.fromRGBO(188, 175, 69, 0.3),
-                              size: 35,
-                            ),
-                            title: const Text('Select period'),
-                            subtitle:
-                            Text(period != null ? period! : 'No period selected'),
-                            trailing: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                            ),
-                          ),
-                          
-                          ],
+                
+                      ListTile(
+                        style: ListTileStyle.drawer,
+                        onTap: pickFile,
+                        leading: const Icon(
+                          Icons.document_scanner_outlined,
+                          color: Color.fromRGBO(188, 175, 69, 0.3),
+                          size: 35,
+                        ),
+                        title: const Text('Select the spreadsheet document(.xlsx)'),
+                        subtitle: Text(excelFile != null
+                            ? getDocName(excelFile!.path)
+                            : 'No document selected'),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
                         ),
                       ),
-                    ),
-                ]),
+                      Visibility(
+                        visible: excelFile != null && scanningDoc,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Color.fromRGBO(188, 175, 69, 0.3),
+                            color: Color.fromRGBO(3, 4, 94, 1),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5.sp,
+                      ),
+                      Visibility(
+                          visible: excelFile != null && scanningDoc,
+                          child: Center(
+                              child: Text(
+                                excelFile != null
+                                    ? 'Scanning ${getDocName(excelFile!.path)}'
+                                    : '',
+                                style: const TextStyle(color: Colors.grey, fontSize: 13),
+                              ))),
+                     Divider(
+                        height: 50.sp,
+                      ),ListTile(
+                        style: ListTileStyle.drawer,
+                        onTap: scanningDoc ? null : selectCourse,
+                        leading: const Icon(
+                          Icons.school_outlined,
+                          color: Color.fromRGBO(188, 175, 69, 0.3),
+                          size: 35,
+                        ),
+                        title: const Text('Select course'),
+                        subtitle:
+                        Text(course != null ? course! : 'No course selected'),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        ),
+                      ),
+                      Divider(
+                        height: 50.sp,
+                      ),
+                      ListTile(
+                        style: ListTileStyle.drawer,
+                        onTap: scanningDoc ? null : selectPeriod,
+                        leading: const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Color.fromRGBO(188, 175, 69, 0.3),
+                          size: 35,
+                        ),
+                        title: const Text('Select period'),
+                        subtitle:
+                        Text(period != null ? period! : 'No period selected'),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        ),
+                      ),
+                      Divider(
+                        height: 50.sp,
+                      ),
+                
+                    
+                        ],):
+                        Form(
+                          
+                          key: _formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height*0.8,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10.sp,),
+                                TextFormField(
+                                 
+                                  controller: _courseNameC,
+                                  cursorColor: primaryThemeColor,
+                                  decoration: AppStyles().textFieldDecoration(
+                                      label: 'Course Name', hintText: 'Bachelors'),
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return 'Course name is required';
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: 20.sp,),
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  style: ListTileStyle.drawer,
+                                  onTap:  selectManualPeriod,
+                                  leading: const Icon(
+                                    Icons.calendar_month_outlined,
+                                    color: Color.fromRGBO(188, 175, 69, 0.3),
+                                    size: 35,
+                                  ),
+                                  title: const Text('Select period'),
+                                  subtitle:
+                                  Text(period != null ? period! : 'No period selected'),
+                                  trailing: const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
+                                ),
+                                
+                                
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 50.sp,)
+                    ]),
+                  ),
+                ),
                 Positioned(
                   bottom: 5,
                   child: MaterialButton(
@@ -274,7 +286,6 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
 
 
     if (result != null&&result.files.single.path!.endsWith('.xlsx')) {

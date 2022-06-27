@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
         key:_scaffoldKey,
         extendBody: true,
         backgroundColor: Colors.white,
-
         appBar: AppBar(
           title: FutureBuilder<TimeTable>(
               future: TimeTableService(context: context).getClassTimetable(),
@@ -66,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             },),
           backgroundColor: Colors.white,
           systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: primaryThemeColor,
+            statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.light,
             statusBarBrightness: Brightness.light,
           ),
@@ -108,19 +107,19 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: const Text('UPCOMING',style: titleTextStyle,),
+                                      leading: Text('UPCOMING',style: titleTextStyle,),
                                       trailing: Text(timeLeft(_record.time, _record.day),style: minorTextStyle,),
                                     ),
                 
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       title: Text(_record.unitCode,style: majorTextStyle,),
-                                      subtitle: Text(_record.unitName.capitalise(),style: TextStyle(fontSize: 14,color: Colors.grey[600]),),
+                                      subtitle: Text(_record.unitName.capitalise(),style: TextStyle(fontSize: 13.sp,color: Colors.grey[600]),),
                                     ),
                                     ListTile(
                 
                                       contentPadding: EdgeInsets.zero,
-                                      subtitle: Text(_record.time,style: tileTitleTextStyle),
+                                      subtitle: Text(_record.time,style: TextStyle(fontSize: 13.sp)),
                                       title: Text(_record.venue,style: tileTitleTextStyle,),
                                       trailing: MaterialButton(
                                         disabledColor: Colors.grey,
@@ -140,8 +139,8 @@ class _HomePageState extends State<HomePage> {
                                           }
                 
                                         }:null,
-                                        color: secondaryThemeColor,
-                                        child: const Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13),),
+                                        color: Color(_record.accentColor),
+                                        child: Text('JOIN MEETING',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 13.sp),),
                                       ),
                                     ),
                                   ],
@@ -152,11 +151,9 @@ class _HomePageState extends State<HomePage> {
                 
                           Divider(height: 20.sp,),
                 
-                
                           TodayUnitTile(color: Colors.pinkAccent, size: Size(MediaQuery.of(context).size.width*0.8,200),),
                 
-                
-                          WeeklyUnitTile(size: Size(180.sp,180.sp),color: Colors.pinkAccent,),
+                          WeeklyUnitTile(size: Size(185.sp,185.sp),color: Colors.pinkAccent,),
                           SizedBox(height: 40.sp,),
                 
                 
@@ -205,7 +202,7 @@ class TodayUnitTile extends StatelessWidget {
                     children: [
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: const Text('TODAY',style: titleTextStyle,),
+                        leading: Text('TODAY',style: titleTextStyle,),
                         trailing: Text('no classe(s)',style: minorTextStyle,),
                       ),
                       SizedBox(height: 50.sp,),
@@ -224,7 +221,7 @@ class TodayUnitTile extends StatelessWidget {
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Text('TODAY',style: titleTextStyle,),
+                      leading: Text('TODAY',style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
                       trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
     
                     ),
@@ -279,19 +276,19 @@ class TodayUnitTile extends StatelessWidget {
                                                 Container(
                                                     padding: const EdgeInsets.all(5),
                                                     decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                                    child: Text(record.unitCode,style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 15,fontWeight: FontWeight.bold),)),
-                                                Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
+                                                    child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 14.sp,fontWeight: FontWeight.bold),)),
+                                                Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20.sp,color: Color.fromARGB(255, 255, 255, 255),)
                                               ],
                                             ),
                                             SizedBox(height: 60.sp,),
-                                            Text(record.unitName.capitalise(),style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                                            Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 14.sp,fontWeight: FontWeight.bold),),
     
-                                            Text(record.venue,style: const TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13),),
+                                            Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13.sp),),
                                             Row(
                                               children: [
-                                                Text(record.time,style: const TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12),),
+                                                Text(record.time,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12.sp),),
                                                 SizedBox(width: 10.sp,),
-                                                Text(timeLeft(record.time, record.day),style: const TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10))
+                                                Text(timeLeft(record.time, record.day),style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10.sp))
                                               ],
                                             )
     
@@ -360,8 +357,8 @@ class WeeklyUnitTile extends StatelessWidget {
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Text('WEEKLY',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-                      trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                      leading: Text('WEEKLY',style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
+                      trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 12.sp),),
                     ),
                     SizedBox(
                       height: size.height+50.sp,
@@ -385,7 +382,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
     
-                                  Text(record.day,style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
+                                  Text(record.day,style: TextStyle(fontSize: 10.sp,fontWeight: FontWeight.bold),),
                                   SizedBox(height: 5.sp,),
                                   Container(
                                       decoration: BoxDecoration(
@@ -406,7 +403,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                       height: size.height,
                                       child: CustomPaint(
                                         child: Padding(
-                                          padding: EdgeInsets.all(15.0.sp),
+                                          padding: EdgeInsets.all(10.0.sp),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -417,15 +414,15 @@ class WeeklyUnitTile extends StatelessWidget {
                                                   Container(
                                                       padding: EdgeInsets.all(5.sp),
                                                       decoration: BoxDecoration(color: Colors.pinkAccent,borderRadius: BorderRadius.circular(20)),
-                                                      child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 250, 250, 250),fontSize: 15,fontWeight: FontWeight.bold),)),
+                                                      child: Text(record.unitCode,style: TextStyle(color: Color.fromARGB(255, 250, 250, 250),fontSize: 14.sp,fontWeight: FontWeight.bold),)),
                                                   Icon(record.reminder? Icons.notifications_active:Icons.notifications_off,size: 20,color: Color.fromARGB(255, 255, 255, 255),)
                                                 ],
                                               ),
-                                              SizedBox(height: 50.sp,),
-                                              Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.bold),),
-                                              Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12),),
+                                              SizedBox(height: 40.sp,),
+                                              Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 12.sp,fontWeight: FontWeight.bold),),
+                                              Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12.sp),),
     
-                                              Text(record.time,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12),)
+                                              Text(record.time,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12.sp),)
                                             ],
                                           ),
                                         ),

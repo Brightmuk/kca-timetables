@@ -1,11 +1,12 @@
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-TextStyle normalTextStyle = TextStyle(fontSize: 14,color: Colors.grey[600]);
-const TextStyle minorTextStyle = TextStyle(color: Colors.grey,fontSize: 13);
-const TextStyle majorTextStyle = TextStyle(fontSize: 30,fontWeight: FontWeight.w300);
-const TextStyle titleTextStyle = TextStyle(fontSize: 15,fontWeight: FontWeight.w500,color: primaryThemeColor);
-const TextStyle headerTextStyle = TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold);
+TextStyle normalTextStyle = TextStyle(fontSize: 14.sp,color: Colors.grey[600]);
+TextStyle minorTextStyle = TextStyle(color: Colors.grey,fontSize: 12.sp);
+TextStyle majorTextStyle = TextStyle(fontSize: 30.sp,fontWeight: FontWeight.w300);
+TextStyle titleTextStyle = TextStyle(fontSize: 13.sp,fontWeight: FontWeight.w500,color: primaryThemeColor);
+TextStyle headerTextStyle = TextStyle(color: Colors.white,fontSize: 20.sp,fontWeight: FontWeight.bold);
 
-const TextStyle tileTitleTextStyle = TextStyle(fontSize: 13,fontWeight: FontWeight.w600);
-TextStyle tileSubtitleTextStyle = TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: Colors.grey[600]);
+TextStyle tileTitleTextStyle = TextStyle(fontSize: 13.sp,fontWeight: FontWeight.w600);
+TextStyle tileSubtitleTextStyle = TextStyle(fontSize: 10.sp,fontWeight: FontWeight.w600,color: Colors.grey[600]);

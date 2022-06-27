@@ -40,6 +40,7 @@ class TimeTableService{
     bool returnValue = true;
 
     try{
+
         for (var _unit in units) {
           await saveUnit(_unit);
      }
@@ -107,6 +108,13 @@ class TimeTableService{
     .stream
         .where((r) => day!=null?r['day']==day:true)
     .map(recordList);
+  }
+  Future<List<UnitClass>> unitsFuture() {
+
+    return db.collection(recordCollection)
+        .get()
+        .then((value) => recordList(value!));
+
   }
 
 
