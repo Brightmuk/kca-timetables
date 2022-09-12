@@ -3,6 +3,9 @@ import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
+
 
 class JoinClassMeeting extends StatefulWidget {
   final UnitClass unitClass;
@@ -94,7 +97,10 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
               leading: Icon(Icons.security_outlined,
                   color: const Color.fromARGB(255, 201, 174, 20)),
               title: Text('Meeting Id'),
-              trailing: meetingId!=null?IconButton(onPressed: (){}, icon: Icon(Icons.copy)): const Icon(
+              trailing: meetingId!=null?IconButton(onPressed: (){
+                Clipboard.setData(ClipboardData(text: meetingId));
+                toast('Meeting Id copied!');
+              }, icon: Icon(Icons.copy)): const Icon(
                 Icons.arrow_forward_ios,
                 size: 15,
               ),
@@ -122,7 +128,10 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
               leading: Icon(Icons.security_outlined,
                   color: const Color.fromARGB(255, 201, 174, 20)),
               title: Text('Meeting passcode'),
-              trailing: meetingId!=null?IconButton(onPressed: (){}, icon: Icon(Icons.copy)): const Icon(
+              trailing: meetingId!=null?IconButton(onPressed: (){
+                Clipboard.setData(ClipboardData(text: passCode));
+                toast('Meeting passcode copied!');
+              }, icon: Icon(Icons.copy)): const Icon(
                 Icons.arrow_forward_ios,
                 size: 15,
               ),
