@@ -167,8 +167,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                ListTile(
                   onTap: (){
-                    NotificationService().showTimeoutNotification(3000);
-                  //  launchUrl(_donateUrl);
+                    // NotificationService().showTimeoutNotification(3000);
+                   launchUrl(_donateUrl);
                   },
                   title: Text('Drop a gift',style: tileTitleTextStyle,),
                   trailing: const Icon(

@@ -221,7 +221,7 @@ class TodayUnitTile extends StatelessWidget {
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Text('TODAY',style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
+                      leading: Text('TODAY',style: TextStyle(fontSize: 13.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
                       trailing: Text('${snapshot.data!.length} classe(s)',style: minorTextStyle,),
     
                     ),
@@ -357,8 +357,8 @@ class WeeklyUnitTile extends StatelessWidget {
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Text('WEEKLY',style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
-                      trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 12.sp),),
+                      leading: Text('WEEKLY',style: TextStyle(fontSize: 13.sp,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 3, 4, 75)),),
+                      trailing: Text('${snapshot.data!.length} classe(s)',style: TextStyle(color: Colors.grey,fontSize: 13.sp),),
                     ),
                     SizedBox(
                       height: size.height+50.sp,

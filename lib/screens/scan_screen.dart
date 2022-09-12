@@ -4,6 +4,7 @@ import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
+import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/decorations.dart';
@@ -212,7 +213,7 @@ class _ScanScreenState extends State<ScanScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: SizedBox(
-                              height: MediaQuery.of(context).size.height*0.8,
+                              // height: MediaQuery.of(context).size.height*0.9,
                               child: Column(
                                 children: [
                                   SizedBox(height: 10.sp,),
@@ -383,6 +384,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void convert() async{
     if(!isAuto){
+      await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
       await TimeTableService(context: context).saveTableDetails(name: 'Custom timetable', period: period??'', course: _courseNameC.value.text);
       Navigator.push(
@@ -441,11 +443,12 @@ class _ScanScreenState extends State<ScanScreen> {
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
       var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
+
       if(result){
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FinishSetupScreen()));
+                builder: (context) => const FinishSetupScreen()));
 
       }
 
