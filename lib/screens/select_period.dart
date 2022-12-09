@@ -17,6 +17,7 @@ class _PeriodSelectorState extends State<PeriodSelector> {
   @override
   void initState() {
     super.initState();
+    debugPrint(widget.courseType);
     if (widget.courseType.startsWith('B')) {
       type = CourseType.degree;
     } else if (widget.courseType.startsWith('C')) {
@@ -64,7 +65,7 @@ class _PeriodSelectorState extends State<PeriodSelector> {
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year one Trim two'),
-                value: 'Year one Trim two',
+                value: 'Year one Trim tw',
                 groupValue: period,
                 onChanged: (String? val) {
                   choosePeriod(val!);
@@ -96,8 +97,8 @@ class _PeriodSelectorState extends State<PeriodSelector> {
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year two trim three'),
-                value: 'Year two trim three',
+                title: const Text('Year two Trim three'),
+                value: 'Year two Trim three',
                 groupValue: period,
                 onChanged: (String? val) {
                   choosePeriod(val!);

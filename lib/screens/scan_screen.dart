@@ -27,6 +27,7 @@ class _ScanScreenState extends State<ScanScreen> {
   List<String>? courses = [];
   String? course;
   String? period;
+  String? period2;
   bool scanningDoc = false;
   bool isAuto = true;
   final _formKey = GlobalKey<FormState>();
@@ -377,6 +378,7 @@ class _ScanScreenState extends State<ScanScreen> {
       if (result != null) {
         setState(() {
           period = result;
+          period2 = result.replaceAll("Trim","Trimester");
         });
       }
     }
@@ -414,7 +416,8 @@ class _ScanScreenState extends State<ScanScreen> {
       for (var row in sheet!.rows) {
         cellsLoop:
         for (var cell in row) {
-          if (cell != null && cell.value == period!.toUpperCase()) {
+        
+          if (cell != null && (cell.value == period!.toUpperCase() || cell.value == period2!.toUpperCase()) ) {
             periodIndex = cell.cellIndex;
             break cellsLoop;
           }
@@ -433,13 +436,18 @@ class _ScanScreenState extends State<ScanScreen> {
     try {
       List<UnitClass> _records = [];
       int startIndex = dayIndex!.rowIndex + 1;
-      int lastRecordIndex =
-      startIndex + 9 > sheet.maxRows ? sheet.maxRows : startIndex + 9;
-      for (var i = startIndex; i < lastRecordIndex; i++) {
+      int lastRecordIndex=startIndex+6; 
+
+      debugPrint(startIndex.toString());
+      debugPrint(lastRecordIndex.toString());
+      
+      for (var i = startIndex; sheet.rows[i][dayIndex.columnIndex] != null; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
+
           _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
         }
       }
+      
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
       var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
@@ -453,6 +461,7 @@ class _ScanScreenState extends State<ScanScreen> {
       }
 
     } catch (e) {
+      
       toast('The period was not found / has an invalid format');
     }
   }
