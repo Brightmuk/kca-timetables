@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
@@ -15,7 +16,8 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({Key? key}) : super(key: key);
+  final bool isClass;
+  const ScanScreen({Key? key, this.isClass=true}) : super(key: key);
 
   @override
   _ScanScreenState createState() => _ScanScreenState();
@@ -62,8 +64,8 @@ class _ScanScreenState extends State<ScanScreen> {
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
-                const Text('Create class timetable',
-                    style: TextStyle(
+              Text('Create ${widget.isClass?'class':'exam'} timetable',
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
@@ -108,7 +110,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         height: 50.sp,
                       ),
                                         
-                      SwitchListTile(
+                      widget.isClass? SwitchListTile(
                         activeColor: secondaryThemeColor,
                         activeTrackColor: secondaryThemeColor.withOpacity(0.5),
                         title: const Text('Auto setup'),
@@ -119,7 +121,7 @@ class _ScanScreenState extends State<ScanScreen> {
                             isAuto=val;
                           });
                         }
-                        ),
+                        ):Container(),
                         Divider(
                         height: 50.sp,
                       ),
@@ -275,7 +277,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       ),
                       onPressed:
                       (excelDoc != null && period != null && course != null)||!isAuto
-                          ? convert
+                          ? (widget.isClass? classTimetableScan:examTimetableScan)
                           : null),
                 )
               ],
@@ -351,7 +353,7 @@ class _ScanScreenState extends State<ScanScreen> {
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
-          builder: (context) => const PeriodSelector(
+          builder: (context) => const ClassPeriodSelector(
             courseType: 'Bachelors',
           ));
       if (result != null) {
@@ -372,9 +374,9 @@ class _ScanScreenState extends State<ScanScreen> {
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
-          builder: (context) => PeriodSelector(
+          builder: (context) => widget.isClass? ClassPeriodSelector(
             courseType: course!,
-          ));
+          ):ExamPeriodSelector(courseType: course!));
       if (result != null) {
         setState(() {
           period = result;
@@ -384,7 +386,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  void convert() async{
+  void classTimetableScan() async{
     if(!isAuto){
       await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
@@ -465,5 +467,68 @@ class _ScanScreenState extends State<ScanScreen> {
       toast('The period was not found / has an invalid format');
     }
   }
+
+void examTimetableScan()async{ 
+    Sheet? sheet;
+    CellIndex? periodIndex;
+    
+
+    //Step 1: Find the selected sheet/course
+    try {
+      sheet = excelDoc!.sheets[course];
+    } catch (e) {
+      toast('There was an error reading from that course');
+      return;
+    }
+    //Step 2: Find the periods
+    List<ExamModel> exams = [];
+ 
+    try {
+      rowsloop:
+      for (var row in sheet!.rows) {
+       
+        cellsLoop:
+        for (var cell in row) {
+          
+          if (cell != null && (cell.value.toString().toUpperCase() == 'TRIMESTER') ) {
+            periodIndex = cell.cellIndex;
+             
+            break rowsloop;
+            
+          }
+        }
+      }
+    } catch (e) {
+      toast('The period was not found');
+      return;
+    }
+    //Step 4: loop through records to get the values
+    // toast(dayIndex!.rowIndex.toString());
+    try {
+      
+        for (int i =periodIndex!.rowIndex+1; i<sheet.rows.length-1;i++) {
+          
+          if(sheet.rows[i][periodIndex.columnIndex]!.value.toString().toUpperCase()==period!.toUpperCase()){
+             
+            debugPrint(sheet.rows[i].toString());
+            exams.add(ExamModel.fromSheet(sheet.rows[i]));
+          }
+        }
+       
+      // var result = true;
+
+      // if(result){
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => const FinishSetupScreen()));
+
+      // }
+
+    } catch (e) {
+      debugPrint(e.toString());
+      toast('The period was not found / has an invalid format');
+    }
+}
 
 }

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:excel_reader/screens/is_timetable_screen.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -152,10 +153,13 @@ children: [
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ScanScreen()));
+                 showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    context: context,
+                    builder: (context) => const IsTimetableScreen()
+                  );
                 }),
           )
         ],
