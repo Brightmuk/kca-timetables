@@ -421,6 +421,8 @@ int get reminderMins{
 
 
 Future<void> setReminder()async{
+  debugPrint(getDate().toString());
+  
     await NotificationService().zonedScheduleNotification(
       id: widget.unit.sortIndex, 
       title: 'Class is about to start', 
@@ -430,9 +432,11 @@ Future<void> setReminder()async{
 }
 
 DateTime getDate(){
+  int startHour=int.parse(_time!.substring(0,2));
+  int startMinute = int.parse(_time!.substring(2,4));
   DateTime now = DateTime.now();
   return DateTime(
-    now.year,now.month,now.day, widget.unit.startHour-reminderHrs,widget.unit.startMinute-reminderMins
+    now.year,now.month,now.day, startHour-reminderHrs,startMinute-reminderMins
     );
 }
 

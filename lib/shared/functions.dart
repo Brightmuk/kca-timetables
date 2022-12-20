@@ -1,4 +1,5 @@
-  import 'package:overlay_support/overlay_support.dart';
+  import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher.dart';
   
 void launchExternalUrl(String url) async {
@@ -31,7 +32,7 @@ String timeLeft(String time,String day){
     endTime = 0;
   }
   try {
-    List val = time.split(" ");
+    List val = time.split("-");
     startTime=int.parse(val[0]);
   } catch (e) {
     startTime = 0;
@@ -40,13 +41,14 @@ String timeLeft(String time,String day){
   int recordDay = dayIndex(day);
 
 if(recordDay-now.weekday==0&&(now.hour*100)>=startTime&&(now.hour*100)<endTime){
+  
     return 'Ongoing';
   }
-if(recordDay-now.weekday==0&&startTime-(now.hour*100)==1){
+if(recordDay-now.weekday==0&&startTime-(now.hour*100)==100){
     return 'in ${60-now.minute} minutes';
   }
 if(recordDay-now.weekday==0&&startTime-(now.hour*100)>100){
-      return 'In ${(startTime-now.hour)/100} hours';
+      return 'In ${((startTime-now.hour)/100).toStringAsFixed(0)} hours';
 }
 if(recordDay-now.weekday==1){
     return 'Tomorrow';
