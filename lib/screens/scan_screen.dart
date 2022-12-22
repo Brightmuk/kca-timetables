@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:excel_reader/models/exam_model.dart';
+import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
+import 'package:excel_reader/services/exam_service.dart';
 import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
@@ -387,6 +389,7 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   void classTimetableScan() async{
+   
     if(!isAuto){
       await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
@@ -464,7 +467,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
     } catch (e) {
       
-      toast('The period was not found / has an invalid format');
+      toast('The period was not found or has an invalid format');
     }
   }
 
@@ -481,7 +484,7 @@ void examTimetableScan()async{
       return;
     }
     //Step 2: Find the periods
-    List<ExamModel> exams = [];
+    List<ExamModel> _exams = [];
  
     try {
       rowsloop:
@@ -504,30 +507,33 @@ void examTimetableScan()async{
     }
     //Step 4: loop through records to get the values
     // toast(dayIndex!.rowIndex.toString());
+ 
     try {
       
         for (int i =periodIndex!.rowIndex+1; i<sheet.rows.length-1;i++) {
           
           if(sheet.rows[i][periodIndex.columnIndex]!.value.toString().toUpperCase()==period!.toUpperCase()){
              
-            debugPrint(sheet.rows[i].toString());
-            exams.add(ExamModel.fromSheet(sheet.rows[i]));
+            debugPrint(sheet.rows[i][1].toString());
+            
+            _exams.add(ExamModel.fromSheet(sheet.rows[i]));
+          
           }
         }
        
-      // var result = true;
+      var result = await ExamService(context: context).saveExamTable(period:period!, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
-      // if(result){
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (context) => const FinishSetupScreen()));
+      if(result){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ExamsView()));
 
-      // }
+      }
 
     } catch (e) {
       debugPrint(e.toString());
-      toast('The period was not found / has an invalid format');
+      toast('The period was not found or has an invalid format');
     }
 }
 

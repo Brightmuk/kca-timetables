@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/notification.dart';
-import 'package:excel_reader/screens/home_screen.dart';
+import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/landing_page.dart';
 import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/notification_service.dart';

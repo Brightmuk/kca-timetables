@@ -1,26 +1,27 @@
-import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/services/local_data.dart';
-import 'package:excel_reader/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 
 class ExamService{
+
   final BuildContext context;
   final String? day;
   ExamService({required this.context,this.day});
+
   final db = Localstore.instance;
 
-  static const String recordCollection = 'examCollection';
-  static const String tableCollection = 'examTableCollection';
+  static const String examColletion = 'examCollection';
+  static const String examTableCollection = 'examTableCollection';
 
 
-  Future<void> saveTableDetails({required String name,required String period,required String course})async{
+  Future<void> saveExamDetails({required String name,required String period,required String course})async{
          await db
-        .collection(tableCollection)
-        .doc('classTimetable')
+        .collection(examTableCollection)
+        .doc('examTimetable')
         .set({
           'name':name,
           'period':period,
@@ -29,23 +30,23 @@ class ExamService{
         });
   }
   Future<TimeTable> getClassTimetable(){
-    return db.collection(tableCollection)
-    .doc('classTimetable')
+    return db.collection(examTableCollection)
+    .doc('examTimetable')
     .get().then((value) => TimeTable.fromMap(value!));
   }
 
   ///Save  a record
  
-  Future<bool> saveTimeTable({required String tableName,required String period, required List<UnitClass> units, required String course}) async {
+  Future<bool> saveExamTable({required String tableName,required String period, required List<ExamModel> exams, required String course}) async {
     bool returnValue = true;
 
     try{
 
-        for (var _unit in units) {
-          await saveUnit(_unit);
+        for (var _exam in exams) {
+          await saveExam(_exam);
      }
-     await saveTableDetails(name: tableName,course: course, period:period);
-      toast('Timetable saved');
+     await saveExamDetails(name: tableName,course: course, period:period);
+      toast('Exam table saved');
       returnValue = true;
     }catch(e){    
      toast(e.toString());
@@ -55,12 +56,12 @@ class ExamService{
     return returnValue;
   }
 
-  Future<bool> saveUnit(UnitClass unit)async{
+  Future<bool> saveExam(ExamModel exam)async{
         try{
         await db
-        .collection(recordCollection)
-        .doc(unit.unitCode)
-        .set(unit.toMap());
+        .collection(examColletion)
+        .doc(exam.unitCode)
+        .set(exam.toMap());
     
       return true;
     }catch(e){    
@@ -69,28 +70,28 @@ class ExamService{
     }
   }
 
-  Future<bool> deleteUnit(UnitClass unit)async{
-    try{
-    await  db
-        .collection(recordCollection)
-        .doc(unit.unitCode)
-        .delete();
-        return true;
-    }catch(e){
-      toast('Sorry an eror occurred');
-      return false;
-    }
-  }
+  // Future<bool> deleteUnit(UnitClass unit)async{
+  //   try{
+  //   await  db
+  //       .collection(examColletion)
+  //       .doc(unit.unitCode)
+  //       .delete();
+  //       return true;
+  //   }catch(e){
+  //     toast('Sorry an eror occurred');
+  //     return false;
+  //   }
+  // }
 
-  Future<bool> editRecord({required UnitClass record}) async {
+  Future<bool> editExam({required ExamModel exam}) async {
     bool returnValue = true;
     try{
         await db
-        .collection(recordCollection)
-        .doc(record.unitCode)
-        .set(record.toMap());
+        .collection(examColletion)
+        .doc(exam.unitCode)
+        .set(exam.toMap());
      
-      toast('Class details updated');
+      toast('Exam details updated');
       returnValue = true;
     }catch(e){    
       toast(e.toString());
@@ -102,35 +103,35 @@ class ExamService{
   }
 
   ///Get record list
-  Stream<List<UnitClass>> get unitsStream {
+  Stream<List<ExamModel>> get examsStream {
 
-    return db.collection(recordCollection)
+    return db.collection(examColletion)
     .stream
         .where((r) => day!=null?r['day']==day:true)
-    .map(recordList);
+    .map(examList);
   }
-  Future<List<UnitClass>> unitsFuture() {
+  Future<List<ExamModel>> examsFuture() {
 
-    return db.collection(recordCollection)
+    return db.collection(examColletion)
         .get()
-        .then((value) => recordList(value!));
+        .then((value) => examList(value!));
 
   }
 
 
-    List<UnitClass>_records = [];
+    List<ExamModel>_records = [];
     ///Yield the list from stream
-  List<UnitClass> recordList(Map<String, dynamic> query) {
+  List<ExamModel> examList(Map<String, dynamic> query) {
     try{
-    final item = UnitClass.fromMap(query);
-    Iterable<UnitClass> record = _records.where((r) => r.unitCode==item.unitCode);
+    final item = ExamModel.fromMap(query);
+    Iterable<ExamModel> record = _records.where((r) => r.unitCode==item.unitCode);
     if(record.isEmpty){
       _records.add(item);
     }else{
       _records.remove(record.first);
       _records.add(item);
     }
-_records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
+// _records.sort((a,b)=>a.d.compareTo(b.sortIndex));
     return _records;
     }catch(e){
       print(e.toString());
@@ -139,21 +140,5 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
 
   }
 
-    //upcoming
-  Stream<UnitClass> get upcomingClass {
-    return db.collection(recordCollection)
-    .stream
-    .map(upcomingList);
-  }
-      List<UnitClass> upcomingRecords = [];
-  UnitClass upcomingList(Map<String, dynamic> query) {
-
-    final item = UnitClass.fromMap(query);
-    upcomingRecords.add(item);
-    upcomingRecords.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
-    UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>timeIndex,orElse: ()=>upcomingRecords.first);
-
-    return result;
-  }
 
 }

@@ -1,7 +1,7 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
-import 'package:excel_reader/screens/home_screen.dart';
+import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/timetable_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';

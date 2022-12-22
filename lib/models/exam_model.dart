@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:flutter/material.dart';
+
+
 
 class ExamModel {
   final String unitName;
   final String unitCode;
-  final String date;
+  final DateTime date;
   final String time;
   final String venue;
   final String invigilator;
@@ -28,14 +31,15 @@ class ExamModel {
 
   
   factory ExamModel.fromSheet(List<Data?> row) {
+
     return ExamModel(
       accentColor: 0xff050851,
-      date: row[3]!.value.toString().toUpperCase(),
-      time: row[4]!.value.toString().toUpperCase(),
-      venue: row[7]!.value.toString().toUpperCase(),
+      date: DateTime.parse(row[5]!.value.toString()),
+      time: row[6]!.value.toString().toUpperCase(),
+      venue: row[10]!.value.toString().toUpperCase(),
       unitCode: row[0]!.value.toString().toUpperCase(),
       unitName: row[1]!.value.toString().toUpperCase(),
-      invigilator: row[6]!.value.toString().toUpperCase(),
+      invigilator: row[8]!.value.toString().toUpperCase(),
       reminderSchedule: null,
       reminder: false,
     );
@@ -43,35 +47,11 @@ class ExamModel {
 
 
 
-  ExamModel copyWith({
-    String? unitName,
-    String? unitCode,
-    String? date,
-    String? time,
-    String? venue,
-    String? invigilator,
-    int? accentColor,
-    bool? reminder,
-    String? reminderSchedule,
-  }) {
-    return ExamModel(
-      unitName: unitName ?? this.unitName,
-      unitCode: unitCode ?? this.unitCode,
-      date: date ?? this.date,
-      time: time ?? this.time,
-      venue: venue ?? this.venue,
-      invigilator: invigilator ?? this.invigilator,
-      accentColor: accentColor ?? this.accentColor,
-      reminder: reminder ?? this.reminder,
-      reminderSchedule: reminderSchedule ?? this.reminderSchedule,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'unitName': unitName,
       'unitCode': unitCode,
-      'date': date,
+      'date': date.toString(),
       'time': time,
       'venue': venue,
       'invigilator': invigilator,
@@ -85,7 +65,7 @@ class ExamModel {
     return ExamModel(
       unitName: map['unitName'] ?? '',
       unitCode: map['unitCode'] ?? '',
-      date: map['date'] ?? '',
+      date: DateTime.parse(map['date'] ?? ''),
       time: map['time'] ?? '',
       venue: map['venue'] ?? '',
       invigilator: map['invigilator'] ?? '',
@@ -132,4 +112,12 @@ class ExamModel {
       reminder.hashCode ^
       reminderSchedule.hashCode;
   }
+
+int get startHour{
+  return  int.parse(time.substring(0,2));
+}
+int get startMinute{
+  return  int.parse(time.substring(2,4));
+}
+
 }

@@ -1,6 +1,7 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/join_meeting_screen.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/settings.dart';
@@ -55,7 +56,8 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: const Icon(Icons.settings_outlined,color: primaryThemeColor,),
               onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
+                // Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const ExamsView()));
               },
             ),
           ],
