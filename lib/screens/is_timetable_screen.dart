@@ -16,16 +16,20 @@ class _IsTimetableScreenState extends State<IsTimetableScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       color: Colors.white,
-      height: 300,
+      height: 200,
       child: Column(
         children: [
+
+          const Divider(height: 30,),
           ListTile(
             style: ListTileStyle.drawer,
             onTap: (){
+              Navigator.pop(context);
                Navigator.push(
                       context,
                       MaterialPageRoute(
                       builder: (context) => const ScanScreen(isClass: true,)));
+                      
             },
             leading: const Icon(
               Icons.calendar_month_outlined,
@@ -43,6 +47,7 @@ class _IsTimetableScreenState extends State<IsTimetableScreen> {
           ListTile(
             style: ListTileStyle.drawer,
             onTap: (){
+              Navigator.pop(context);
                Navigator.push(
                       context,
                       MaterialPageRoute(

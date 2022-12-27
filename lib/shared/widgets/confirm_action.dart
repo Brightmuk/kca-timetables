@@ -19,13 +19,15 @@ class ConfirmAction extends StatelessWidget {
             Text(
              text,
              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
             ),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const SizedBox(),
                 MaterialButton(
+                   padding: EdgeInsets.all(20),
                       shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   textColor: Colors.white,
@@ -36,6 +38,7 @@ class ConfirmAction extends StatelessWidget {
                   color: Colors.redAccent,
                 ),
                 MaterialButton(
+                  padding: EdgeInsets.all(20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   textColor: Colors.white,

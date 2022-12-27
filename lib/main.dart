@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/notification.dart';
 import 'package:excel_reader/screens/class_home.dart';
+import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/landing_page.dart';
 import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/notification_service.dart';
@@ -64,16 +65,15 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: LocalData().isFirstTime(),
-      builder: (context,sn){
-        if(sn.hasData&&sn.data!){
-          return const LandingPage();
-        }else{
-          return HomePage();
-        }
-      }
-      );
+    AppState state = Provider.of<AppState>(context);
+
+    if(state.mode==AppMode.classTimetable){
+      return const ClassHome();
+    }else if(state.mode==AppMode.examTimetable){
+      return const ExamsHome();
+    }else{
+      return const LandingPage();
+    }
   }
 }
 
@@ -82,67 +82,4 @@ Future<void> configureLocalTimeZone() async {
   tz.initializeTimeZones();
   final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
   tz.setLocalLocation(tz.getLocation(timeZoneName!));
-}
-
-
-class WrapperWidget extends StatefulWidget {
-  const WrapperWidget({ Key? key }) : super(key: key);
-
-  @override
-  State<WrapperWidget> createState() => _WrapperWidgetState();
-}
-
-class _WrapperWidgetState extends State<WrapperWidget> {
-  List<Widget> pages = const[Home(),Profile()];
-
-  int currentPage=0;
-
-  Widget currentView(){
-    return pages[currentPage];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: currentView(),
-
-      bottomNavigationBar: Container(
-        child: Row(
-          children: [
-          IconButton(onPressed: (){
-          setState(() {
-            currentPage=0;
-          });
-        }, icon: Icon(Icons.home)),
-        IconButton(onPressed: (){
-          setState(() {
-            currentPage=1;
-          });
-        }, icon: Icon(Icons.person))
-        ]),
-      ),
-    );
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('home'),
-    );
-  }
-}
-
-class Profile extends StatelessWidget {
-  const Profile({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('Profile'),
-    );
-  }
 }

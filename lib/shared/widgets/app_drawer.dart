@@ -1,22 +1,26 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/exam_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
-import 'package:excel_reader/shared/confirm_action.dart';
+import 'package:excel_reader/shared/widgets/confirm_action.dart';
 import 'package:excel_reader/shared/text_styles.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return Drawer(
       width: MediaQuery.of(context).size.width*0.6,
       child: Stack(
@@ -36,7 +40,8 @@ class AppDrawer extends StatelessWidget {
               ),
 
             FutureBuilder<TimeTable>(
-              future: TimeTableService(context: context).getClassTimetable(),
+              future: state.isClassMode? TimeTableService(context: context).getClassTimetable():
+              ExamService(context: context).getExamTimetable(),
               builder: (context, snapshot) {
                 if(snapshot.hasData){
                   TimeTable? table = snapshot.data;
@@ -61,10 +66,11 @@ class AppDrawer extends StatelessWidget {
 
               }
             ),
-            StreamBuilder<List<UnitClass>>(
-              stream: TimeTableService(context: context).unitsStream,
+             StreamBuilder<int>(
+              stream:  state.isClassMode? TimeTableService(context: context).unitsCount:
+              ExamService(context: context).examsCount,
               builder: (context, snapshot) {
-                int count = snapshot.hasData?snapshot.data!.length:0;
+                int? count = snapshot.hasData?snapshot.data:0;
                 return ListTile(
                   leading: Text('$count unit(s)',style: tileTitleTextStyle,),
                   
@@ -150,24 +156,67 @@ class AppDrawer extends StatelessWidget {
              bottom: 20,
              child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: LiteRollingSwitch(
-                  value: false,
-                  width: MediaQuery.of(context).size.width*0.4,
-                  animationDuration: const Duration(milliseconds: 400),
-                  textOff: 'Class Timetable Mode ',
-                  textOn: 'Exam Timetable Mode ',
-                  textOnColor: Colors.white,
-                  colorOff: primaryThemeColor,
-                  colorOn: secondaryThemeColor,
-                  iconOn: Icons.school_outlined, 
-                  iconOff: Icons.receipt,
-                  onChanged: (bool state) {
-                   
-                  },
-                  onDoubleTap: () {},
-                  onSwipe: () {},
-                  onTap: () {},
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Slide to change mode',style: TextStyle(color: Colors.grey,fontSize: 11),),
+                  const Divider(),
+                  Consumer<AppState>(
+                      builder: (context, appState, child) {
+                        return AnimatedToggleSwitch<bool>.dual(
+                            current: !appState.isClassMode,
+                            first: true,
+                            second: false,
+                            textMargin: const EdgeInsets.symmetric(horizontal: 15),
+                            minTouchTargetSize: MediaQuery.of(context).size.width*0.4,
+                            indicatorSize: Size(100,45),
+                            innerColor: primaryThemeColor,
+                            indicatorColor: secondaryThemeColor,
+                            
+                            borderColor:primaryThemeColor,
+                            
+                            textBuilder: (value) {
+                              return Text(appState.modeStr, style: TextStyle(color: Colors.white),);
+                            },
+                            onChanged: (val)async{
+                              AppMode mode = val?AppMode.examTimetable:AppMode.classTimetable;
+                              bool exists;
+                              if(!val){
+                                exists = await TimeTableService(context: context).tableExists();
+                              }else{
+                                exists = await ExamService(context: context).tableExists();
+                              }
+                              if(exists){
+                                appState.changeMode(mode);
+
+                              }else{
+                                var result = await showModalBottomSheet(
+                                  shape:
+                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  context: context,
+                                  builder: (context) => ConfirmAction(text: 'You have no ${val?'exam':'class'} timetable yet. Do you want to scan now?'));
+                                    if (result) {
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ScanScreen(isClass: !val,)));
+                                    }
+                              }  
+                            },
+                            iconBuilder: (val){
+                              if(!val){
+                                  return Icon(Icons.school_outlined,color: Colors.white,);
+                              }else{
+                                return Icon(Icons.receipt,color: Colors.white,);
+                              }
+                              
+                            },
+                            
+                          );
+                    }
+                  ),
+                ],
+              ),
           ),
            ),
         ],
@@ -177,30 +226,3 @@ class AppDrawer extends StatelessWidget {
 }
 
 
-
-class DrawerPainter extends CustomPainter{
-  final Color color;
-
-  DrawerPainter({required this.color,});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-   final paint = Paint()
-   ..style=PaintingStyle.fill
-   ..strokeWidth=1
-   ..color=color;
-
-    Offset p1 = Offset(0, size.height*0.3);
-   final path = Path();
-   path.lineTo(size.width, 0);
-   path.lineTo(size.width, size.height*0.5);
-  path.arcToPoint( p1,radius: Radius.circular(size.height*size.width/100),clockwise: false);
- 
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
-
-  
-}

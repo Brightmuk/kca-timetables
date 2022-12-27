@@ -1,7 +1,7 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/single_class.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/decorations.dart';
 import 'package:excel_reader/shared/text_styles.dart';
@@ -213,8 +213,9 @@ class _EditDayState extends State<EditDay> {
   }
 }
 class EditTime extends StatefulWidget {
-  final String current;
-  const EditTime({ Key? key,required this.current }) : super(key: key);
+  final double start;
+  final double end;
+  const EditTime({ Key? key,required this.start,required this.end }) : super(key: key);
 
   @override
   State<EditTime> createState() => _EditTimeState();
@@ -225,17 +226,12 @@ class _EditTimeState extends State<EditTime> {
   @override
   void initState(){
     super.initState();
-    try{
-    List<String> range = widget.current.substring(0,widget.current.length-3).split('-');
-    start = double.parse(range[0]);
-    end = double.parse(range[1]) ;
-    }catch(e){
-      print(e.toString());
-    }
-
+    start = widget.start;
+    end = widget.end;
   }
   double start=0;
   double end=0;
+  
 
   @override
   Widget build(BuildContext context) {

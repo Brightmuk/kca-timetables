@@ -14,7 +14,7 @@ class ExamModel {
   final String invigilator;
   final int accentColor;
   final bool reminder;
-  final String? reminderSchedule;
+  final int? reminderSchedule;
 
   ExamModel({
     required this.unitName,
@@ -119,5 +119,16 @@ int get startHour{
 int get startMinute{
   return  int.parse(time.substring(2,4));
 }
+  
+int get sortIndex {
+    int timeValue;
+    try {
+      timeValue = int.parse(time.substring(5,9));
+    } catch (e) {
+      timeValue = 0;
+    }
+
+    return timeValue+date.day;
+  }
 
 }

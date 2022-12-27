@@ -3,9 +3,9 @@ import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/single_class.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
-import 'package:excel_reader/shared/confirm_action.dart';
+import 'package:excel_reader/shared/widgets/confirm_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -227,7 +227,8 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       onPressed: (){
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>const HomePage()), (Route<dynamic> route) => false);
+                        
+                        Navigator.pop(context);
                       }),
                 ),
               )

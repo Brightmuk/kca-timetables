@@ -33,10 +33,14 @@ class TimeTableService{
     .doc('classTimetable')
     .get().then((value) => TimeTable.fromMap(value!));
   }
-
+  Future<bool> tableExists()async{
+      var value = await db.collection(tableCollection)
+      .doc('classTimetable').get();
+      return value!=null;
+    }
   ///Save  a record
  
-  Future<bool> saveTimeTable({required String tableName,required String period, required List<UnitClass> units, required String course}) async {
+  Future<bool> saveClassTimeTable({required String tableName,required String period, required List<UnitClass> units, required String course}) async {
     bool returnValue = true;
 
     try{
@@ -115,6 +119,28 @@ class TimeTableService{
         .get()
         .then((value) => recordList(value!));
 
+  }
+  Stream<int> get unitsCount{
+        return db.collection(recordCollection)
+    .stream
+        
+    .map(unitCountMap);
+  }
+  int unitCountMap(Map<String, dynamic> query){
+       try{
+    final item = UnitClass.fromMap(query);
+    Iterable<UnitClass> record = _records.where((r) => r.unitCode==item.unitCode);
+    if(record.isEmpty){
+      _records.add(item);
+    }else{
+      _records.remove(record.first);
+      _records.add(item);
+    }
+    return _records.length;
+    }catch(e){
+      print(e.toString());
+      return 0;
+    } 
   }
 
 

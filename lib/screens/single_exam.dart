@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
+import 'package:excel_reader/services/exam_service.dart';
 import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/accent_color_selector.dart';
@@ -15,38 +17,32 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class EditClassPage extends StatefulWidget {
-  final UnitClass unit;
-  const EditClassPage({Key? key, required this.unit}) : super(key: key);
+class EditExamPage extends StatefulWidget {
+  final ExamModel exam;
+  const EditExamPage({Key? key, required this.exam}) : super(key: key);
 
   @override
-  _EditClassPageState createState() => _EditClassPageState();
+  _EditExamPageState createState() => _EditExamPageState();
 }
 
-class _EditClassPageState extends State<EditClassPage> {
-  String? _day;
+class _EditExamPageState extends State<EditExamPage> {
+  DateTime? _date;
   String? _time;
   String? _venue;
-  String? _lecturer;
-  String? _link;
-  String? _passCode;
-  String? _meetingId;
+  String? _invigilator;
   bool? _reminder;
   int? _accentColor;
   int? _reminderSchedule;
 
   void initState() {
     super.initState();
-    _day = widget.unit.day;
-    _time = widget.unit.time;
-    _venue = widget.unit.venue;
-    _lecturer = widget.unit.lecturer;
-    _link = widget.unit.classLink;
-    _passCode = widget.unit.meetingPassCode;
-    _meetingId = widget.unit.meetingId;
-    _reminder = widget.unit.reminder;
-    _reminderSchedule=widget.unit.reminderSchedule??5;
-    _accentColor=widget.unit.accentColor;
+    _date = widget.exam.date;
+    _time = widget.exam.time;
+    _venue = widget.exam.venue;
+    _invigilator = widget.exam.invigilator;
+    _reminder = widget.exam.reminder;
+    _reminderSchedule=widget.exam.reminderSchedule??5;
+    _accentColor=widget.exam.accentColor;
   }
 
   @override
@@ -87,7 +83,7 @@ class _EditClassPageState extends State<EditClassPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                       ),
-                      Text('Edit Class',
+                      Text('Edit Exam',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -99,13 +95,13 @@ class _EditClassPageState extends State<EditClassPage> {
                 context: context,
                 builder: (context) => const ConfirmAction(text: 'Are you sure you want to delete this unit?'));
                   if(result){
-                  if(!await TimeTableService(context: context).deleteUnit(widget.unit)){
-                    toast('Sorry, an error occurred');
-                  }else{
-                    _appState.reload();
-                    toast('Unit deleted');
-                    Navigator.pop(context);
-                    }
+                  // if(!await ExamService(context: context).deleteExam(widget.exam)){
+                  //   toast('Sorry, an error occurred');
+                  // }else{
+                  //   _appState.reload();
+                  //   toast('Unit deleted');
+                  //   Navigator.pop(context);
+                  //   }
                   }
 
                 }, icon: const Icon(Icons.delete,color: Colors.white,))
@@ -131,7 +127,7 @@ class _EditClassPageState extends State<EditClassPage> {
                 ),
                 Center(
                   child: Text(
-                    widget.unit.unitName,
+                    widget.exam.unitName,
                     style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.sp),
                   ),
                 ),
@@ -140,7 +136,7 @@ class _EditClassPageState extends State<EditClassPage> {
                 ),
                 Center(
                   child: Text(
-                    widget.unit.unitCode,
+                    widget.exam.unitCode,
                     style: TextStyle(color: Colors.grey,fontSize: 14.sp),
                   ),
                 ),
@@ -150,36 +146,36 @@ class _EditClassPageState extends State<EditClassPage> {
                 ListTile(
                   onTap: ()async{
 
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      context: context, builder: (context)=>EditDay(current: _day!),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    );
-                    if(result!=null){
-                      setState(() {
-                        _day=result;
-                      });
-                      save();
-                      setReminder();
-                    }
+                    // var result = await showModalBottomSheet(
+                    //   backgroundColor: Colors.white,
+                    //   isScrollControlled: true,
+                    //   context: context, builder: (context)=>EditDay(current: _date!),
+                    //   shape:
+                    //   RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    // );
+                    // if(result!=null){
+                    //   setState(() {
+                    //     _date=result;
+                    //   });
+                    //   save();
+                    //   setReminder();
+                    // }
                   },
                   style: ListTileStyle.drawer,
                   leading: Icon(Icons.calendar_today_outlined,
                       color: Color(_accentColor!)),
-                  title: Text('Day'),
+                  title: Text('Date'),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
                   ),
-                  subtitle: Text(_day!),
+                  subtitle: Text(_date.toString()),
                 ),
                 ListTile(
                   onTap: ()async{
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditTime(start: 0,end: 0,),
+                      context: context, builder: (context)=>EditTime(start: 0,end:0),
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     );
@@ -235,13 +231,13 @@ class _EditClassPageState extends State<EditClassPage> {
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
                       isScrollControlled: true,
-                      context: context, builder: (context)=>EditLecturer(lecturer: _lecturer!),
+                      context: context, builder: (context)=>EditLecturer(lecturer: _invigilator!),
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     );
                     if(result!=null){
                       setState(() {
-                        _lecturer=result;
+                        _invigilator=result;
                       });
                       save();
                     }
@@ -249,74 +245,19 @@ class _EditClassPageState extends State<EditClassPage> {
                   style: ListTileStyle.drawer,
                   leading: Icon(Icons.person_outline,
                       color: Color(_accentColor!)),
-                  title: Text('Lecturer'),
+                  title: Text('Invigilator'),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
                   ),
-                  subtitle: Text(_lecturer!),
+                  subtitle: Text(_invigilator!),
                 ),
-                ListTile(
-                  onTap: ()async{
 
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      context: context, builder: (context)=>EditLink(meetingLink: _link??''),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    );
-                    if(result!=null){
-                      setState(() {
-                        _link=result;
-                      });
-                      save();
-                    }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading:Icon(Icons.link_outlined,
-                      color: Color(_accentColor!)),
-                  title: Text('Meeting link'),
-                  subtitle: Text(_link ?? 'No link'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ),
-                ListTile(
-                  onTap: ()async{
-
-                    var result = await showModalBottomSheet(
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      context: context, builder: (context)=>EditCredentials(passCode:_passCode??'',meetingId:_meetingId??''),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    );
-                    if(result!=null){
-                      setState(() {
-                        _passCode=result['passCode'];
-                        _meetingId=result['meetingId'];
-                      });
-                      save();
-                    }
-                  },
-                  style: ListTileStyle.drawer,
-                  leading: Icon(Icons.security_outlined,
-                      color: Color(_accentColor!)),
-                  title: Text('Meeting credentials'),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                  subtitle: Text(
-                      'Meeting Id: ${_meetingId ?? 'No meeting Id'} | Passcode: ${_passCode ?? 'No passcode'}'),
-                ),
                 Divider(),
                 SwitchListTile(
                     activeColor: Color(_accentColor!),
                     title: Text('Reminder'),
-                    subtitle: Text('Get reminded when class is about to start'),
+                    subtitle: Text('Get reminded when exam is about to start'),
                     value: _reminder!,
                     onChanged: (val)async {
                       setState(() {
@@ -326,7 +267,7 @@ class _EditClassPageState extends State<EditClassPage> {
                       if(val){
                         setReminder();
                       }else{
-                        await NotificationService().cancelReminder(widget.unit.sortIndex);
+                        await NotificationService().cancelReminder(widget.exam.sortIndex);
                       }
                     }),
                 AnimatedOpacity(
@@ -424,10 +365,10 @@ Future<void> setReminder()async{
   debugPrint(getDate().toString());
   
     await NotificationService().zonedScheduleNotification(
-      id: widget.unit.sortIndex, 
+      id: widget.exam.sortIndex, 
       title: 'Class is about to start', 
-      description: 'Your ${widget.unit.unitName} class is starting in $timeFormatStr', 
-      payload: "{'unitCode':${widget.unit.unitCode}}", 
+      description: 'Your ${widget.exam.unitName} class is starting in $timeFormatStr', 
+      payload: "{'unitCode':${widget.exam.unitCode}}", 
       date: getDate());
 }
 
@@ -448,22 +389,19 @@ DateTime getDate(){
     }
   }
   void save()async{
-    UnitClass _record = UnitClass(
+    ExamModel _exam = ExamModel(
         accentColor: _accentColor!,
-        unitCode: widget.unit.unitCode,
-        unitName: widget.unit.unitName,
-        day: _day!,
+        unitCode: widget.exam.unitCode,
+        unitName: widget.exam.unitName,
+        date: _date!,
         time: _time!,
         venue: _venue!,
-        lecturer: _lecturer!,
-        meetingId: _meetingId,
-        meetingPassCode: _passCode,
-        classLink: _link,
+        invigilator: _invigilator!,
         reminder: _reminder!,
         reminderSchedule: _reminderSchedule
     );
 
-    await TimeTableService(context: context).editRecord(record: _record);
+    await ExamService(context: context).editExam(exam: _exam);
 
   }
 }

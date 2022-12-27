@@ -15,12 +15,12 @@ class ExamService{
   final db = Localstore.instance;
 
   static const String examColletion = 'examCollection';
-  static const String examTableCollection = 'examTableCollection';
+  static const String tableCollection = 'tableCollection';
 
 
   Future<void> saveExamDetails({required String name,required String period,required String course})async{
          await db
-        .collection(examTableCollection)
+        .collection(tableCollection)
         .doc('examTimetable')
         .set({
           'name':name,
@@ -29,15 +29,20 @@ class ExamService{
           'date':DateTime.now().millisecondsSinceEpoch
         });
   }
-  Future<TimeTable> getClassTimetable(){
-    return db.collection(examTableCollection)
+  Future<TimeTable> getExamTimetable(){
+    return db.collection(tableCollection)
     .doc('examTimetable')
     .get().then((value) => TimeTable.fromMap(value!));
+  }
+Future<bool> tableExists()async{
+    var value = await db.collection(tableCollection)
+    .doc('examTimetable').get();
+    return value!=null;
   }
 
   ///Save  a record
  
-  Future<bool> saveExamTable({required String tableName,required String period, required List<ExamModel> exams, required String course}) async {
+  Future<bool> saveExamTimeTable({required String tableName,required String period, required List<ExamModel> exams, required String course}) async {
     bool returnValue = true;
 
     try{
@@ -107,13 +112,20 @@ class ExamService{
 
     return db.collection(examColletion)
     .stream
-        .where((r) => day!=null?r['day']==day:true)
     .map(examList);
+  }
+  Stream<int> get examsCount {
+
+    return db.collection(examColletion)
+    .stream
+    .map(examsCountMap);
   }
   Future<List<ExamModel>> examsFuture() {
 
     return db.collection(examColletion)
+    
         .get()
+        
         .then((value) => examList(value!));
 
   }
@@ -131,11 +143,29 @@ class ExamService{
       _records.remove(record.first);
       _records.add(item);
     }
-// _records.sort((a,b)=>a.d.compareTo(b.sortIndex));
+_records.sort((a,b)=>a.date.compareTo(b.date));
     return _records;
     }catch(e){
       print(e.toString());
       return [];
+    }
+
+  }
+
+int examsCountMap(Map<String, dynamic> query) {
+    try{
+    final item = ExamModel.fromMap(query);
+    Iterable<ExamModel> record = _records.where((r) => r.unitCode==item.unitCode);
+    if(record.isEmpty){
+      _records.add(item);
+    }else{
+      _records.remove(record.first);
+      _records.add(item);
+    }
+    return _records.length;
+    }catch(e){
+      print(e.toString());
+      return 0;
     }
 
   }

@@ -1,6 +1,6 @@
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -8,14 +8,16 @@ import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
 import 'package:excel_reader/services/exam_service.dart';
 import 'package:excel_reader/services/local_data.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/decorations.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class ScanScreen extends StatefulWidget {
   final bool isClass;
@@ -265,22 +267,35 @@ class _ScanScreenState extends State<ScanScreen> {
                 ),
                 Positioned(
                   bottom: 5,
-                  child: MaterialButton(
-                      disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.all(20),
-                      minWidth: MediaQuery.of(context).size.width * 0.9,
-                      color: const Color.fromARGB(255, 201, 174, 20),
-                      child: const Text(
-                        'Next',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      onPressed:
-                      (excelDoc != null && period != null && course != null)||!isAuto
-                          ? (widget.isClass? classTimetableScan:examTimetableScan)
-                          : null),
+                  child: Consumer<AppState>(
+                    
+                    builder: (context, state,child) {
+                      return MaterialButton(
+                          disabledColor: const Color.fromRGBO(188, 175, 69, 0.5),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: const EdgeInsets.all(20),
+                          minWidth: MediaQuery.of(context).size.width * 0.9,
+                          color: const Color.fromARGB(255, 201, 174, 20),
+                          child: const Text(
+                            'Next',
+                            style: TextStyle(
+                                color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          onPressed:
+                          (excelDoc != null && period != null && course != null)||!isAuto
+                              ? (){
+                                  if(widget.isClass){
+                                    classTimetableScan(state);
+                                   
+                                  } else{
+                                    examTimetableScan(state);
+                                    
+                                  }  
+                              }
+                              : null);
+                    }
+                  ),
                 )
               ],
             ),
@@ -388,7 +403,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  void classTimetableScan() async{
+  void classTimetableScan(AppState state) async{
    
     if(!isAuto){
       await LocalData().setNotFirst();
@@ -455,10 +470,11 @@ class _ScanScreenState extends State<ScanScreen> {
       
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
 
-      var result = await TimeTableService(context: context).saveTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
+      var result = await TimeTableService(context: context).saveClassTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
 
       if(result){
-        Navigator.push(
+         state.changeMode(AppMode.classTimetable);
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => const FinishSetupScreen()));
@@ -471,7 +487,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-void examTimetableScan()async{ 
+void examTimetableScan(AppState state)async{ 
     Sheet? sheet;
     CellIndex? periodIndex;
     
@@ -521,13 +537,12 @@ void examTimetableScan()async{
           }
         }
        
-      var result = await ExamService(context: context).saveExamTable(period:period!, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
+      var result = await ExamService(context: context).saveExamTimeTable(period:period!, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ExamsView()));
+         state.changeMode(AppMode.examTimetable);
+         Navigator.pop(context);
+
 
       }
 

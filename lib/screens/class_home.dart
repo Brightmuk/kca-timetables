@@ -6,10 +6,10 @@ import 'package:excel_reader/screens/join_meeting_screen.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/settings.dart';
 import 'package:excel_reader/screens/single_class.dart';
-import 'package:excel_reader/services/timetable_service.dart';
+import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
-import 'package:excel_reader/shared/app_drawer.dart';
-import 'package:excel_reader/shared/app_widgets.dart';
+import 'package:excel_reader/shared/widgets/app_drawer.dart';
+import 'package:excel_reader/shared/widgets/app_loader.dart';
 import 'package:excel_reader/shared/functions.dart';
 import 'package:excel_reader/shared/text_styles.dart';
 import 'package:excel_reader/shared/unit_painter.dart';
@@ -21,15 +21,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key, }) : super(key: key);
+class ClassHome extends StatefulWidget {
+  const ClassHome({Key? key, }) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ClassHome> createState() => _ClassHomeState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class _ClassHomeState extends State<ClassHome> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   
   @override
   Widget build(BuildContext context) {
@@ -56,8 +56,8 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: const Icon(Icons.settings_outlined,color: primaryThemeColor,),
               onPressed: (){
-                // Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
-                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const ExamsView()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const SettingsPage()));
+
               },
             ),
           ],
