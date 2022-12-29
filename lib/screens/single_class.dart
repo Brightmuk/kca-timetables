@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/notification_service.dart';
@@ -38,7 +39,7 @@ class _EditClassPageState extends State<EditClassPage> {
   void initState() {
     super.initState();
     _day = widget.unit.day;
-    _time = widget.unit.time;
+    _time = widget.unit.time.originalStr;
     _venue = widget.unit.venue;
     _lecturer = widget.unit.lecturer;
     _link = widget.unit.classLink;
@@ -432,11 +433,23 @@ Future<void> setReminder()async{
 }
 
 DateTime getDate(){
+  
   int startHour=int.parse(_time!.substring(0,2));
   int startMinute = int.parse(_time!.substring(2,4));
   DateTime now = DateTime.now();
+
+  int unitDay = getWeekday(_day);
+
+  int dayDifference;
+  if(unitDay<now.weekday){
+    unitDay+=7;
+    dayDifference=unitDay-now.weekday;
+  }else{
+    dayDifference=unitDay-now.weekday;
+  }
+
   return DateTime(
-    now.year,now.month,now.day, startHour-reminderHrs,startMinute-reminderMins
+    now.year,now.month,now.day+dayDifference, startHour-reminderHrs,startMinute-reminderMins
     );
 }
 
@@ -453,7 +466,7 @@ DateTime getDate(){
         unitCode: widget.unit.unitCode,
         unitName: widget.unit.unitName,
         day: _day!,
-        time: _time!,
+        time: Time.fromString(_time!),
         venue: _venue!,
         lecturer: _lecturer!,
         meetingId: _meetingId,
@@ -466,6 +479,25 @@ DateTime getDate(){
     await TimeTableService(context: context).editRecord(record: _record);
 
   }
+
+  int getWeekday(day){
+      switch (day) {
+      case 'MONDAY':
+        return 1;
+      case 'TUESDAY':
+        return 2;
+      case 'WEDNESDAY':
+        return 3;
+      case 'THURSDAY':
+        return 4;
+      case 'FRIDAY':
+        return 5;
+      case 'SATURDAY':
+        return 6;
+      default:
+        return 0;
+    }
+}
 }
 
 

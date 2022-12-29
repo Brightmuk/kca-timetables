@@ -110,7 +110,7 @@ class _ClassHomeState extends State<ClassHome> {
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: Text('UPCOMING',style: titleTextStyle,),
-                                      trailing: Text(timeLeft(_record.time, _record.day),style: minorTextStyle,),
+                                      trailing: Text(timeLeft(_record.time.originalStr, _record.day),style: minorTextStyle,),
                                     ),
                 
                                     ListTile(
@@ -121,7 +121,7 @@ class _ClassHomeState extends State<ClassHome> {
                                     ListTile(
                 
                                       contentPadding: EdgeInsets.zero,
-                                      subtitle: Text(_record.time,style: TextStyle(fontSize: 13.sp)),
+                                      subtitle: Text(_record.time.originalStr,style: TextStyle(fontSize: 13.sp)),
                                       title: Text(_record.venue,style: tileTitleTextStyle,),
                                       trailing: MaterialButton(
                                         disabledColor: Colors.grey,
@@ -288,9 +288,9 @@ class TodayUnitTile extends StatelessWidget {
                                             Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 204, 204, 204),fontSize: 13.sp),),
                                             Row(
                                               children: [
-                                                Text(record.time,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12.sp),),
+                                                Text(record.time.originalStr,style: TextStyle(color: Color.fromARGB(255, 196, 196, 196),fontSize: 12.sp),),
                                                 SizedBox(width: 10.sp,),
-                                                Text(timeLeft(record.time, record.day),style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10.sp))
+                                                Text(timeLeft(record.time.originalStr, record.day),style: TextStyle(color: Color.fromARGB(255, 139, 142, 161),fontSize: 10.sp))
                                               ],
                                             )
     
@@ -424,7 +424,7 @@ class WeeklyUnitTile extends StatelessWidget {
                                               Text(record.unitName.capitalise(),style: TextStyle(color: Colors.white,fontSize: 12.sp,fontWeight: FontWeight.bold),),
                                               Text(record.venue,style: TextStyle(color: Color.fromARGB(255, 173, 173, 173),fontSize: 12.sp),),
     
-                                              Text(record.time,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12.sp),)
+                                              Text(record.time.originalStr,style: TextStyle(color: Color.fromARGB(255, 197, 197, 197),fontSize: 12.sp),)
                                             ],
                                           ),
                                         ),

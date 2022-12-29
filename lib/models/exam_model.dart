@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:flutter/material.dart';
 
 
@@ -9,7 +10,7 @@ class ExamModel {
   final String unitName;
   final String unitCode;
   final DateTime date;
-  final String time;
+  final Time time;
   final String venue;
   final String invigilator;
   final int accentColor;
@@ -35,7 +36,7 @@ class ExamModel {
     return ExamModel(
       accentColor: 0xff050851,
       date: DateTime.parse(row[5]!.value.toString()),
-      time: row[6]!.value.toString().toUpperCase(),
+      time: Time.fromString(row[6]!.value.toString().toUpperCase()),
       venue: row[10]!.value.toString().toUpperCase(),
       unitCode: row[0]!.value.toString().toUpperCase(),
       unitName: row[1]!.value.toString().toUpperCase(),
@@ -52,7 +53,7 @@ class ExamModel {
       'unitName': unitName,
       'unitCode': unitCode,
       'date': date.toString(),
-      'time': time,
+      'time': time.toJson(),
       'venue': venue,
       'invigilator': invigilator,
       'accentColor': accentColor,
@@ -66,7 +67,7 @@ class ExamModel {
       unitName: map['unitName'] ?? '',
       unitCode: map['unitCode'] ?? '',
       date: DateTime.parse(map['date'] ?? ''),
-      time: map['time'] ?? '',
+      time: Time.fromJson(map['time'] ?? ''),
       venue: map['venue'] ?? '',
       invigilator: map['invigilator'] ?? '',
       accentColor: map['accentColor']?.toInt() ?? 0,
@@ -113,22 +114,9 @@ class ExamModel {
       reminderSchedule.hashCode;
   }
 
-int get startHour{
-  return  int.parse(time.substring(0,2));
-}
-int get startMinute{
-  return  int.parse(time.substring(2,4));
-}
   
 int get sortIndex {
-    int timeValue;
-    try {
-      timeValue = int.parse(time.substring(5,9));
-    } catch (e) {
-      timeValue = 0;
-    }
-
-    return timeValue+date.day;
+    return time.start+date.day;
   }
 
 }

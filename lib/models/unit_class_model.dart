@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/shared/functions.dart';
 
 class UnitClass {
   final String day;
   final String? course;
-  final String time;
+  final Time time;
   final String venue;
   final String unitCode;
   final String unitName;
@@ -45,7 +46,7 @@ class UnitClass {
       accentColor: 0xff050851,
       day: row[dayIndex]!.value.toString().toUpperCase(),
       course:courseName,
-      time: row[dayIndex + 1]!.value.toString().toUpperCase(),
+      time: Time.fromString(row[dayIndex + 1]!.value.toString().toUpperCase()) ,
       venue: row[dayIndex + 2]!.value.toString().toUpperCase(),
       unitCode: row[dayIndex + 3]!.value.toString().toUpperCase(),
       unitName: row[dayIndex + 4]!.value.toString().toUpperCase(),
@@ -63,7 +64,7 @@ class UnitClass {
       accentColor: 0xff050851,
       day: dayFromWeekday(DateTime.now().weekday),
       course:defaultCourseName,
-      time: '0800-1100 HRS',
+      time: Time.fromString('0800-1100 HRS'),
       venue: 'VIRTUAL',
       unitCode: defaultUnitCode,
       unitName: defaultUnitName,
@@ -77,57 +78,6 @@ class UnitClass {
   }
 
 
-bool get isFulfiled{
-    int timeValue;
-      int hourOfDay = DateTime.now().hour;
-    try {
-      timeValue = int.parse(time.split('-')[0]);
-    } catch (e) {
-      timeValue = 0;
-    }
-    return (hourOfDay*100)>timeValue;
-      
-}
-
-bool get canJoinMeeting{
-  int today = DateTime.now().weekday;
-  int startTime = int.parse(time.substring(0,4));
-
-  return timeIndex>=startTime&&venue=='VIRTUAL'&&dayIndex(day)== today;
-}
-
-int get startHour{
-  return  int.parse(time.substring(0,2));
-}
-int get startMinute{
-  return  int.parse(time.substring(2,4));
-}
-
-  int get sortIndex {
-    int timeValue;
-    try {
-      timeValue = int.parse(time.substring(5,9));
-    } catch (e) {
-      timeValue = 0;
-    }
-
-    switch (day) {
-      case 'MONDAY':
-        return 10000 + timeValue;
-      case 'TUESDAY':
-        return 20000 + timeValue;
-      case 'WEDNESDAY':
-        return 30000 + timeValue;
-      case 'THURSDAY':
-        return 40000 + timeValue;
-      case 'FRIDAY':
-        return 50000 + timeValue;
-      case 'SATURDAY':
-        return 60000 + timeValue;
-      default:
-        return 0 + timeValue;
-    }
-  }
 
 
   Map<String, dynamic> toMap() {
@@ -135,7 +85,7 @@ int get startMinute{
       'day': day,
       'accentColor':accentColor,
       'course': course,
-      'time': time,
+      'time': time.toJson(),
       'venue': venue,
       'unitCode': unitCode,
       'unitName': unitName,
@@ -153,7 +103,7 @@ int get startMinute{
       accentColor: map['accentColor']??0xff050851,
       day: map['day'] ?? '',
       course: map['course'],
-      time: map['time'] ?? '',
+      time: Time.fromJson(map['time'] ?? '') ,
       venue: map['venue'] ?? '',
       unitCode: map['unitCode'] ?? '',
       unitName: map['unitName'] ?? '',
@@ -166,36 +116,7 @@ int get startMinute{
     );
   }
 
-  UnitClass copyWith({
-    String? day,
-    String? course,
-    String? time,
-    String? venue,
-    String? unitCode,
-    String? unitName,
-    String? lecturer,
-    bool? reminder,
-    int? reminderSchedule,
-    String? classLink,
-    String? meetingPassCode,
-    String? meetingId,
-  }) {
-    return UnitClass(
-      day: day ?? this.day,
-      course: course ?? this.course,
-      time: time ?? this.time,
-      venue: venue ?? this.venue,
-      unitCode: unitCode ?? this.unitCode,
-      unitName: unitName ?? this.unitName,
-      lecturer: lecturer ?? this.lecturer,
-      reminder: reminder ?? this.reminder,
-      reminderSchedule: reminderSchedule ?? this.reminderSchedule,
-      classLink: classLink ?? this.classLink,
-      meetingPassCode: meetingPassCode ?? this.meetingPassCode,
-      meetingId: meetingId ?? this.meetingId,
-      accentColor: accentColor
-    );
-  }
+
 
   String toJson() => json.encode(toMap());
 
@@ -240,4 +161,59 @@ int get startMinute{
       meetingPassCode.hashCode ^
       meetingId.hashCode;
   }
+
+  bool get isFulfiled{
+      int hourOfDay = DateTime.now().hour;
+    return (hourOfDay*100)>time.end;
+      
+}
+
+bool get canJoinMeeting{
+  int today = DateTime.now().weekday;
+  
+
+  return timeIndex>=time.start&&venue=='VIRTUAL'&&dayIndex(day)== today;
+}
+
+int get weekday{
+      switch (day) {
+      case 'MONDAY':
+        return 1;
+      case 'TUESDAY':
+        return 2;
+      case 'WEDNESDAY':
+        return 3;
+      case 'THURSDAY':
+        return 4;
+      case 'FRIDAY':
+        return 5;
+      case 'SATURDAY':
+        return 6;
+      default:
+        return 0;
+    }
+}
+
+  int get sortIndex {
+    int timeValue=time.start;
+
+
+    switch (day) {
+      case 'MONDAY':
+        return 10000 + timeValue;
+      case 'TUESDAY':
+        return 20000 + timeValue;
+      case 'WEDNESDAY':
+        return 30000 + timeValue;
+      case 'THURSDAY':
+        return 40000 + timeValue;
+      case 'FRIDAY':
+        return 50000 + timeValue;
+      case 'SATURDAY':
+        return 60000 + timeValue;
+      default:
+        return 0 + timeValue;
+    }
+  }
+
 }

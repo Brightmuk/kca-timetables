@@ -181,7 +181,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                             return ListTile(
                               style: ListTileStyle.drawer,
                               title: Text(_records[index].unitName),
-                              subtitle: Text(_records[index].time),
+                              subtitle: Text(_records[index].time.originalStr),
                               onTap: () {
                                 Navigator.push(
                                     context,

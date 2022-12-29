@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/exam_model.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/exam_service.dart';
@@ -13,9 +14,11 @@ import 'package:excel_reader/shared/text_styles.dart';
 import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
 
 class EditExamPage extends StatefulWidget {
   final ExamModel exam;
@@ -37,7 +40,7 @@ class _EditExamPageState extends State<EditExamPage> {
   void initState() {
     super.initState();
     _date = widget.exam.date;
-    _time = widget.exam.time;
+    _time = widget.exam.time.originalStr;
     _venue = widget.exam.venue;
     _invigilator = widget.exam.invigilator;
     _reminder = widget.exam.reminder;
@@ -169,7 +172,7 @@ class _EditExamPageState extends State<EditExamPage> {
                     Icons.arrow_forward_ios,
                     size: 15,
                   ),
-                  subtitle: Text(_date.toString()),
+                  subtitle: Text(DateFormat.MMMEd().format(_date!)),
                 ),
                 ListTile(
                   onTap: ()async{
@@ -394,7 +397,7 @@ DateTime getDate(){
         unitCode: widget.exam.unitCode,
         unitName: widget.exam.unitName,
         date: _date!,
-        time: _time!,
+        time: Time.fromString(_time!),
         venue: _venue!,
         invigilator: _invigilator!,
         reminder: _reminder!,

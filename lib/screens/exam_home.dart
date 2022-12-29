@@ -191,7 +191,7 @@ class ExamTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             
-            Text(exam.time),
+            Text(exam.time.originalStr),
             SizedBox(
               width: MediaQuery.of(context).size.width*0.5,
               child: Column(
