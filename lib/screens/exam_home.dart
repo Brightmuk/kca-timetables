@@ -53,7 +53,7 @@ class _ExamsHomeState extends State<ExamsHome> {
               },
             ),
           ],
-          leading: IconButton(icon: Icon(Icons.menu,color: primaryThemeColor,)
+          leading: IconButton(icon: const Icon(Icons.menu,color: primaryThemeColor,)
             ,onPressed: (){
               _scaffoldKey.currentState!.openDrawer();
             },),
@@ -91,13 +91,13 @@ class _ExamsHomeState extends State<ExamsHome> {
                       return const Center(child: Text('An error has occurred'),);
                     }
                     List<ExamModel> exams = snapshot.data!;
-                    print(exams.length);
+                  
                     return ListView.separated(
-                      padding: EdgeInsets.only(bottom: 50),
+                      padding: const EdgeInsets.only(bottom: 50),
                       
                       itemCount: exams.length,
                       itemBuilder: (context, index){
-                        print('${exams[index].unitName}'  '${exams[index].date}' );
+                      
                         return Column(
                           children: [
                             index==0?DayHeader(date: exams[index].date):Container(),
@@ -186,42 +186,45 @@ class ExamTile extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => EditExamPage(exam: exam)));
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            
-            Text(exam.time.originalStr),
-            SizedBox(
-              width: MediaQuery.of(context).size.width*0.5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   
-                  Text(exam.unitName.capitalise(),style: TextStyle(fontSize: 17,fontWeight: FontWeight.w600),),
-                  SizedBox(height: 25,),
-                  Row(
-                    children: [
-                    const Icon(Icons.house_outlined,color: secondaryThemeColor,),
-                    const SizedBox(width: 10,),
-                    Text(exam.venue,style: TextStyle(fontWeight: FontWeight.w600),)
-                  ],),
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                    const Icon(Icons.person_outline,color: secondaryThemeColor,),
-                    const SizedBox(width: 10,),
-                    Text(exam.invigilator.capitalise(),style: TextStyle(fontWeight: FontWeight.w600),)
-                  ],),
-                   SizedBox(height: 20,),
-                ],
+        child: Container(
+         decoration: const BoxDecoration(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+              Text(exam.time.originalStr),
+              SizedBox(
+                width: MediaQuery.of(context).size.width*0.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     
+                    Text(exam.unitName.capitalise(),style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w600),),
+                    const SizedBox(height: 25,),
+                    Row(
+                      children: [
+                      const Icon(Icons.house_outlined,color: secondaryThemeColor,),
+                      const SizedBox(width: 10,),
+                      Text(exam.venue,style: const TextStyle(fontWeight: FontWeight.w600),)
+                    ],),
+                    const SizedBox(height: 20,),
+                    Row(
+                      children: [
+                      const Icon(Icons.person_outline,color: secondaryThemeColor,),
+                      const SizedBox(width: 10,),
+                      Text(exam.invigilator.capitalise(),style: const TextStyle(fontWeight: FontWeight.w600),)
+                    ],),
+                     const SizedBox(height: 20,),
+                  ],
+                ),
               ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 15,
-            ),
-          ],
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
+              ),
+            ],
+          ),
         ),
       ),
     );

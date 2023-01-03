@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:excel_reader/models/exam_model.dart';
+import 'package:excel_reader/models/period_model.dart';
 import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/finish_setup.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
@@ -12,6 +13,7 @@ import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/decorations.dart';
 import 'package:excel_reader/state/app_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
@@ -32,8 +34,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Excel? excelDoc;
   List<String>? courses = [];
   String? course;
-  String? period;
-  String? period2;
+  Period? period;
   bool scanningDoc = false;
   bool isAuto = true;
   final _formKey = GlobalKey<FormState>();
@@ -202,7 +203,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         ),
                         title: const Text('Select period'),
                         subtitle:
-                        Text(period != null ? period! : 'No period selected'),
+                        Text(period != null ? period!.str : 'No period selected'),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
                           size: 15,
@@ -248,7 +249,7 @@ class _ScanScreenState extends State<ScanScreen> {
                                   ),
                                   title: const Text('Select period'),
                                   subtitle:
-                                  Text(period != null ? period! : 'No period selected'),
+                                  Text(period != null ? period!.str : 'No period selected'),
                                   trailing: const Icon(
                                     Icons.arrow_forward_ios,
                                     size: 15,
@@ -315,17 +316,17 @@ class _ScanScreenState extends State<ScanScreen> {
         excelFile = file;
         scanningDoc = true;
       });
-      Future.delayed(const Duration(microseconds: 2000), () {
-        readXlsx(file);
-      });
+      
+      readXlsx(file);
+     
     } else if(result != null&&!result.files.single.path!.endsWith('.xlsx')){
       toast('Please select a valid spreadsheet document(.xlsx)');
     }
   }
 
-  void readXlsx(File file) {
-    var bytes = File(file.path).readAsBytesSync();
-    var excel = Excel.decodeBytes(bytes);
+  void readXlsx(File file)async {
+    Excel excel = await compute(scanFile,excelFile);
+
     setState(() {
       excelDoc = excel;
       courses = excel.sheets.keys.toList();
@@ -391,13 +392,13 @@ class _ScanScreenState extends State<ScanScreen> {
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           context: context,
-          builder: (context) => widget.isClass? ClassPeriodSelector(
+          builder: (context) =>ClassPeriodSelector(
             courseType: course!,
-          ):ExamPeriodSelector(courseType: course!));
+          ));
       if (result != null) {
         setState(() {
           period = result;
-          period2 = result.replaceAll("Trim","Trimester");
+         
         });
       }
     }
@@ -408,11 +409,11 @@ class _ScanScreenState extends State<ScanScreen> {
     if(!isAuto){
       await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
-      await TimeTableService(context: context).saveTableDetails(name: 'Custom timetable', period: period??'', course: _courseNameC.value.text);
+      await TimeTableService(context: context).saveTableDetails(name: 'Custom timetable', period: period!.str, course: _courseNameC.value.text);
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const FinishSetupScreen())
+            builder: (context) => FinishSetupScreen(course: course!,))
         );
       }
       return;
@@ -424,42 +425,38 @@ class _ScanScreenState extends State<ScanScreen> {
     //Step 1: Find the selected sheet/course
     try {
       sheet = excelDoc!.sheets[course];
-    } catch (e) {
-      toast('There was an error reading from that course');
-      return;
-    }
+
     //Step 2: Find the period
     //Step 3: Find the 'Day' field
-
+    
     try {
       rowsLoop:
       for (var row in sheet!.rows) {
         cellsLoop:
         for (var cell in row) {
-        
-          if (cell != null && (cell.value == period!.toUpperCase() || cell.value == period2!.toUpperCase()) ) {
+        debugPrint('period: '+period.toString());
+          if (cell != null && period!.isMatch(cell.value.toString())) {
+            
+            debugPrint("Found period index:"+cell.cellIndex.toString());
             periodIndex = cell.cellIndex;
             break cellsLoop;
           }
           if (cell != null && periodIndex != null && cell.value == 'DAY') {
             dayIndex = cell.cellIndex;
+            debugPrint("Found day index:"+cell.cellIndex.toString());
             break rowsLoop;
           }
         }
       }
-    } catch (e) {
-      toast('The period was not found');
-      return;
-    }
     //Step 4: loop through records to get the values
     // toast(dayIndex!.rowIndex.toString());
     try {
       List<UnitClass> _records = [];
-      int startIndex = dayIndex!.rowIndex + 1;
-      int lastRecordIndex=startIndex+6; 
 
-      debugPrint(startIndex.toString());
-      debugPrint(lastRecordIndex.toString());
+     
+
+      int startIndex = dayIndex!.rowIndex + 1;
+    
       
       for (var i = startIndex; sheet.rows[i][dayIndex.columnIndex] != null; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
@@ -469,22 +466,33 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
-
-      var result = await TimeTableService(context: context).saveClassTimeTable(period:period!, tableName: getDocName(excelFile!.path), units: _records,course:course!);
-
+      debugPrint("\nFound these items: "+_records.length.toString());
+      var result = await TimeTableService(context: context).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
+  
       if(result){
          state.changeMode(AppMode.classTimetable);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const FinishSetupScreen()));
+                builder: (context) => FinishSetupScreen(course: course!,)));
 
       }
 
     } catch (e) {
-      
+      debugPrint("ERROR: "+e.toString());
       toast('The period was not found or has an invalid format');
     }
+    } catch (e) {
+      debugPrint(e.toString());
+      toast('Hmm, something ain\'t right!');
+      return;
+    }
+
+    } catch (e) {
+      toast('There was an error reading from that course');
+      return;
+    }
+
   }
 
 void examTimetableScan(AppState state)async{ 
@@ -495,11 +503,8 @@ void examTimetableScan(AppState state)async{
     //Step 1: Find the selected sheet/course
     try {
       sheet = excelDoc!.sheets[course];
-    } catch (e) {
-      toast('There was an error reading from that course');
-      return;
-    }
-    //Step 2: Find the periods
+
+        
     List<ExamModel> _exams = [];
  
     try {
@@ -517,18 +522,14 @@ void examTimetableScan(AppState state)async{
           }
         }
       }
-    } catch (e) {
-      toast('The period was not found');
-      return;
-    }
     //Step 4: loop through records to get the values
     // toast(dayIndex!.rowIndex.toString());
- 
+  
     try {
       
         for (int i =periodIndex!.rowIndex+1; i<sheet.rows.length-1;i++) {
           
-          if(sheet.rows[i][periodIndex.columnIndex]!.value.toString().toUpperCase()==period!.toUpperCase()){
+          if(period!.isMatch(sheet.rows[i][periodIndex.columnIndex]!.value.toString())){
              
             debugPrint(sheet.rows[i][1].toString());
             
@@ -536,13 +537,12 @@ void examTimetableScan(AppState state)async{
           
           }
         }
-       
-      var result = await ExamService(context: context).saveExamTimeTable(period:period!, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
+       debugPrint('Found: '+_exams.length.toString());
+      var result = await ExamService(context: context).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
          state.changeMode(AppMode.examTimetable);
          Navigator.pop(context);
-
 
       }
 
@@ -550,6 +550,25 @@ void examTimetableScan(AppState state)async{
       debugPrint(e.toString());
       toast('The period was not found or has an invalid format');
     }
+    } catch (e) {
+       debugPrint(e.toString());
+      toast('This table has an invalid format, sorry dude!');
+      return;
+    }
+
+    } catch (e) {
+       debugPrint(e.toString());
+      toast('There was an error reading from that course');
+      return;
+    }
+
 }
 
+}
+
+
+Excel scanFile(File? file){
+  var bytes = File(file!.path).readAsBytesSync();
+    var excel = Excel.decodeBytes(bytes);
+    return excel;
 }

@@ -116,7 +116,7 @@ class ExamModel {
 
   
 int get sortIndex {
-    return time.start+date.day;
+    return time.start.hour+date.day;
   }
 
 }

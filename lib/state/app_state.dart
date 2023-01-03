@@ -31,6 +31,7 @@ class AppState extends ChangeNotifier{
     notifyListeners();
   }
 
+
   void init()async{
   SharedPreferences _prefs = await SharedPreferences.getInstance();
 

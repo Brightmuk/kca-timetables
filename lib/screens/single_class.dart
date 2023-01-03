@@ -26,7 +26,7 @@ class EditClassPage extends StatefulWidget {
 
 class _EditClassPageState extends State<EditClassPage> {
   String? _day;
-  String? _time;
+  Time? _time;
   String? _venue;
   String? _lecturer;
   String? _link;
@@ -39,7 +39,7 @@ class _EditClassPageState extends State<EditClassPage> {
   void initState() {
     super.initState();
     _day = widget.unit.day;
-    _time = widget.unit.time.originalStr;
+    _time = widget.unit.time;
     _venue = widget.unit.venue;
     _lecturer = widget.unit.lecturer;
     _link = widget.unit.classLink;
@@ -180,7 +180,7 @@ class _EditClassPageState extends State<EditClassPage> {
                   onTap: ()async{
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditTime(start: 0,end: 0,),
+                      context: context, builder: (context)=>EditTime(time:_time!),
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     );
@@ -200,7 +200,7 @@ class _EditClassPageState extends State<EditClassPage> {
                     Icons.arrow_forward_ios,
                     size: 15,
                   ),
-                  subtitle: Text(_time!),
+                  subtitle: Text(_time!.originalStr),
                 ),
                 ListTile(
                   onTap: ()async{
@@ -422,36 +422,17 @@ int get reminderMins{
 
 
 Future<void> setReminder()async{
-  debugPrint(getDate().toString());
+ 
   
     await NotificationService().zonedScheduleNotification(
       id: widget.unit.sortIndex, 
       title: 'Class is about to start', 
       description: 'Your ${widget.unit.unitName} class is starting in $timeFormatStr', 
       payload: "{'unitCode':${widget.unit.unitCode}}", 
-      date: getDate());
+      date: _time!.getDate(widget.unit.day, reminderHrs, reminderMins));
 }
 
-DateTime getDate(){
-  
-  int startHour=int.parse(_time!.substring(0,2));
-  int startMinute = int.parse(_time!.substring(2,4));
-  DateTime now = DateTime.now();
 
-  int unitDay = getWeekday(_day);
-
-  int dayDifference;
-  if(unitDay<now.weekday){
-    unitDay+=7;
-    dayDifference=unitDay-now.weekday;
-  }else{
-    dayDifference=unitDay-now.weekday;
-  }
-
-  return DateTime(
-    now.year,now.month,now.day+dayDifference, startHour-reminderHrs,startMinute-reminderMins
-    );
-}
 
   String scheduleStr(int minutes){
     if(minutes>59){
@@ -466,7 +447,7 @@ DateTime getDate(){
         unitCode: widget.unit.unitCode,
         unitName: widget.unit.unitName,
         day: _day!,
-        time: Time.fromString(_time!),
+        time: _time!,
         venue: _venue!,
         lecturer: _lecturer!,
         meetingId: _meetingId,
@@ -480,24 +461,6 @@ DateTime getDate(){
 
   }
 
-  int getWeekday(day){
-      switch (day) {
-      case 'MONDAY':
-        return 1;
-      case 'TUESDAY':
-        return 2;
-      case 'WEDNESDAY':
-        return 3;
-      case 'THURSDAY':
-        return 4;
-      case 'FRIDAY':
-        return 5;
-      case 'SATURDAY':
-        return 6;
-      default:
-        return 0;
-    }
-}
 }
 
 

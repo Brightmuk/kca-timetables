@@ -10,7 +10,8 @@ import 'package:overlay_support/overlay_support.dart';
 class TimeTableService{
   final BuildContext context;
   final String? day;
-  TimeTableService({required this.context,this.day});
+  final String? course;
+  TimeTableService({required this.context,this.day, this.course});
   final db = Localstore.instance;
 
   static const String recordCollection = 'recordCollection';
@@ -42,11 +43,13 @@ class TimeTableService{
  
   Future<bool> saveClassTimeTable({required String tableName,required String period, required List<UnitClass> units, required String course}) async {
     bool returnValue = true;
-
+    debugPrint(units[0].toString());
     try{
 
         for (var _unit in units) {
-          await saveUnit(_unit);
+          if(!await saveUnit(_unit)){
+            throw Error();
+          }
      }
      await saveTableDetails(name: tableName,course: course, period:period);
       toast('Timetable saved');
@@ -65,10 +68,11 @@ class TimeTableService{
         .collection(recordCollection)
         .doc(unit.unitCode)
         .set(unit.toMap());
-    
+      
       return true;
     }catch(e){    
      toast('An error occurred');
+     debugPrint(e.toString());
       return false;
     }
   }
@@ -110,17 +114,21 @@ class TimeTableService{
 
     return db.collection(recordCollection)
     .stream
+        // .where((r) => r['course']==course)
         .where((r) => day!=null?r['day']==day:true)
+        
     .map(recordList);
   }
   Future<List<UnitClass>> unitsFuture() {
 
     return db.collection(recordCollection)
+        // .where((r) => r['course']==course)
         .get()
         .then((value) => recordList(value!));
 
   }
   Stream<int> get unitsCount{
+
         return db.collection(recordCollection)
     .stream
         
@@ -147,6 +155,7 @@ class TimeTableService{
     List<UnitClass>_records = [];
     ///Yield the list from stream
   List<UnitClass> recordList(Map<String, dynamic> query) {
+   
     try{
     final item = UnitClass.fromMap(query);
     Iterable<UnitClass> record = _records.where((r) => r.unitCode==item.unitCode);
@@ -180,6 +189,10 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>timeIndex,orElse: ()=>upcomingRecords.first);
 
     return result;
+  }
+
+  Future reScanClassTt()async{
+    
   }
 
 }

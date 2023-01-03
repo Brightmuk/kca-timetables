@@ -164,7 +164,7 @@ class UnitClass {
 
   bool get isFulfiled{
       int hourOfDay = DateTime.now().hour;
-    return (hourOfDay*100)>time.end;
+    return (hourOfDay*100)>time.end.hour;
       
 }
 
@@ -172,7 +172,7 @@ bool get canJoinMeeting{
   int today = DateTime.now().weekday;
   
 
-  return timeIndex>=time.start&&venue=='VIRTUAL'&&dayIndex(day)== today;
+  return timeIndex>=time.start.hour&&venue=='VIRTUAL'&&dayIndex(day)== today;
 }
 
 int get weekday{
@@ -195,7 +195,7 @@ int get weekday{
 }
 
   int get sortIndex {
-    int timeValue=time.start;
+    int timeValue=time.start.hour;
 
 
     switch (day) {

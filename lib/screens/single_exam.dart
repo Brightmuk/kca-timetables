@@ -30,7 +30,7 @@ class EditExamPage extends StatefulWidget {
 
 class _EditExamPageState extends State<EditExamPage> {
   DateTime? _date;
-  String? _time;
+  Time? _time;
   String? _venue;
   String? _invigilator;
   bool? _reminder;
@@ -40,7 +40,7 @@ class _EditExamPageState extends State<EditExamPage> {
   void initState() {
     super.initState();
     _date = widget.exam.date;
-    _time = widget.exam.time.originalStr;
+    _time = widget.exam.time;
     _venue = widget.exam.venue;
     _invigilator = widget.exam.invigilator;
     _reminder = widget.exam.reminder;
@@ -178,7 +178,7 @@ class _EditExamPageState extends State<EditExamPage> {
                   onTap: ()async{
                     var result = await showModalBottomSheet(
                       backgroundColor: Colors.white,
-                      context: context, builder: (context)=>EditTime(start: 0,end:0),
+                      context: context, builder: (context)=>EditTime(time: _time!,),
                       shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     );
@@ -198,7 +198,7 @@ class _EditExamPageState extends State<EditExamPage> {
                     Icons.arrow_forward_ios,
                     size: 15,
                   ),
-                  subtitle: Text(_time!),
+                  subtitle: Text(_time!.originalStr),
                 ),
                 ListTile(
                   onTap: ()async{
@@ -365,24 +365,15 @@ int get reminderMins{
 
 
 Future<void> setReminder()async{
-  debugPrint(getDate().toString());
-  
+
     await NotificationService().zonedScheduleNotification(
       id: widget.exam.sortIndex, 
       title: 'Class is about to start', 
       description: 'Your ${widget.exam.unitName} class is starting in $timeFormatStr', 
       payload: "{'unitCode':${widget.exam.unitCode}}", 
-      date: getDate());
+      date: _time!.getDate(widget.exam.date.weekday, reminderHrs, reminderMins));
 }
 
-DateTime getDate(){
-  int startHour=int.parse(_time!.substring(0,2));
-  int startMinute = int.parse(_time!.substring(2,4));
-  DateTime now = DateTime.now();
-  return DateTime(
-    now.year,now.month,now.day, startHour-reminderHrs,startMinute-reminderMins
-    );
-}
 
   String scheduleStr(int minutes){
     if(minutes>59){
@@ -397,7 +388,7 @@ DateTime getDate(){
         unitCode: widget.exam.unitCode,
         unitName: widget.exam.unitName,
         date: _date!,
-        time: Time.fromString(_time!),
+        time: _time!,
         venue: _venue!,
         invigilator: _invigilator!,
         reminder: _reminder!,

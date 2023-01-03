@@ -48,7 +48,10 @@ Future<bool> tableExists()async{
     try{
 
         for (var _exam in exams) {
-          await saveExam(_exam);
+          
+          if(!await saveExam(_exam)){
+            throw Error();
+          }
      }
      await saveExamDetails(name: tableName,course: course, period:period);
       toast('Exam table saved');

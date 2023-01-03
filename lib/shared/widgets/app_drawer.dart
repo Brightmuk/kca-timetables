@@ -48,6 +48,12 @@ class AppDrawer extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      color: secondaryThemeColor,
+                      padding: EdgeInsets.all(10),
+                      width: MediaQuery.of(context).size.width*0.6,
+                      child: Text(state.modeStr,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                    ),
                     ListTile(
                       title: Text(table!.name,style: titleTextStyle.copyWith(color: primaryThemeColor),),
                       trailing: Container(width: 10,height: 10, decoration: BoxDecoration(color: secondaryThemeColor, borderRadius: BorderRadius.circular(10))),
@@ -111,8 +117,9 @@ class AppDrawer extends StatelessWidget {
                       shape:
                           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       context: context,
-                      builder: (context) => const ConfirmAction(text: 'This will overwrite the current class timetable data. Are you sure you want to rescan the timetable?'));
+                      builder: (context) => const ConfirmAction(text: 'This will overwrite the current class timetable data. Are you sure you want to scan the timetable?'));
                         if (result) {
+                          Navigator.pop(context);
                         Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -138,8 +145,9 @@ class AppDrawer extends StatelessWidget {
                     shape:
                         RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     context: context,
-                    builder: (context) => const ConfirmAction(text: 'This will overwrite the current exam timetable data. Are you sure you want to rescan the timetable?'));
+                    builder: (context) => const ConfirmAction(text: 'This will overwrite the current exam timetable data. Are you sure you want to scan the timetable?'));
                       if (result) {
+                        Navigator.pop(context);
                       Navigator.push(
                       context,
                       MaterialPageRoute(

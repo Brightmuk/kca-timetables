@@ -1,4 +1,6 @@
+import 'package:excel_reader/models/period_model.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 enum CourseType { degree, diploma, certificate, masters, phd }
 
@@ -11,8 +13,9 @@ class ClassPeriodSelector extends StatefulWidget {
 }
 
 class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
-  String? period;
+  String? periodStr;
   CourseType? type;
+  Period? _period;
 
   @override
   void initState() {
@@ -58,75 +61,84 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year one Trim one'),
                 value: 'Year one Trim one',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+one|\w+\s+1+\s+\w+\s+1|\w+1+\w+1)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year one Trim two'),
                 value: 'Year one Trim two',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+two|\w+\s+1+\s+\w+\s+2|\w+1+\w+2)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year one Trim three'),
                 value: 'Year one Trim three',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+three|\w+\s+1+\s+\w+\s+3|\w+1+\w+3)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             Divider(),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year two Trim one'),
                 value: 'Year two Trim one',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+one|\w+\s+2+\s+\w+\s+1|\w+2+\w+1)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year two Trim two'),
                 value: 'Year two Trim two',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+two|\w+\s+2+\s+\w+\s+2|\w+2+\w+2)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year two Trim three'),
                 value: 'Year two Trim three',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+three|\w+\s+2+\s+\w+\s+3|\w+2+\w+3)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             Divider(),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year three Trim one'),
                 value: 'Year three Trim one',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+one|\w+\s+3+\s+\w+\s+1|\w+3+\w+1)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year three Trim two'),
                 value: 'Year three Trim two',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+two|\w+\s+3+\s+\w+\s+2|\w+3+\w+2)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Year three Trim three'),
                 value: 'Year three Trim three',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+three|\w+\s+3+\s+\w+\s+3|\w+3+\w+3)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
           ],
         );
@@ -142,41 +154,46 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Stage one'),
                 value: 'Stage one',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+one|\w+\s+1|one|\w+1)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Stage two'),
                 value: 'Stage two',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+two|\w+\s+2|two\w+2)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Stage three'),
                 value: 'Stage three',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+three|\w+\s+3|three\w+3)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Stage four'),
                 value: 'Stage four',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+four|\w+\s+4|four\w+4)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
             RadioListTile(
                 activeColor: const Color.fromRGBO(188, 175, 69, 1),
                 title: const Text('Stage five'),
                 value: 'Stage five',
-                groupValue: period,
+                groupValue: periodStr,
                 onChanged: (String? val) {
-                  choosePeriod(val!);
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+five|\w+\s+5|five\w+5)',caseSensitive:false));
+                  choosePeriod(period);
                 }),
           ],
         );
@@ -190,17 +207,19 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
               activeColor: const Color.fromRGBO(188, 175, 69, 1),
               title: const Text('Stage one'),
               value: 'Stage one',
-              groupValue: period,
+              groupValue: periodStr,
               onChanged: (String? val) {
-                choosePeriod(val!);
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+one|\w+\s+1|one\w+1)',caseSensitive:false));
+                  choosePeriod(period);
               }),
           RadioListTile(
               activeColor: const Color.fromRGBO(188, 175, 69, 1),
               title: const Text('Stage two'),
               value: 'Stage two',
-              groupValue: period,
+              groupValue: periodStr,
               onChanged: (String? val) {
-                choosePeriod(val!);
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+two|\w+\s+2|two\w+2)',caseSensitive:false));
+                  choosePeriod(period);
               }),
         ]);
 
@@ -211,229 +230,15 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
     }
   }
 
-  void choosePeriod(String val) {
+  void choosePeriod(Period val) {
     setState(() {
-      period = val;
+      periodStr = val.str;
     });
+   
     Future.delayed(const Duration(milliseconds: 500), () {
-      Navigator.pop(context, period);
+      
+      Navigator.pop(context, val);
     });
   }
 }
 
-class ExamPeriodSelector extends StatefulWidget {
-  final String courseType;
-  const ExamPeriodSelector({Key? key, required this.courseType}) : super(key: key);
-
-  @override
-  State<ExamPeriodSelector> createState() => _ExamPeriodSelectorState();
-}
-
-class _ExamPeriodSelectorState extends State<ExamPeriodSelector> {
-  String? period;
-  CourseType? type;
-
-  @override
-  void initState() {
-    super.initState();
-    debugPrint(widget.courseType);
-    if (widget.courseType.startsWith('B')) {
-      type = CourseType.degree;
-    } else if (widget.courseType.startsWith('C')) {
-      type = CourseType.certificate;
-    } else if (widget.courseType.startsWith('D')) {
-      type = CourseType.diploma;
-    } else if (widget.courseType.startsWith('P')) {
-      type = CourseType.phd;
-    } else if (widget.courseType.startsWith('M')) {
-      type = CourseType.masters;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      color: Colors.white,
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: SingleChildScrollView(child: periodTypes()),
-      ),
-    );
-  }
-
-  Widget periodTypes() {
-    switch (type) {
-      case CourseType.degree:
-      case CourseType.masters:
-      case CourseType.phd:
-        return Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Divider(),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year one Trim one'),
-                value: 'Year1Trim1',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year one Trim two'),
-                value: 'Year1Trim2',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year one Trim three'),
-                value: 'Year1Trim3',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            Divider(),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year two Trim one'),
-                value: 'Year2Trim1',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year two Trim two'),
-                value: 'Year2Trim2',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year two Trim three'),
-                value: 'Year2Trim3',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            Divider(),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year three Trim one'),
-                value: 'Year3Trim1',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year three Trim two'),
-                value: 'Year3Trim1',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Year three Trim three'),
-                value: 'Year3Trim3',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-          ],
-        );
-
-      case CourseType.diploma:
-        return Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Divider(),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Stage one'),
-                value: 'Stage1',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Stage two'),
-                value: 'Stage2',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Stage three'),
-                value: 'Stage3',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Stage four'),
-                value: 'Stage4',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-            RadioListTile(
-                activeColor: const Color.fromRGBO(188, 175, 69, 1),
-                title: const Text('Stage five'),
-                value: 'Stage5',
-                groupValue: period,
-                onChanged: (String? val) {
-                  choosePeriod(val!);
-                }),
-          ],
-        );
-      case CourseType.certificate:
-        return Column(children: [
-          const SizedBox(
-            height: 20,
-          ),
-          const Divider(),
-          RadioListTile(
-              activeColor: const Color.fromRGBO(188, 175, 69, 1),
-              title: const Text('Stage one'),
-              value: 'Stage1',
-              groupValue: period,
-              onChanged: (String? val) {
-                choosePeriod(val!);
-              }),
-          RadioListTile(
-              activeColor: const Color.fromRGBO(188, 175, 69, 1),
-              title: const Text('Stage two'),
-              value: 'Stage2',
-              groupValue: period,
-              onChanged: (String? val) {
-                choosePeriod(val!);
-              }),
-        ]);
-
-      default:
-        return Container();
-    }
-  }
-
-  void choosePeriod(String val) {
-    setState(() {
-      period = val;
-    });
-    Future.delayed(const Duration(milliseconds: 500), () {
-      Navigator.pop(context, period);
-    });
-  }
-}

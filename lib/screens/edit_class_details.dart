@@ -1,4 +1,5 @@
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/class_service.dart';
@@ -213,9 +214,8 @@ class _EditDayState extends State<EditDay> {
   }
 }
 class EditTime extends StatefulWidget {
-  final double start;
-  final double end;
-  const EditTime({ Key? key,required this.start,required this.end }) : super(key: key);
+  final Time time;
+  const EditTime({ Key? key,required this.time }) : super(key: key);
 
   @override
   State<EditTime> createState() => _EditTimeState();
@@ -226,8 +226,8 @@ class _EditTimeState extends State<EditTime> {
   @override
   void initState(){
     super.initState();
-    start = widget.start;
-    end = widget.end;
+    start = (widget.time.start.hour+widget.time.start.minute).toDouble();
+    end = (widget.time.end.hour+widget.time.end.minute).toDouble();
   }
   double start=0;
   double end=0;
@@ -310,7 +310,7 @@ class _EditTimeState extends State<EditTime> {
                     onPressed:(){
                      
                       String result = [timeString(start),timeString(end)].join('-')+' HRS';
-                      Navigator.pop(context,result);
+                      Navigator.pop(context,Time.fromString(result));
                     }
                         ),
               )

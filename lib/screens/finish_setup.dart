@@ -12,9 +12,9 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FinishSetupScreen extends StatefulWidget {
-
+final String course;
   const FinishSetupScreen(
-      {Key? key,})
+      {Key? key,required this.course})
       : super(key: key);
 
   @override
@@ -131,7 +131,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                   height: 50.sp,
                 ),
                 StreamBuilder<List<UnitClass>>(
-                    stream: TimeTableService(context: context).unitsStream,
+                    stream: TimeTableService(context: context,course: widget.course).unitsStream,
                     builder: (context, snapshot) {
                       if(snapshot.connectionState==ConnectionState.waiting){
                               return MaterialButton(
