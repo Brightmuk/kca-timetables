@@ -1,3 +1,4 @@
+import 'package:excel_reader/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmAction extends StatelessWidget {
@@ -39,7 +40,7 @@ class ConfirmAction extends StatelessWidget {
                       Navigator.pop(context,true);
                     },
                     child: const Text('Yes'),
-                    color: Colors.redAccent,
+                    color: primaryThemeColor,
                   ),
                   MaterialButton(
                     padding: EdgeInsets.all(20),

@@ -50,7 +50,7 @@ class _EditExamPageState extends State<EditExamPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AppState _appState = Provider.of<AppState>(context);
+    final AppState state = Provider.of<AppState>(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -186,7 +186,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       setState(() {
                         _time=result;
                       });
-                      save();
+                      save(state);
                       setReminder();
                     }
                   },
@@ -215,7 +215,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       setState(() {
                         _venue=result;
                       });
-                      save();
+                      save(state);
                     }
                   },
                   style: ListTileStyle.drawer,
@@ -242,7 +242,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       setState(() {
                         _invigilator=result;
                       });
-                      save();
+                      save(state);
                     }
                   },
                   style: ListTileStyle.drawer,
@@ -266,7 +266,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       setState(() {
                         _reminder=val;
                       });
-                      save();
+                      save(state);
                       if(val){
                         setReminder();
                       }else{
@@ -291,7 +291,7 @@ class _EditExamPageState extends State<EditExamPage> {
                         setState(() {
                           _reminderSchedule=result;
                         });
-                        save();
+                        save(state);
                         setReminder();
                       }
                     }:null,
@@ -314,7 +314,7 @@ class _EditExamPageState extends State<EditExamPage> {
                   setState(() {
                     _accentColor=val;
                   });
-                  save();
+                  save(state);
                 },),
 
                 SizedBox(
@@ -382,7 +382,7 @@ Future<void> setReminder()async{
       return minutes.toString()+' minutes';
     }
   }
-  void save()async{
+  void save(AppState state)async{
     ExamModel _exam = ExamModel(
         accentColor: _accentColor!,
         unitCode: widget.exam.unitCode,
@@ -395,7 +395,7 @@ Future<void> setReminder()async{
         reminderSchedule: _reminderSchedule
     );
 
-    await ExamService(context: context).editExam(exam: _exam);
+    await ExamService(context: context,state: state).editExam(exam: _exam);
 
   }
 }

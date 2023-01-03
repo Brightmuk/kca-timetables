@@ -1,6 +1,7 @@
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/services/local_data.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -10,11 +11,11 @@ class ExamService{
 
   final BuildContext context;
   final String? day;
-  ExamService({required this.context,this.day});
+  AppState state;
+  ExamService({required this.context,this.day ,required this.state});
 
   final db = Localstore.instance;
 
-  static const String examColletion = 'examCollection';
   static const String tableCollection = 'tableCollection';
 
 
@@ -67,7 +68,7 @@ Future<bool> tableExists()async{
   Future<bool> saveExam(ExamModel exam)async{
         try{
         await db
-        .collection(examColletion)
+        .collection(state.currentExamTt!)
         .doc(exam.unitCode)
         .set(exam.toMap());
     
@@ -95,7 +96,7 @@ Future<bool> tableExists()async{
     bool returnValue = true;
     try{
         await db
-        .collection(examColletion)
+        .collection(state.currentExamTt!)
         .doc(exam.unitCode)
         .set(exam.toMap());
      
@@ -113,19 +114,19 @@ Future<bool> tableExists()async{
   ///Get record list
   Stream<List<ExamModel>> get examsStream {
 
-    return db.collection(examColletion)
+    return db.collection(state.currentExamTt!)
     .stream
     .map(examList);
   }
   Stream<int> get examsCount {
 
-    return db.collection(examColletion)
+    return db.collection(state.currentExamTt!)
     .stream
     .map(examsCountMap);
   }
   Future<List<ExamModel>> examsFuture() {
 
-    return db.collection(examColletion)
+    return db.collection(state.currentExamTt!)
     
         .get()
         
@@ -134,7 +135,7 @@ Future<bool> tableExists()async{
   }
 
 
-    List<ExamModel>_records = [];
+    List<ExamModel> _records = [];
     ///Yield the list from stream
   List<ExamModel> examList(Map<String, dynamic> query) {
     try{

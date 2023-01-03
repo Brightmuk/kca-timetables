@@ -2,7 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
-import 'package:excel_reader/screens/finish_setup.dart';
+import 'package:excel_reader/screens/finish_class_setup.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/exam_service.dart';
@@ -31,17 +31,17 @@ class AppDrawer extends StatelessWidget {
             children: [
               DrawerHeader(
                 
-                padding: EdgeInsets.all(60),
+                padding: const EdgeInsets.all(60),
                 margin: EdgeInsets.zero,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: primaryThemeColor,
                 ),
                 child: Image.asset('assets/images/splash_center.png',)
               ),
 
             FutureBuilder<TimeTable>(
-              future: state.isClassMode? TimeTableService(context: context).getClassTimetable():
-              ExamService(context: context).getExamTimetable(),
+              future: state.isClassMode? ClassTimeTableService(context: context,state: state).getClassTimetable():
+              ExamService(context: context,state: state).getExamTimetable(),
               builder: (context, snapshot) {
                 if(snapshot.hasData){
                   TimeTable? table = snapshot.data;
@@ -50,7 +50,7 @@ class AppDrawer extends StatelessWidget {
                   children: [
                     Container(
                       color: secondaryThemeColor,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width*0.6,
                       child: Text(state.modeStr,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                     ),
@@ -73,8 +73,8 @@ class AppDrawer extends StatelessWidget {
               }
             ),
              StreamBuilder<int>(
-              stream:  state.isClassMode? TimeTableService(context: context).unitsCount:
-              ExamService(context: context).examsCount,
+              stream:  state.isClassMode? ClassTimeTableService(context: context,state: state).unitsCount:
+              ExamService(context: context,state: state).examsCount,
               builder: (context, snapshot) {
                 int? count = snapshot.hasData?snapshot.data:0;
                 return ListTile(
@@ -102,7 +102,7 @@ class AppDrawer extends StatelessWidget {
             ),
             const Divider(),
               ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.pages_outlined,
                       color: secondaryThemeColor,
                     ),
@@ -119,11 +119,7 @@ class AppDrawer extends StatelessWidget {
                       context: context,
                       builder: (context) => const ConfirmAction(text: 'This will overwrite the current class timetable data. Are you sure you want to scan the timetable?'));
                         if (result) {
-                          Navigator.pop(context);
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ScanScreen()));
+                          await ClassTimeTableService(context: context,state: state).reScanClassTt(state);
                         }
               
                     },
@@ -169,10 +165,8 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   const Text('Slide to change mode',style: TextStyle(color: Colors.grey,fontSize: 11),),
                   const Divider(),
-                  Consumer<AppState>(
-                      builder: (context, appState, child) {
-                        return AnimatedToggleSwitch<bool>.dual(
-                            current: !appState.isClassMode,
+                  AnimatedToggleSwitch<bool>.dual(
+                            current: !state.isClassMode,
                             first: true,
                             second: false,
                             textMargin: const EdgeInsets.symmetric(horizontal: 15),
@@ -184,18 +178,18 @@ class AppDrawer extends StatelessWidget {
                             borderColor:primaryThemeColor,
                             
                             textBuilder: (value) {
-                              return Text(appState.modeStr, style: TextStyle(color: Colors.white),);
+                              return Text(state.modeStr, style: TextStyle(color: Colors.white),);
                             },
                             onChanged: (val)async{
                               AppMode mode = val?AppMode.examTimetable:AppMode.classTimetable;
                               bool exists;
                               if(!val){
-                                exists = await TimeTableService(context: context).tableExists();
+                                exists = await ClassTimeTableService(context: context,state: state).tableExists();
                               }else{
-                                exists = await ExamService(context: context).tableExists();
+                                exists = await ExamService(context: context,state: state).tableExists();
                               }
                               if(exists){
-                                appState.changeMode(mode);
+                                state.changeMode(mode);
 
                               }else{
                                 var result = await showModalBottomSheet(
@@ -220,9 +214,7 @@ class AppDrawer extends StatelessWidget {
                               
                             },
                             
-                          );
-                    }
-                  ),
+                          )
                 ],
               ),
           ),

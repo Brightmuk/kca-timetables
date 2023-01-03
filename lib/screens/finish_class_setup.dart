@@ -1,49 +1,45 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
-import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
-import 'package:excel_reader/shared/widgets/confirm_action.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class FinishSetupScreen extends StatefulWidget {
-final String course;
-  const FinishSetupScreen(
-      {Key? key,required this.course})
-      : super(key: key);
+  final String course;
+  const FinishSetupScreen({Key? key, required this.course}) : super(key: key);
 
   @override
   _FinishSetupScreenState createState() => _FinishSetupScreenState();
 }
 
 class _FinishSetupScreenState extends State<FinishSetupScreen> {
-
-
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height*0.1,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
               color: Color.fromARGB(255, 3, 4, 75),
             ),
-            height: MediaQuery.of(context).size.height*0.1,
+            height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:[
-
+              children: [
                 IconButton(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -60,16 +56,13 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                         fontWeight: FontWeight.bold)),
                 IconButton(
                   padding: const EdgeInsets.all(20),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.arrow_back_ios,
                     size: 20,
                     color: Colors.transparent,
                   ),
                 ),
-
               ],
             ),
           ),
@@ -81,8 +74,8 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
             statusBarBrightness: Brightness.light,
           ),
           leading: IconButton(
-            padding: EdgeInsets.all(20),
-            onPressed: ()async {
+            padding: const EdgeInsets.all(20),
+            onPressed: () async {
               Navigator.pop(context);
             },
             icon: const Icon(
@@ -98,20 +91,21 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
             alignment: Alignment.center,
             children: [
               ListView(children: [
-              
                 SizedBox(
                   height: 50.sp,
                 ),
                 FutureBuilder<TimeTable>(
-                    future: TimeTableService(context: context).getClassTimetable(),
+                    future: ClassTimeTableService(context: context,state: state)
+                        .getClassTimetable(),
                     builder: (context, snapshot) {
-                      if(snapshot.hasData){
+                      if (snapshot.hasData) {
                         TimeTable? table = snapshot.data;
                         return Column(
                           children: [
                             Text(
                               table!.course,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
                               table.period,
@@ -119,96 +113,122 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                             ),
                           ],
                         );
-                      }else{
+                      } else {
                         return Container();
                       }
-              
-              
-                    }
-                ),
-              
+                    }),
                 Divider(
                   height: 50.sp,
                 ),
                 StreamBuilder<List<UnitClass>>(
-                    stream: TimeTableService(context: context,course: widget.course).unitsStream,
+                    stream: ClassTimeTableService(
+                            context: context, state: state)
+                        .unitsStream,
                     builder: (context, snapshot) {
-                      if(snapshot.connectionState==ConnectionState.waiting){
-                              return MaterialButton(
-                                onPressed: (){
-                                  showModalBottomSheet(
-                                    backgroundColor: Colors.white,
-                                    isScrollControlled: true,
-                                    context: context, builder: (context)=>const AddUnit(),
-                                    shape:
-                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                Icon(Icons.add,color: secondaryThemeColor,),SizedBox(width: 5,),Text('Add unit',style: TextStyle(color: secondaryThemeColor),)
-                              ]),);
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return MaterialButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.white,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => const AddUnit(),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                            );
+                          },
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.add,
+                                  color: secondaryThemeColor,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Add unit',
+                                  style: TextStyle(color: secondaryThemeColor),
+                                )
+                              ]),
+                        );
                       }
-                      if(snapshot.hasError){
-                        return Center(child: Text('An error has occurred'),);
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('An error has occurred'),
+                        );
                       }
                       List<UnitClass>? _records = snapshot.data;
-              
+
                       return ListView.builder(
                           shrinkWrap: true,
                           physics: const ClampingScrollPhysics(),
-                          itemCount: _records!.length+1,
-
+                          itemCount: _records!.length + 1,
                           itemBuilder: (context, index) {
-                            if(index==_records.length){
+                            if (index == _records.length) {
                               return MaterialButton(
-                                onPressed: (){
+                                onPressed: () {
                                   showModalBottomSheet(
                                     backgroundColor: Colors.white,
                                     isScrollControlled: true,
-                                    context: context, builder: (context)=>const AddUnit(),
-                                    shape:
-                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                    context: context,
+                                    builder: (context) => const AddUnit(),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                   );
                                 },
                                 child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(
+                                        Icons.add,
+                                        color: secondaryThemeColor,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        'Add unit',
+                                        style: TextStyle(
+                                            color: secondaryThemeColor),
+                                      )
+                                    ]),
+                              );
+                            } else {
+                              return ListTile(
+                                style: ListTileStyle.drawer,
+                                title: Text(_records[index].unitName),
+                                subtitle:
+                                    Text(_records[index].time.originalStr),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditClassPage(
+                                              unit: _records[index])));
+                                },
+                                leading: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                Icon(Icons.add,color: secondaryThemeColor,),SizedBox(width: 5,),Text('Add unit',style: TextStyle(color: secondaryThemeColor),)
-                              ]),);
-                            }else{
-                            return ListTile(
-                              style: ListTileStyle.drawer,
-                              title: Text(_records[index].unitName),
-                              subtitle: Text(_records[index].time.originalStr),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditClassPage(unit: _records[index])));
-              
-                              },
-                              leading: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    convertDay(_records[index].day),
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                              trailing: const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 15,
-                              ),
-                            );
+                                    Text(
+                                      convertDay(_records[index].day),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                                trailing: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
+                                ),
+                              );
                             }
-
                           });
-                    }
-                ),
-                SizedBox(height: 100.sp,)
+                    }),
+                SizedBox(
+                  height: 100.sp,
+                )
               ]),
               Positioned(
                 bottom: 0,
@@ -226,8 +246,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                      onPressed: (){
-                        
+                      onPressed: () {
                         Navigator.pop(context);
                       }),
                 ),
@@ -238,8 +257,6 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
       ),
     );
   }
-
-
 
   String convertDay(String day) {
     switch (day) {

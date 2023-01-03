@@ -12,6 +12,9 @@ class AppState extends ChangeNotifier{
   AppMode mode = AppMode.none;
   bool get isClassMode=>mode==AppMode.classTimetable;
 
+  String? currentClassTt;
+  String? currentExamTt;
+
   AppState(){
     init();
   }
@@ -27,8 +30,22 @@ class AppState extends ChangeNotifier{
     
       mode=newMode;
       _prefs.setString('mode', mode.toString());
-    toast('Changed to '+modeStr+' mode');
+      if(mode!=AppMode.none){
+        toast('Changed to '+modeStr+' mode');
+      }
+    
     notifyListeners();
+  }
+
+  void setCurrentExamTt(String currentTt)async{
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setString('currentExamTt', currentTt);
+    currentExamTt=currentTt;
+  }
+  void setCurrentClassTt(String currentTt)async{
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setString('currentClassTt', currentTt);
+    currentClassTt=currentTt;
   }
 
 
@@ -36,6 +53,8 @@ class AppState extends ChangeNotifier{
   SharedPreferences _prefs = await SharedPreferences.getInstance();
 
   String? md =_prefs.getString('mode');
+  currentClassTt=_prefs.getString('currentClassTt');
+  currentExamTt=_prefs.getString('currentExamTt');
 
   if(md=='AppMode.classTimetable'){
     mode=AppMode.classTimetable;

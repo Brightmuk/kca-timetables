@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/period_model.dart';
 import 'package:excel_reader/screens/exam_home.dart';
-import 'package:excel_reader/screens/finish_setup.dart';
+import 'package:excel_reader/screens/finish_class_setup.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
@@ -42,6 +42,8 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -409,7 +411,7 @@ class _ScanScreenState extends State<ScanScreen> {
     if(!isAuto){
       await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
-      await TimeTableService(context: context).saveTableDetails(name: 'Custom timetable', period: period!.str, course: _courseNameC.value.text);
+      await ClassTimeTableService(context: context,state: state).saveTableDetails(name: 'Custom timetable', period: period!.str, course: _courseNameC.value.text);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -464,13 +466,16 @@ class _ScanScreenState extends State<ScanScreen> {
           _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
         }
       }
-      
+      state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
+
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
       debugPrint("\nFound these items: "+_records.length.toString());
-      var result = await TimeTableService(context: context).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
+      debugPrint((course!+period!.str).replaceAll(" ",""));
+      var result = await ClassTimeTableService(context: context,state: state).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
   
       if(result){
          state.changeMode(AppMode.classTimetable);
+         
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -537,11 +542,14 @@ void examTimetableScan(AppState state)async{
           
           }
         }
+
        debugPrint('Found: '+_exams.length.toString());
-      var result = await ExamService(context: context).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
+        state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
+      var result = await ExamService(context: context,state: state).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
          state.changeMode(AppMode.examTimetable);
+        
          Navigator.pop(context);
 
       }

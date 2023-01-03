@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 
 enum EditDetailType { day, time, venue, lecturer, type, link, credentials }
@@ -31,6 +32,8 @@ class _AddUnitState extends State<AddUnit> {
 
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return Container(
        height: MediaQuery.of(context).size.height*0.9,  
      margin: const EdgeInsets.symmetric(vertical: 20),  
@@ -101,9 +104,9 @@ class _AddUnitState extends State<AddUnit> {
                     ),
                     onPressed:()async{
                       
-                      TimeTable table = await TimeTableService(context: context).getClassTimetable();
+                      TimeTable table = await ClassTimeTableService(context: context,state: state).getClassTimetable();
                       UnitClass unit = UnitClass.defaultClass(_unitNameC.value.text.toUpperCase(),_unitCodeC.value.text.toUpperCase(),table.course);
-                      await TimeTableService(context: context).saveUnit(unit);
+                      await ClassTimeTableService(context: context,state:state).saveUnit(unit);
 
                   Navigator.pop(context);
                   Navigator.push(

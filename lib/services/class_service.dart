@@ -1,20 +1,21 @@
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/shared/functions.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 
-class TimeTableService{
+class ClassTimeTableService{
   final BuildContext context;
   final String? day;
-  final String? course;
-  TimeTableService({required this.context,this.day, this.course});
+  final AppState state;
+  ClassTimeTableService({required this.context,this.day, required this.state});
   final db = Localstore.instance;
 
-  static const String recordCollection = 'recordCollection';
   static const String tableCollection = 'tableCollection';
 
 
@@ -65,7 +66,7 @@ class TimeTableService{
   Future<bool> saveUnit(UnitClass unit)async{
         try{
         await db
-        .collection(recordCollection)
+        .collection(state.currentClassTt!)
         .doc(unit.unitCode)
         .set(unit.toMap());
       
@@ -80,7 +81,7 @@ class TimeTableService{
   Future<bool> deleteUnit(UnitClass unit)async{
     try{
     await  db
-        .collection(recordCollection)
+        .collection(state.currentClassTt!)
         .doc(unit.unitCode)
         .delete();
         return true;
@@ -94,7 +95,7 @@ class TimeTableService{
     bool returnValue = true;
     try{
         await db
-        .collection(recordCollection)
+        .collection(state.currentClassTt!)
         .doc(record.unitCode)
         .set(record.toMap());
      
@@ -112,24 +113,24 @@ class TimeTableService{
   ///Get record list
   Stream<List<UnitClass>> get unitsStream {
 
-    return db.collection(recordCollection)
+    return db.collection(state.currentClassTt!)
     .stream
-        // .where((r) => r['course']==course)
+        
         .where((r) => day!=null?r['day']==day:true)
         
     .map(recordList);
   }
   Future<List<UnitClass>> unitsFuture() {
 
-    return db.collection(recordCollection)
-        // .where((r) => r['course']==course)
+    return db.collection(state.currentClassTt!)
+      
         .get()
         .then((value) => recordList(value!));
 
   }
   Stream<int> get unitsCount{
 
-        return db.collection(recordCollection)
+        return db.collection(state.currentClassTt!)
     .stream
         
     .map(unitCountMap);
@@ -168,7 +169,7 @@ class TimeTableService{
 _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     return _records;
     }catch(e){
-      print(e.toString());
+  
       return [];
     }
 
@@ -176,7 +177,7 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
 
     //upcoming
   Stream<UnitClass> get upcomingClass {
-    return db.collection(recordCollection)
+    return db.collection(state.currentClassTt!)
     .stream
     .map(upcomingList);
   }
@@ -191,8 +192,25 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     return result;
   }
 
-  Future reScanClassTt()async{
-    
-  }
+  Future reScanClassTt(AppState state)async{
+    try{
+    List<UnitClass> units = await unitsFuture();
 
+    for (UnitClass unit in units){
+      await deleteUnit(unit);
+    }
+  state.changeMode(AppMode.none);
+
+    Navigator.pop(context);
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+        builder: (context) => const ScanScreen()));
+  
+    }catch(e){
+      toast('An error occurred');
+      debugPrint(e.toString());
+    }
+
+  }
 }

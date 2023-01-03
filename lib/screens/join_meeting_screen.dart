@@ -2,9 +2,11 @@ import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_class_details.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/functions.dart';
+import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 
 
 class JoinClassMeeting extends StatefulWidget {
@@ -31,6 +33,8 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
 
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       color: Colors.white,
@@ -53,7 +57,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
                   setState(() {
                     link=result;
                   });
-                  save();
+                  save(state);
                 }
               },
               style: ListTileStyle.drawer,
@@ -90,7 +94,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
                     passCode=result['passCode'];
                     meetingId=result['meetingId'];
                   });
-                  save();
+                  save(state);
                 }
               },
               style: ListTileStyle.drawer,
@@ -121,7 +125,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
                     passCode=result['passCode'];
                     meetingId=result['meetingId'];
                   });
-                  save();
+                  save(state);
                 }
               },
               style: ListTileStyle.drawer,
@@ -144,7 +148,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
 
     );
   }
-  void save()async{
+  void save(AppState state)async{
     UnitClass _record = UnitClass(
         accentColor:  widget.unitClass.accentColor ,
         unitCode: widget.unitClass.unitCode,
@@ -159,7 +163,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
         reminder: widget.unitClass.reminder,
         reminderSchedule: widget.unitClass.reminderSchedule
     );
-    await TimeTableService(context: context).editRecord(record: _record);
+    await ClassTimeTableService(context: context,state:state).editRecord(record: _record);
 
   }
 }

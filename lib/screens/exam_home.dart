@@ -27,13 +27,15 @@ class _ExamsHomeState extends State<ExamsHome> {
 
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return Scaffold(
       key: _scaffoldKey,
               extendBody: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: FutureBuilder<TimeTable>(
-              future: ExamService(context: context).getExamTimetable(),
+              future: ExamService(context: context,state: state).getExamTimetable(),
               builder: (context, snapshot) {
                 if(snapshot.hasData){
                   return Text(snapshot.data!.name,style: titleTextStyle.copyWith(color: primaryThemeColor),);
@@ -82,7 +84,7 @@ class _ExamsHomeState extends State<ExamsHome> {
               
               builder: (context, state, child) {
                 return StreamBuilder<List<ExamModel>>(
-                  stream: ExamService(context: context).examsStream,
+                  stream: ExamService(context: context,state: state).examsStream,
                   builder: (context, snapshot) {
                   if(!snapshot.hasData){
                       return const Center(child: CircularProgressIndicator());

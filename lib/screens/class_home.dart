@@ -32,16 +32,19 @@ class ClassHome extends StatefulWidget {
 
 class _ClassHomeState extends State<ClassHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  
+  
   @override
   Widget build(BuildContext context) {
+    AppState state = Provider.of<AppState>(context);
+
     return Scaffold(
         key: _scaffoldKey,
         extendBody: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: FutureBuilder<TimeTable>(
-              future: TimeTableService(context: context).getClassTimetable(),
+              future: ClassTimeTableService(context: context,state: state).getClassTimetable(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(
@@ -102,7 +105,7 @@ class _ClassHomeState extends State<ClassHome> {
                     ),
                     StreamBuilder<UnitClass>(
                         stream:
-                            TimeTableService(context: context).upcomingClass,
+                            ClassTimeTableService(context: context,state: state).upcomingClass,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(child: circularLoader);
@@ -232,7 +235,7 @@ class TodayUnitTile extends StatelessWidget {
         height: size.height + 80.sp,
         child: StreamBuilder<List<UnitClass>>(
             stream:
-                TimeTableService(context: context, day: weekDay).unitsStream,
+                ClassTimeTableService(context: context, day: weekDay,state: state).unitsStream,
             builder: (context, snapshot) {
               // if(snapshot.connectionState==ConnectionState.waiting){
               //   return const Center(child: circularLoader);
@@ -459,13 +462,13 @@ class WeeklyUnitTile extends StatelessWidget {
       return SizedBox(
         height: size.height + 150.sp,
         child: StreamBuilder<List<UnitClass>>(
-            stream: TimeTableService(context: context).unitsStream,
+            stream: ClassTimeTableService(context: context,state: state).unitsStream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return Center(
+                return const Center(
                   child: Text('An error has occurred'),
                 );
               }
