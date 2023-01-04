@@ -1,4 +1,5 @@
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/screens/exam_home.dart';
@@ -128,8 +129,8 @@ class _ClassHomeState extends State<ClassHome> {
                                   style: titleTextStyle,
                                 ),
                                 trailing: Text(
-                                  timeLeft(
-                                      _record.time.originalStr, _record.day),
+                                  Time.timeLeft(
+                                      _record.time, _record.day),
                                   style: minorTextStyle,
                                 ),
                               ),
@@ -402,8 +403,8 @@ class TodayUnitTile extends StatelessWidget {
                                                 width: 10.sp,
                                               ),
                                               Text(
-                                                  timeLeft(
-                                                      record.time.originalStr,
+                                                  Time.timeLeft(
+                                                      record.time,
                                                       record.day),
                                                   style: TextStyle(
                                                       color: Color.fromARGB(

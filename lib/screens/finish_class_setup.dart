@@ -1,6 +1,6 @@
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
-import 'package:excel_reader/screens/edit_class_details.dart';
+import 'package:excel_reader/screens/edit_unit_details.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
@@ -10,15 +10,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class FinishSetupScreen extends StatefulWidget {
-  final String course;
-  const FinishSetupScreen({Key? key, required this.course}) : super(key: key);
+class FinishClassSetupScreen extends StatefulWidget {
+  
+  const FinishClassSetupScreen({Key? key}) : super(key: key);
 
   @override
-  _FinishSetupScreenState createState() => _FinishSetupScreenState();
+  _FinishClassSetupScreenState createState() => _FinishClassSetupScreenState();
 }
 
-class _FinishSetupScreenState extends State<FinishSetupScreen> {
+class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
   @override
   Widget build(BuildContext context) {
     AppState state = Provider.of<AppState>(context);
@@ -132,7 +132,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                               backgroundColor: Colors.white,
                               isScrollControlled: true,
                               context: context,
-                              builder: (context) => const AddUnit(),
+                              builder: (context) => const AddExam(),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                             );
@@ -173,7 +173,7 @@ class _FinishSetupScreenState extends State<FinishSetupScreen> {
                                     backgroundColor: Colors.white,
                                     isScrollControlled: true,
                                     context: context,
-                                    builder: (context) => const AddUnit(),
+                                    builder: (context) => const AddExam(),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),

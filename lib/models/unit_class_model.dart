@@ -62,7 +62,7 @@ class UnitClass {
   factory UnitClass.defaultClass(String defaultUnitName, String defaultUnitCode, String defaultCourseName){
     return UnitClass(
       accentColor: 0xff050851,
-      day: dayFromWeekday(DateTime.now().weekday),
+      day: Time.dayFromWeekday(DateTime.now().weekday),
       course:defaultCourseName,
       time: Time.fromString('0800-1100 HRS'),
       venue: 'VIRTUAL',
@@ -164,15 +164,14 @@ class UnitClass {
 
   bool get isFulfiled{
       int hourOfDay = DateTime.now().hour;
-    return (hourOfDay*100)>time.end.hour;
+    return hourOfDay>time.end.hour;
       
 }
 
 bool get canJoinMeeting{
   int today = DateTime.now().weekday;
-  
 
-  return timeIndex>=time.start.hour&&venue=='VIRTUAL'&&dayIndex(day)== today;
+  return Time.timeIndex>=time.start.hour&&venue=='VIRTUAL'&&Time.dayIndex(day)== today;
 }
 
 int get weekday{

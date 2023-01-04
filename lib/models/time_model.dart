@@ -44,25 +44,29 @@ class Time {
       String f1 = time.substring(0, time.length-3).trim();
      
       List<String> startEnds = f1.split("-");
-      _startHour = int.parse(startEnds[0].substring(0,2));
-      _startMin = int.parse(startEnds[0].substring(2));
-      _endHour = int.parse(startEnds[1].substring(0,2));
-      _endMin = int.parse(startEnds[1].substring(2));
+      String start = startEnds[0].trim();
+      String end = startEnds[1].trim();
+      _startHour = int.parse(start.substring(0,2));
+      _startMin = int.parse(start.substring(2));
+      _endHour = int.parse(end.substring(0,2));
+      _endMin = int.parse(end.substring(2));
       
     }else{
      
        List<String> startEnds = time.split("-");
+      String start = startEnds[0].trim();
+      String end = startEnds[1].trim();
       
-      bool startAM = startEnds[0].toUpperCase().contains("AM");
-       _startHour = int.parse(startEnds[0].substring(0,startEnds[0].indexOf(".")));
+      bool startAM = start.toUpperCase().contains("AM");
+       _startHour = int.parse(start.substring(0,start.indexOf(".")));
       
       if(!startAM){
         _startHour = _startHour+12;
       }
        
-      bool endAM = startEnds[1].toUpperCase().contains("AM");
+      bool endAM = end.toUpperCase().contains("AM");
       
-       _endHour = int.parse(startEnds[1].substring(0,startEnds[1].indexOf(".")));
+       _endHour = int.parse(end.substring(0,end.indexOf(".")));
       if(!endAM){
         _endHour = _endHour+12;
       }
@@ -78,7 +82,7 @@ class Time {
     );
     }catch(e){
 
-      return Time(originalStr:"No value",start:TimeOfDay.now(),end:TimeOfDay.now());
+      return Time(originalStr:"No value:$time",start:TimeOfDay.now(),end:TimeOfDay.now());
     }
 
   }
@@ -98,6 +102,120 @@ DateTime getDate(dynamic dayOfWeek, int reminderHrs,int reminderMins){
   return DateTime(now.year,now.month,now.day+dayDifference, start.hour,start.minute).subtract(Duration(hours: reminderHrs,minutes: reminderMins));
 }
 
+ static int get timeIndex {
+    
+  int weekDay=DateTime.now().weekday;
+  int hourOfDay = DateTime.now().hour;
+
+  return (weekDay*10000)+(hourOfDay*100);
+
+}
+
+
+
+static String timeLeft(Time time, String day){
+  TimeOfDay startTime=time.start;
+  TimeOfDay endTime=time.end;
+
+  DateTime now = DateTime.now();
+  int recordDay = dayIndex(day);
+
+if(recordDay-now.weekday==0&&now.hour>=startTime.hour&&now.hour<endTime.hour){
+  
+    return 'Ongoing';
+  }
+if(recordDay-now.weekday==0&&startTime.hour-now.hour==1){
+    return 'in ${60-now.minute} minutes';
+  }
+if(recordDay-now.weekday==0&&startTime.hour-now.hour>1){
+      return 'In ${(startTime.hour-now.hour).toStringAsFixed(0)} hours';
+}
+if(recordDay-now.weekday==1){
+    return 'Tomorrow';
+  }
+if(recordDay-now.weekday==0&&endTime.hour<now.hour){
+    return 'done';
+  }
+
+return 'on $day';
+}
+
+static String relativeDay(DateTime date){
+  DateTime today = DateTime.now();
+
+  if(date.day==today.day){
+    return 'Today';
+  }else if(date.difference(today).inDays==1){
+    return 'Tomorrow';
+  }else if(today.difference(date).inDays==1){
+    return 'Yesterday';
+  }else if(date.difference(today).inDays>1){
+    return 'in ${date.day-today.day} days';
+  }else if(today.difference(date).inDays>1){
+    return 'days ago';
+  }else{
+    return dayFromWeekday(date.weekday);
+  }
+}
+
+
+static int dayIndex(String day) {
+
+  switch (day) {
+    case 'MONDAY':
+      return 1;
+    case 'TUESDAY':
+      return 2;
+    case 'WEDNESDAY':
+      return 3;
+    case 'THURSDAY':
+      return 4;
+    case 'FRIDAY':
+      return 5;
+    case 'SATURDAY':
+      return 6;
+    default:
+      return 0;
+  }
+}
+
+
+static String convertDay(String day) {
+  switch (day) {
+    case 'MONDAY':
+      return 'MON';
+    case 'TUESDAY':
+      return 'TUE';
+    case 'WEDNESDAY':
+      return 'WED';
+    case 'THURSDAY':
+      return 'THUR';
+    case 'FRIDAY':
+      return 'FRI';
+    case 'SATURDAY':
+      return 'SAT';
+    default:
+      return '';
+  }
+}
+ static String dayFromWeekday(int weekDay) {
+    switch (weekDay) {
+      case 1:
+        return 'MONDAY';
+      case 2:
+        return 'TUESDAY';
+      case 3:
+        return 'WEDNESDAY';
+      case 4:
+        return 'THURSDAY';
+      case 5:
+        return 'FRIDAY';
+      case 6:
+        return 'SATURDAY';
+      default:
+        return '';
+    }
+  }
 static int getWeekday(day){
   if(day.runtimeType==int){
     return day;
@@ -121,8 +239,6 @@ static int getWeekday(day){
   }
 
 }
-
-
 
 
   Time copyWith({
@@ -172,5 +288,32 @@ static int getWeekday(day){
 
   @override
   int get hashCode => originalStr.hashCode ^ start.hashCode ^ end.hashCode;
+
+
+  static String minuteFormat(int minute){
+    if(minute>=10){
+      return minute.toString();
+    }else{
+      return "0"+minute.toString();
+    }
+  }
+  static String hourFormat(int hour){
+    if(hour>=10){
+      return hour.toString();
+    }else{
+      return "0"+hour.toString();
+    }
+  }
+  static String timeStringFromTime(TimeOfDay start, TimeOfDay end){
+    return '${hourFormat(start.hour)}${minuteFormat(start.minute)} - ${hourFormat(end.hour)}${minuteFormat(end.minute)} HRS';
+  }
+
+  static Map<int,String> monthName = {
+       1:'Jan',2:'Feb',3:'March',4:'April',5:'May',6:'June',
+       7:'July',8:'Aug',9:'Sept',10:'Oct',11:'Nov',12:'Dec'
+  };
+
+
+
 }
 

@@ -2,6 +2,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/string_extension.dart';
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/screens/settings.dart';
 import 'package:excel_reader/screens/single_exam.dart';
 import 'package:excel_reader/services/exam_service.dart';
@@ -148,10 +149,6 @@ class DayHeader extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-     const Map<int,String> monthName = {
-       1:'Jan',2:'Feb',3:'March',4:'April',5:'May',6:'June',
-       7:'July',8:'Aug',9:'Sept',10:'Oct',11:'Nov',12:'Dec'
-     };
 
     return Container(
       color: primaryThemeColor,
@@ -163,10 +160,10 @@ class DayHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(date.day.toString(),style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),),
-              Text(monthName[date.month]!,style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),)
+              Text(Time.monthName[date.month]!,style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),)
             ],
           ),
-          const Text('Today',style:TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),)
+          Text(Time.relativeDay(date),style:TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w400),)
       ]),
     );
   }

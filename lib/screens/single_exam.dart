@@ -4,7 +4,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
-import 'package:excel_reader/screens/edit_class_details.dart';
+import 'package:excel_reader/screens/edit_unit_details.dart';
 import 'package:excel_reader/services/exam_service.dart';
 import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/services/class_service.dart';
@@ -96,15 +96,15 @@ class _EditExamPageState extends State<EditExamPage> {
                 shape:
                     RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 context: context,
-                builder: (context) => const ConfirmAction(text: 'Are you sure you want to delete this unit?'));
+                builder: (context) => const ConfirmAction(text: 'Are you sure you want to delete this exam?'));
                   if(result){
-                  // if(!await ExamService(context: context).deleteExam(widget.exam)){
-                  //   toast('Sorry, an error occurred');
-                  // }else{
-                  //   _appState.reload();
-                  //   toast('Unit deleted');
-                  //   Navigator.pop(context);
-                  //   }
+                  if(!await ExamService(context: context,state: state).deleteExam(widget.exam)){
+                    toast('Sorry, an error occurred');
+                  }else{
+                    state.reload();
+                    toast('Exam deleted');
+                    Navigator.pop(context);
+                    }
                   }
 
                 }, icon: const Icon(Icons.delete,color: Colors.white,))

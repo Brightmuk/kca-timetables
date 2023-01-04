@@ -46,6 +46,21 @@ class ExamModel {
     );
   }
 
+    factory ExamModel.defaultModel(String unitName, String unitCode) {
+
+    return ExamModel(
+      accentColor: 0xff050851,
+      date: DateTime.now(),
+      time: const Time(end: TimeOfDay(hour: 0,minute: 0),start: TimeOfDay(hour: 0,minute: 0),originalStr: '0.00AM - 0.00AM'),
+      venue: "No venue",
+      unitCode: unitCode,
+      unitName: unitName,
+      invigilator: "No invigilator",
+      reminderSchedule: null,
+      reminder: false,
+    );
+  }
+
 
 
   Map<String, dynamic> toMap() {

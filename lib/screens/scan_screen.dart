@@ -4,6 +4,7 @@ import 'package:excel_reader/models/period_model.dart';
 import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/finish_class_setup.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
+import 'package:excel_reader/screens/finish_exam_setup.dart';
 import 'package:excel_reader/screens/select_course.dart';
 import 'package:excel_reader/screens/select_period.dart';
 import 'package:excel/excel.dart';
@@ -415,7 +416,7 @@ class _ScanScreenState extends State<ScanScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => FinishSetupScreen(course: course!,))
+            builder: (context) => const FinishClassSetupScreen())
         );
       }
       return;
@@ -455,10 +456,7 @@ class _ScanScreenState extends State<ScanScreen> {
     try {
       List<UnitClass> _records = [];
 
-     
-
-      int startIndex = dayIndex!.rowIndex + 1;
-    
+      int startIndex = dayIndex!.rowIndex + 1;    
       
       for (var i = startIndex; sheet.rows[i][dayIndex.columnIndex] != null; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
@@ -479,7 +477,7 @@ class _ScanScreenState extends State<ScanScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => FinishSetupScreen(course: course!,)));
+                builder: (context) => const FinishClassSetupScreen()));
 
       }
 
@@ -544,13 +542,17 @@ void examTimetableScan(AppState state)async{
         }
 
        debugPrint('Found: '+_exams.length.toString());
-        state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
+        state.setCurrentExamTt((course!+period!.str).replaceAll(" ",""));
+
       var result = await ExamService(context: context,state: state).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
          state.changeMode(AppMode.examTimetable);
         
-         Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const FinishExamSetupScreen()));
 
       }
 

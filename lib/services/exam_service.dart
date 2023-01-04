@@ -79,18 +79,18 @@ Future<bool> tableExists()async{
     }
   }
 
-  // Future<bool> deleteUnit(UnitClass unit)async{
-  //   try{
-  //   await  db
-  //       .collection(examColletion)
-  //       .doc(unit.unitCode)
-  //       .delete();
-  //       return true;
-  //   }catch(e){
-  //     toast('Sorry an eror occurred');
-  //     return false;
-  //   }
-  // }
+  Future<bool> deleteExam(ExamModel exam)async{
+    try{
+    await  db
+        .collection(state.currentExamTt!)
+        .doc(exam.unitCode)
+        .delete();
+        return true;
+    }catch(e){
+      toast('Sorry an eror occurred');
+      return false;
+    }
+  }
 
   Future<bool> editExam({required ExamModel exam}) async {
     bool returnValue = true;

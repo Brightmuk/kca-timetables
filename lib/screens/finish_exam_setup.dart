@@ -1,7 +1,8 @@
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/table_model.dart';
+import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
-import 'package:excel_reader/screens/edit_class_details.dart';
+import 'package:excel_reader/screens/edit_unit_details.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/screens/single_exam.dart';
 import 'package:excel_reader/services/class_service.dart';
@@ -136,7 +137,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
                               backgroundColor: Colors.white,
                               isScrollControlled: true,
                               context: context,
-                              builder: (context) => const AddUnit(),
+                              builder: (context) => const AddExam(),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                             );
@@ -177,7 +178,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
                                     backgroundColor: Colors.white,
                                     isScrollControlled: true,
                                     context: context,
-                                    builder: (context) => const AddUnit(),
+                                    builder: (context) => const AddExam(),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),
@@ -194,7 +195,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
                                         width: 5,
                                       ),
                                       Text(
-                                        'Add unit',
+                                        'Add exam',
                                         style: TextStyle(
                                             color: secondaryThemeColor),
                                       )
@@ -213,15 +214,13 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
                                           builder: (context) => EditExamPage(
                                               exam: _records[index])));
                                 },
-                                leading: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _records[index].date.toString(),
-                                      style: const TextStyle(fontSize: 12),
+                                leading:  Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(_records[index].date.day.toString(),style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                                        Text(Time.monthName[_records[index].date.month]!,style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)
+                                      ],
                                     ),
-                                  ],
-                                ),
                                 trailing: const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 15,

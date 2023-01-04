@@ -1,7 +1,7 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
-import 'package:excel_reader/screens/edit_class_details.dart';
+import 'package:excel_reader/screens/edit_unit_details.dart';
 import 'package:excel_reader/screens/finish_class_setup.dart';
 import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/single_class.dart';
@@ -87,7 +87,7 @@ class AppDrawer extends StatelessWidget {
                       showModalBottomSheet(
                         backgroundColor: Colors.white,
                         isScrollControlled: true,
-                        context: context, builder: (context)=>const AddUnit(),
+                        context: context, builder: (context)=> state.isClassMode?const AddUnit():const AddExam(),
                         shape:
                         RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       );
