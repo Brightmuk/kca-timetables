@@ -57,7 +57,7 @@ class ClassTimeTableService{
       toast('Timetable saved');
       returnValue = true;
     }catch(e){    
-     toast(e.toString());
+    toast('Sorry,a timetable erorr occurred');
       returnValue = false;
     }
     await LocalData().setNotFirst();
@@ -65,6 +65,7 @@ class ClassTimeTableService{
   }
 
   Future<bool> saveUnit(UnitClass unit)async{
+    debugPrint(unit.toString());
         try{
         await db
         .collection(state.currentClassTt!)
@@ -87,7 +88,7 @@ class ClassTimeTableService{
         .delete();
         return true;
     }catch(e){
-      toast('Sorry an eror occurred');
+      toast('Sorry an error occurred');
       return false;
     }
   }
@@ -182,7 +183,7 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     .stream
     .map(upcomingList);
   }
-      List<UnitClass> upcomingRecords = [];
+  List<UnitClass> upcomingRecords = [];
   UnitClass upcomingList(Map<String, dynamic> query) {
 
     final item = UnitClass.fromMap(query);

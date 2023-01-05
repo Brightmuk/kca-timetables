@@ -32,18 +32,25 @@ class ExamModel {
 
   
   factory ExamModel.fromSheet(List<Data?> row) {
-
+    try{
     return ExamModel(
       accentColor: 0xff050851,
-      date: DateTime.parse(row[5]!.value.toString()),
-      time: Time.fromString(row[6]!.value.toString().toUpperCase()),
-      venue: row[10]!.value.toString().toUpperCase(),
-      unitCode: row[0]!.value.toString().toUpperCase(),
-      unitName: row[1]!.value.toString().toUpperCase(),
-      invigilator: row[8]!.value.toString().toUpperCase(),
+      date: DateTime.parse(row[5]!=null?row[5]!.value:DateTime.now().toString()),
+      time: Time.fromString(row[6]!=null?row[6]!.value:''),
+      venue: row[10]!=null? row[10]!.value:'No value',
+      unitCode: row[0]!=null?row[0]!.value:'No value',
+      unitName: row[1]!=null? row[1]!.value:'No value',
+      invigilator: row[8]!=null? row[8]!.value:'No value',
       reminderSchedule: null,
       reminder: false,
     );
+    }catch(e){
+      
+      debugPrint("Error: "+e.toString());
+      return ExamModel.defaultModel("No value", "No value");
+     
+    }
+
   }
 
     factory ExamModel.defaultModel(String unitName, String unitCode) {

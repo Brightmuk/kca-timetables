@@ -18,18 +18,16 @@ class _LandingPageState extends State<LandingPage> {
     'assets/images/organised.png',
     'assets/images/reminder.png',
     'assets/images/link.png',
-
   ];
   final List<String> texts = [
     'All your classes\norganised\nin one place',
     'Get reminded\nwhen class\nstarts',
     'Join\nonline classes\nwith one click'
-
   ];
-  int viewIndex=0;
-    Widget indicator(currentIndex) {
+  int viewIndex = 0;
+  Widget indicator(currentIndex) {
     return SizedBox(
-        height: 10.sp,
+        height: 8,
         width: pages.length * 35,
         child: ListView.separated(
             itemCount: pages.length,
@@ -47,8 +45,7 @@ class _LandingPageState extends State<LandingPage> {
                   color: currentIndex == index
                       ? secondaryThemeColor
                       : Colors.grey[200],
-                  border: Border.all(
-                      color: Colors.grey[200]!, width: 0.6),
+                  border: Border.all(color: Colors.grey[200]!, width: 0.6),
                   borderRadius: BorderRadius.circular(10),
                 ),
               );
@@ -61,29 +58,31 @@ class _LandingPageState extends State<LandingPage> {
       extendBody: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: MediaQuery.of(context).size.height*0.3,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.3,
         flexibleSpace: SizedBox(
-          height: MediaQuery.of(context).size.height*0.33,
+          height: MediaQuery.of(context).size.height * 0.33,
           width: MediaQuery.of(context).size.width,
           child: CustomPaint(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height*0.1,
+                    height: MediaQuery.of(context).size.height * 0.1,
                   ),
-                   Text('Welcome to \nKCA Timetables',
+                  Text(
+                    'Welcome to \nKCA Timetables',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 35.sp,
-                        fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(
                     height: 10.sp,
                   ),
                   const Text('Its convenient, time saving and organised',
                       style: TextStyle(
                         color: Color.fromARGB(255, 201, 174, 20),
-
                       )),
                 ]),
             painter: TrapeziumPainter(),
@@ -104,21 +103,27 @@ class _LandingPageState extends State<LandingPage> {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-  Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Text(texts[viewIndex],style: TextStyle(color: primaryThemeColor,fontSize: 25.sp,fontWeight: FontWeight.bold),),
-  ),
-  SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: CarouselSlider.builder(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    texts[viewIndex],
+                    style: TextStyle(
+                        color: primaryThemeColor,
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: CarouselSlider.builder(
                       options: CarouselOptions(
                         onPageChanged: (index, reason) {
                           setState(() {
                             viewIndex = index;
                           });
                         },
-                        height: 250.sp,
+                        height: 270.sp,
                         aspectRatio: 16 / 9,
                         viewportFraction: 1,
                         initialPage: 0,
@@ -127,18 +132,19 @@ children: [
                         scrollDirection: Axis.horizontal,
                       ),
                       itemCount: pages.length,
-                      itemBuilder:
-                          (BuildContext context, int index, int pageViewIndex) =>
-            Image.asset(
-              pages[index],
-            )),
-        ),
-        SizedBox(height: 70.sp,),
-        Center(child: indicator(viewIndex))
-        ],
+                      itemBuilder: (BuildContext context, int index,
+                              int pageViewIndex) =>
+                          Image.asset(
+                            pages[index],
+                          )),
+                ),
+                SizedBox(
+                  height: 70.sp,
+                ),
+                Center(child: indicator(viewIndex))
+              ],
             ),
           ),
-
           Positioned(
             bottom: 30.sp,
             child: MaterialButton(
@@ -153,13 +159,12 @@ children: [
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                 showModalBottomSheet(
-                    backgroundColor: Colors.white,
-                    shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    context: context,
-                    builder: (context) => const IsTimetableScreen()
-                  );
+                  showModalBottomSheet(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      context: context,
+                      builder: (context) => const IsTimetableScreen());
                 }),
           )
         ],
@@ -168,25 +173,23 @@ children: [
   }
 }
 
-class TrapeziumPainter extends CustomPainter{
-
+class TrapeziumPainter extends CustomPainter {
   @override
-  void paint(Canvas canvas, Size size){
+  void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..strokeCap=StrokeCap.round
-      ..color=const Color.fromARGB(255, 3, 4, 75)
-      ..style =PaintingStyle.fill
-      ..strokeWidth=10;
+      ..strokeCap = StrokeCap.round
+      ..color = const Color.fromARGB(255, 3, 4, 75)
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 10;
 
-    final Offset point1 = Offset(size.width*0.5, size.height);
-    final Offset point2 = Offset(size.width,size.height);
-
+    final Offset point1 = Offset(size.width * 0.5, size.height);
+    final Offset point2 = Offset(size.width, size.height);
 
     final path = Path()
       ..moveTo(0, 0)
       ..lineTo(0, size.height)
-      ..arcToPoint(point1,radius: const Radius.circular(200))
-      ..arcToPoint(point2,radius: const Radius.circular(200),clockwise: false)
+      ..arcToPoint(point1, radius: const Radius.circular(200))
+      ..arcToPoint(point2, radius: const Radius.circular(200), clockwise: false)
       ..lineTo(size.width, size.height)
       ..lineTo(size.width, 0);
 
@@ -194,6 +197,5 @@ class TrapeziumPainter extends CustomPainter{
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
-
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

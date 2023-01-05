@@ -30,6 +30,8 @@ class Time {
     required this.start,
     required this.end,
   });
+
+  static Time noValue = Time(originalStr:"No value",start:TimeOfDay.now(),end:TimeOfDay.now());
   
   factory Time.fromString(String time){
     
@@ -82,7 +84,7 @@ class Time {
     );
     }catch(e){
 
-      return Time(originalStr:"No value:$time",start:TimeOfDay.now(),end:TimeOfDay.now());
+      return noValue;
     }
 
   }

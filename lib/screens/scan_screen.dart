@@ -468,7 +468,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
       debugPrint("\nFound these items: "+_records.length.toString());
-      debugPrint((course!+period!.str).replaceAll(" ",""));
+
       var result = await ClassTimeTableService(context: context,state: state).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
   
       if(result){
@@ -534,12 +534,14 @@ void examTimetableScan(AppState state)async{
           
           if(period!.isMatch(sheet.rows[i][periodIndex.columnIndex]!.value.toString())){
              
-            debugPrint(sheet.rows[i][1].toString());
+            debugPrint(sheet.rows[i][8].toString());
             
             _exams.add(ExamModel.fromSheet(sheet.rows[i]));
-          
+            
           }
+          
         }
+        
 
        debugPrint('Found: '+_exams.length.toString());
         state.setCurrentExamTt((course!+period!.str).replaceAll(" ",""));
