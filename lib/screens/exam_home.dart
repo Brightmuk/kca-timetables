@@ -151,7 +151,7 @@ class DayHeader extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      color: primaryThemeColor,
+      color: Time.relativeDay(date)=='days ago'?Colors.grey: primaryThemeColor,
       padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

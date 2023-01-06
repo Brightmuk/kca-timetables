@@ -63,7 +63,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year one Trim one',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+one|\w+\s+1+\s+\w+\s+1|\w+1+\w+1)',caseSensitive:false));
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+one|\D+1+\D+1)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -72,7 +72,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year one Trim two',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+two|\w+\s+1+\s+\w+\s+2|\w+1+\w+2)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+two|\D+1+\D+2)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -81,7 +81,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year one Trim three',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+three|\w+\s+1+\s+\w+\s+3|\w+1+\w+3)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(one+\s\w+\s+three|\D+1+\D+3)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             Divider(),
@@ -91,7 +91,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year two Trim one',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+one|\w+\s+2+\s+\w+\s+1|\w+2+\w+1)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+one|\D+2+\D+1)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -100,7 +100,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year two Trim two',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+two|\w+\s+2+\s+\w+\s+2|\w+2+\w+2)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+two|\D+2+\D+2)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -109,7 +109,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year two Trim three',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+three|\w+\s+2+\s+\w+\s+3|\w+2+\w+3)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(two+\s\w+\s+three|\D+2+\D+3)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             Divider(),
@@ -119,7 +119,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year three Trim one',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+one|\w+\s+3+\s+\w+\s+1|\w+3+\w+1)',caseSensitive:false));
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+one|\D+3+\D+1)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -128,7 +128,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year three Trim two',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+two|\w+\s+3+\s+\w+\s+2|\w+3+\w+2)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+two|\D+3+\D+2)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -137,7 +137,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Year three Trim three',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+three|\w+\s+3+\s+\w+\s+3|\w+3+\w+3)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(three+\s\w+\s+three|\D+3+\D+3)',caseSensitive:false));
                   choosePeriod(period);
                 }),
           ],
@@ -156,7 +156,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Stage one',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+one|\w+\s+1|one|\w+1)',caseSensitive:false));
+                 Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+one|one|\D1)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -165,7 +165,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Stage two',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+two|\w+\s+2|two\w+2)',caseSensitive:false));
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+two|two|\D2)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -174,7 +174,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Stage three',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+three|\w+\s+3|three\w+3)',caseSensitive:false));
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+three|three|\D3)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -183,7 +183,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Stage four',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+four|\w+\s+4|four\w+4)',caseSensitive:false));
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+four|four|\D4)',caseSensitive:false));
                   choosePeriod(period);
                 }),
             RadioListTile(
@@ -192,7 +192,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
                 value: 'Stage five',
                 groupValue: periodStr,
                 onChanged: (String? val) {
-                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+five|\w+\s+5|five\w+5)',caseSensitive:false));
+                  Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+five|five|\D5)',caseSensitive:false));
                   choosePeriod(period);
                 }),
           ],
@@ -209,7 +209,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
               value: 'Stage one',
               groupValue: periodStr,
               onChanged: (String? val) {
-                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+one|\w+\s+1|one\w+1)',caseSensitive:false));
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+one|one|\D1)',caseSensitive:false));
                   choosePeriod(period);
               }),
           RadioListTile(
@@ -218,7 +218,7 @@ class _ClassPeriodSelectorState extends State<ClassPeriodSelector> {
               value: 'Stage two',
               groupValue: periodStr,
               onChanged: (String? val) {
-                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\w+\s+two|\w+\s+2|two\w+2)',caseSensitive:false));
+                Period period = Period(str: val!, type: type!, reg: RegExp(r'(\D+two|two|\D2)',caseSensitive:false));
                   choosePeriod(period);
               }),
         ]);

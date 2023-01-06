@@ -44,13 +44,13 @@ class UnitClass {
   factory UnitClass.fromSheet(List<Data?> row, int dayIndex,String courseName) {
     return UnitClass(
       accentColor: 0xff050851,
-      day: row[dayIndex]!.value??'No value',
+      day: row[dayIndex]!=null?row[dayIndex]!.value:'No value',
       course:courseName,
       time: Time.fromString(row[dayIndex + 1]!.value),
-      venue: row[dayIndex + 2]!.value??'No value',
-      unitCode: row[dayIndex + 3]!.value??'No value',
-      unitName: row[dayIndex + 4]!.value??'No value',
-      lecturer: row[dayIndex + 5]!.value??'No value',
+      venue: row[dayIndex + 2]!=null?row[dayIndex + 2]!.value:'No value',
+      unitCode: row[dayIndex + 3]!=null?row[dayIndex + 3]!.value:'No value',
+      unitName: row[dayIndex + 4]!=null?row[dayIndex + 4]!.value:'No value',
+      lecturer: row[dayIndex + 5]!=null?row[dayIndex + 5]!.value:'No value',
       meetingId: null,
       reminderSchedule: null,
       meetingPassCode: null,
@@ -162,11 +162,7 @@ class UnitClass {
       meetingId.hashCode;
   }
 
-  bool get isFulfiled{
-      int hourOfDay = DateTime.now().hour;
-    return hourOfDay>time.end.hour;
-      
-}
+
 
 bool get canJoinMeeting{
   int today = DateTime.now().weekday;
@@ -194,25 +190,29 @@ int get weekday{
 }
 
   int get sortIndex {
-    int timeValue=time.start.hour;
-
+    int timeValue=time.end.hour;
 
     switch (day) {
       case 'MONDAY':
-        return 10000 + timeValue;
+        return 100 + timeValue;
       case 'TUESDAY':
-        return 20000 + timeValue;
+        return 200 + timeValue;
       case 'WEDNESDAY':
-        return 30000 + timeValue;
+        return 300 + timeValue;
       case 'THURSDAY':
-        return 40000 + timeValue;
+        return 400 + timeValue;
       case 'FRIDAY':
-        return 50000 + timeValue;
+        return 500 + timeValue;
       case 'SATURDAY':
-        return 60000 + timeValue;
+        return 600 + timeValue;
       default:
         return 0 + timeValue;
     }
   }
+    bool get isNowOrNext{
+      DateTime now = DateTime.now();
+      int todayValue = (now.weekday*1000)+now.hour;
+      return sortIndex>todayValue; 
+}
 
 }

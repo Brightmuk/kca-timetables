@@ -74,7 +74,7 @@ class ClassTimeTableService{
       
       return true;
     }catch(e){    
-     toast('An error occurred');
+     toast('Error, please try again!');
      debugPrint(e.toString());
       return false;
     }
@@ -189,6 +189,7 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     final item = UnitClass.fromMap(query);
     upcomingRecords.add(item);
     upcomingRecords.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
+
     UnitClass result = upcomingRecords.firstWhere((r) => r.sortIndex>Time.timeIndex,orElse: ()=>upcomingRecords.first);
 
     return result;

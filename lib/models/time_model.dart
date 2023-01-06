@@ -109,7 +109,7 @@ DateTime getDate(dynamic dayOfWeek, int reminderHrs,int reminderMins){
   int weekDay=DateTime.now().weekday;
   int hourOfDay = DateTime.now().hour;
 
-  return (weekDay*10000)+(hourOfDay*100);
+  return (weekDay*100)+hourOfDay;
 
 }
 
@@ -139,13 +139,14 @@ if(recordDay-now.weekday==0&&endTime.hour<now.hour){
     return 'done';
   }
 
-return 'on $day';
+// return 'on $day';
+return '';
 }
 
 static String relativeDay(DateTime date){
   DateTime today = DateTime.now();
 
-  if(date.day==today.day){
+  if(date.difference(today).inDays==0){
     return 'Today';
   }else if(date.difference(today).inDays==1){
     return 'Tomorrow';
