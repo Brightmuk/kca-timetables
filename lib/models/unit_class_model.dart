@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:excel/excel.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/shared/functions.dart';
+import 'package:flutter/material.dart';
 
 class UnitClass {
   final String day;
@@ -13,7 +14,7 @@ class UnitClass {
   final String unitName;
   final String lecturer;
   final bool reminder;
-  final int? reminderSchedule;
+  final TimeOfDay reminderSchedule;
   final String? classLink;
   final String? meetingPassCode;
   final String? meetingId;
@@ -29,7 +30,7 @@ class UnitClass {
     required this.unitName,
     required this.lecturer,
     required this.reminder,
-    this.reminderSchedule,
+    required this.reminderSchedule,
     this.classLink,
     this.meetingPassCode,
     this.meetingId,
@@ -52,7 +53,7 @@ class UnitClass {
       unitName: row[dayIndex + 4]!=null?row[dayIndex + 4]!.value:'No value',
       lecturer: row[dayIndex + 5]!=null?row[dayIndex + 5]!.value:'No value',
       meetingId: null,
-      reminderSchedule: null,
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
       meetingPassCode: null,
       classLink: null,
       reminder: false,
@@ -70,7 +71,7 @@ class UnitClass {
       unitName: defaultUnitName,
       lecturer: 'LECTURER\'S NAME',
       meetingId: null,
-      reminderSchedule: null,
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
       meetingPassCode: null,
       classLink: null,
       reminder: false,
@@ -91,7 +92,7 @@ class UnitClass {
       'unitName': unitName,
       'lecturer': lecturer,
       'reminder': reminder,
-      'reminderSchedule': reminderSchedule,
+      'reminderSchedule': TimeOfD.toJson(reminderSchedule),
       'classLink': classLink,
       'meetingPassCode': meetingPassCode,
       'meetingId': meetingId,
@@ -109,7 +110,7 @@ class UnitClass {
       unitName: map['unitName'] ?? '',
       lecturer: map['lecturer'] ?? '',
       reminder: map['reminder'] ?? false,
-      reminderSchedule: map['reminderSchedule']?.toInt(),
+      reminderSchedule: TimeOfD.fromJson(map['reminderSchedule']),
       classLink: map['classLink'],
       meetingPassCode: map['meetingPassCode'],
       meetingId: map['meetingId'],

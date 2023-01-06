@@ -457,8 +457,8 @@ class _ScanScreenState extends State<ScanScreen> {
       List<UnitClass> _records = [];
 
       int startIndex = dayIndex!.rowIndex + 1;    
-      
-      for (var i = startIndex; sheet.rows[i][dayIndex.columnIndex] != null; i++) {
+     
+      for (var i = startIndex; i<sheet.rows.length&&sheet.rows[i][dayIndex.columnIndex] != null; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
 
           _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
@@ -468,7 +468,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
       debugPrint("\nFound these items: "+_records.length.toString());
-
+      
       var result = await ClassTimeTableService(context: context,state: state).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
   
       if(result){
@@ -483,7 +483,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
     } catch (e) {
       debugPrint("ERROR: "+e.toString());
-      toast('The period was not found or has an invalid format');
+      toast('There was an error processing the document');
     }
     } catch (e) {
       debugPrint(e.toString());

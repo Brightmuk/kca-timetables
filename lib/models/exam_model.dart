@@ -15,7 +15,7 @@ class ExamModel {
   final String invigilator;
   final int accentColor;
   final bool reminder;
-  final int? reminderSchedule;
+  final TimeOfDay reminderSchedule;
 
   ExamModel({
     required this.unitName,
@@ -26,7 +26,7 @@ class ExamModel {
     required this.invigilator,
     required this.accentColor,
     required this.reminder,
-    this.reminderSchedule
+    required this.reminderSchedule
   });
 
 
@@ -41,7 +41,7 @@ class ExamModel {
       unitCode: row[0]!=null?row[0]!.value:'No value',
       unitName: row[1]!=null? row[1]!.value:'No value',
       invigilator: row[8]!=null? row[8]!.value:'No value',
-      reminderSchedule: null,
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
       reminder: false,
     );
     }catch(e){
@@ -63,7 +63,7 @@ class ExamModel {
       unitCode: unitCode,
       unitName: unitName,
       invigilator: "No invigilator",
-      reminderSchedule: null,
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
       reminder: false,
     );
   }
@@ -80,7 +80,7 @@ class ExamModel {
       'invigilator': invigilator,
       'accentColor': accentColor,
       'reminder': reminder,
-      'reminderSchedule': reminderSchedule,
+      'reminderSchedule': TimeOfD.toJson(reminderSchedule),
     };
   }
 
@@ -94,7 +94,7 @@ class ExamModel {
       invigilator: map['invigilator'] ?? '',
       accentColor: map['accentColor']?.toInt() ?? 0,
       reminder: map['reminder'] ?? false,
-      reminderSchedule: map['reminderSchedule'],
+      reminderSchedule: TimeOfD.fromJson(map['reminderSchedule']),
     );
   }
 

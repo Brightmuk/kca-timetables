@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 extension TimeOfD on TimeOfDay{
   static Map<String, int> toMap(TimeOfDay t){
+
     return {
       'hour':t.hour,
       'minute':t.minute
@@ -87,6 +88,14 @@ class Time {
       return noValue;
     }
 
+  }
+
+  static  String scheduleStr(TimeOfDay time) {
+    if (time.hour>0) {
+      return time.hour.toString() + ' hour(s)';
+    } else {
+      return time.minute.toString() + ' minutes';
+    }
   }
 
 

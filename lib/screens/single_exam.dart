@@ -35,7 +35,7 @@ class _EditExamPageState extends State<EditExamPage> {
   String? _invigilator;
   bool? _reminder;
   int? _accentColor;
-  int? _reminderSchedule;
+  TimeOfDay? _reminderSchedule;
 
   void initState() {
     super.initState();
@@ -44,7 +44,7 @@ class _EditExamPageState extends State<EditExamPage> {
     _venue = widget.exam.venue;
     _invigilator = widget.exam.invigilator;
     _reminder = widget.exam.reminder;
-    _reminderSchedule=widget.exam.reminderSchedule??5;
+    _reminderSchedule=widget.exam.reminderSchedule;
     _accentColor=widget.exam.accentColor;
   }
 
@@ -283,7 +283,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       var result = await showModalBottomSheet(
                         backgroundColor: Colors.white,
                         isScrollControlled: true,
-                        context: context, builder: (context)=>EditReminderSchedule(minutes: _reminderSchedule!,),
+                        context: context, builder: (context)=>EditReminderSchedule(initial: _reminderSchedule!,),
                         shape:
                         RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       );
@@ -297,7 +297,7 @@ class _EditExamPageState extends State<EditExamPage> {
                     }:null,
                     style: ListTileStyle.drawer,
                     title: const Text('Reminder schedule'),
-                    subtitle: Text(scheduleStr(_reminderSchedule!)),
+                    subtitle: Text(Time.scheduleStr(_reminderSchedule!)),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
@@ -340,48 +340,16 @@ class _EditExamPageState extends State<EditExamPage> {
   }
 
 
-String get timeFormatStr{
-  if(_reminderSchedule!>60){
-    return '${_reminderSchedule!~/60} hour(s)';
-  }else{
-    return '$_reminderSchedule minutes';
-  }
-}
-
-int get reminderHrs{
-  int hrs=0;
-  if(_reminderSchedule!%60>0){
-    hrs = _reminderSchedule!~/60;
-  }
-  return hrs;
-}
-int get reminderMins{
-  int mins=0;
-  if(_reminderSchedule!<60){
-    mins = _reminderSchedule!.toInt();
-  }
-  return mins;
-}
-
-
 Future<void> setReminder()async{
 
     await NotificationService().zonedScheduleNotification(
       id: widget.exam.sortIndex, 
       title: 'Class is about to start', 
-      description: 'Your ${widget.exam.unitName} class is starting in $timeFormatStr', 
+      description: 'Your ${widget.exam.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}', 
       payload: "{'unitCode':${widget.exam.unitCode}}", 
-      date: _time!.getDate(widget.exam.date.weekday, reminderHrs, reminderMins));
+      date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!.hour, _reminderSchedule!.minute));
 }
 
-
-  String scheduleStr(int minutes){
-    if(minutes>59){
-      return (minutes/60).toString()+' hours';
-    }else {
-      return minutes.toString()+' minutes';
-    }
-  }
   void save(AppState state)async{
     ExamModel _exam = ExamModel(
         accentColor: _accentColor!,
@@ -392,7 +360,7 @@ Future<void> setReminder()async{
         venue: _venue!,
         invigilator: _invigilator!,
         reminder: _reminder!,
-        reminderSchedule: _reminderSchedule
+        reminderSchedule: _reminderSchedule!
     );
 
     await ExamService(context: context,state: state).editExam(exam: _exam);

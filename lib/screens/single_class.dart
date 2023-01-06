@@ -34,7 +34,7 @@ class _EditClassPageState extends State<EditClassPage> {
   String? _meetingId;
   bool? _reminder;
   int? _accentColor;
-  int? _reminderSchedule;
+  TimeOfDay? _reminderSchedule;
 
   void initState() {
     super.initState();
@@ -46,7 +46,7 @@ class _EditClassPageState extends State<EditClassPage> {
     _passCode = widget.unit.meetingPassCode;
     _meetingId = widget.unit.meetingId;
     _reminder = widget.unit.reminder;
-    _reminderSchedule = widget.unit.reminderSchedule ?? 5;
+    _reminderSchedule = widget.unit.reminderSchedule;
     _accentColor = widget.unit.accentColor;
   }
 
@@ -349,7 +349,7 @@ class _EditClassPageState extends State<EditClassPage> {
                               isScrollControlled: true,
                               context: context,
                               builder: (context) => EditReminderSchedule(
-                                minutes: _reminderSchedule!,
+                                initial: _reminderSchedule!,
                               ),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
@@ -365,7 +365,7 @@ class _EditClassPageState extends State<EditClassPage> {
                         : null,
                     style: ListTileStyle.drawer,
                     title: const Text('Reminder schedule'),
-                    subtitle: Text(scheduleStr(_reminderSchedule!)),
+                    subtitle: Text(Time.scheduleStr(_reminderSchedule!)),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
@@ -412,47 +412,17 @@ class _EditClassPageState extends State<EditClassPage> {
     );
   }
 
-  String get timeFormatStr {
-    if (_reminderSchedule! > 60) {
-      return '${_reminderSchedule! ~/ 60} hour(s)';
-    } else {
-      return '$_reminderSchedule minutes';
-    }
-  }
-
-  int get reminderHrs {
-    int hrs = 0;
-    if (_reminderSchedule! % 60 > 0) {
-      hrs = _reminderSchedule! ~/ 60;
-    }
-    return hrs;
-  }
-
-  int get reminderMins {
-    int mins = 0;
-    if (_reminderSchedule! < 60) {
-      mins = _reminderSchedule!.toInt();
-    }
-    return mins;
-  }
 
   Future<void> setReminder() async {
     await NotificationService().zonedScheduleNotification(
         id: widget.unit.sortIndex,
         title: 'Class is about to start',
         description:
-            'Your ${widget.unit.unitName} class is starting in $timeFormatStr',
+            'Your ${widget.unit.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}',
         payload: "{'unitCode':${widget.unit.unitCode}}",
-        date: _time!.getDate(widget.unit.day, reminderHrs, reminderMins));
+        date: _time!.getDate(widget.unit.day, _reminderSchedule!.hour, _reminderSchedule!.minute));
   }
 
-  String scheduleStr(int minutes) {
-    if (minutes > 59) {
-      return (minutes / 60).toString() + ' hours';
-    } else {
-      return minutes.toString() + ' minutes';
-    }
-  }
 
   void save(AppState state) async {
     UnitClass _record = UnitClass(
@@ -467,7 +437,7 @@ class _EditClassPageState extends State<EditClassPage> {
         meetingPassCode: _passCode,
         classLink: _link,
         reminder: _reminder!,
-        reminderSchedule: _reminderSchedule);
+        reminderSchedule: _reminderSchedule!);
 
     await ClassTimeTableService(context: context,state: state).editRecord(record: _record);
   }

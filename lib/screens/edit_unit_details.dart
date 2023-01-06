@@ -1101,8 +1101,8 @@ class _EditCredentialsState extends State<EditCredentials> {
 }
 
 class EditReminderSchedule extends StatefulWidget {
-  final int minutes;
-  const EditReminderSchedule({Key? key, required this.minutes})
+  final TimeOfDay initial;
+  const EditReminderSchedule({Key? key, required this.initial})
       : super(key: key);
 
   @override
@@ -1110,12 +1110,12 @@ class EditReminderSchedule extends StatefulWidget {
 }
 
 class _EditReminderScheduleState extends State<EditReminderSchedule> {
-  int minutes = 0;
+  TimeOfDay time = TimeOfDay.now();
 
   @override
   void initState() {
     super.initState();
-    minutes = widget.minutes;
+    time = widget.initial;
   }
 
   @override
@@ -1155,7 +1155,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
               ),
               ListTile(
                 subtitle: Text(
-                    'Get a reminder ${scheduleStr(minutes)} before the class starts'),
+                    'Get a reminder ${Time.scheduleStr(time)} before the class starts'),
               ),
               RadioListTile(
                   activeColor: const Color.fromARGB(255, 201, 174, 20),
@@ -1163,11 +1163,11 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                     '5 minutes ',
                     style: tileTitleTextStyle,
                   ),
-                  value: 5,
-                  groupValue: minutes,
-                  onChanged: (int? val) {
+                  value: const TimeOfDay(hour: 0,minute: 5),
+                  groupValue: time,
+                  onChanged: (TimeOfDay? val) {
                     setState(() {
-                      minutes = val!;
+                      time = val!;
                     });
                   }),
               RadioListTile(
@@ -1176,11 +1176,11 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                     '30 minutes ',
                     style: tileTitleTextStyle,
                   ),
-                  value: 30,
-                  groupValue: minutes,
-                  onChanged: (int? val) {
+                  value: TimeOfDay(hour: 0,minute:30),
+                  groupValue: time,
+                  onChanged: (TimeOfDay? val) {
                     setState(() {
-                      minutes = val!;
+                      time = val!;
                     });
                   }),
               RadioListTile(
@@ -1189,11 +1189,11 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                     '1 hour ',
                     style: tileTitleTextStyle,
                   ),
-                  value: 60,
-                  groupValue: minutes,
-                  onChanged: (int? val) {
+                  value: TimeOfDay(hour: 1,minute:0),
+                  groupValue: time,
+                  onChanged: (TimeOfDay? val) {
                     setState(() {
-                      minutes = val!;
+                      time = val!;
                     });
                   }),
               RadioListTile(
@@ -1202,11 +1202,11 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                     '2 hours ',
                     style: tileTitleTextStyle,
                   ),
-                  value: 120,
-                  groupValue: minutes,
-                  onChanged: (int? val) {
+                  value: TimeOfDay(hour: 2,minute:0),
+                  groupValue: time,
+                  onChanged: (TimeOfDay? val) {
                     setState(() {
-                      minutes = val!;
+                      time = val!;
                     });
                   }),
             ],
@@ -1226,7 +1226,7 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Navigator.pop(context, minutes);
+                  Navigator.pop(context, time);
                 }),
           )
         ],
@@ -1234,11 +1234,5 @@ class _EditReminderScheduleState extends State<EditReminderSchedule> {
     );
   }
 
-  String scheduleStr(int minutes) {
-    if (minutes > 59) {
-      return (minutes / 60).toStringAsFixed(0) + ' hour(s)';
-    } else {
-      return minutes.toString() + ' minutes';
-    }
-  }
+
 }
