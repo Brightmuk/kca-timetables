@@ -13,6 +13,7 @@ import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/decorations.dart';
+import 'package:excel_reader/shared/widgets/app_loader.dart';
 import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _ScanScreenState extends State<ScanScreen> {
   bool scanningDoc = false;
   bool isAuto = true;
   final _formKey = GlobalKey<FormState>();
+  bool loading=false;
   final TextEditingController _courseNameC = TextEditingController();
 
   @override
@@ -281,7 +283,7 @@ class _ScanScreenState extends State<ScanScreen> {
                           padding: const EdgeInsets.all(20),
                           minWidth: MediaQuery.of(context).size.width * 0.9,
                           color: const Color.fromARGB(255, 201, 174, 20),
-                          child: const Text(
+                          child: Text(
                             'Next',
                             style: TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.bold),
@@ -295,7 +297,8 @@ class _ScanScreenState extends State<ScanScreen> {
                                   } else{
                                     examTimetableScan(state);
                                     
-                                  }  
+                                  } 
+
                               }
                               : null);
                     }
@@ -465,7 +468,7 @@ class _ScanScreenState extends State<ScanScreen> {
         }
       }
       state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
-
+      await Future.delayed(const Duration(milliseconds: 500));
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
       debugPrint("\nFound these items: "+_records.length.toString());
       
@@ -545,7 +548,7 @@ void examTimetableScan(AppState state)async{
 
        debugPrint('Found: '+_exams.length.toString());
         state.setCurrentExamTt((course!+period!.str).replaceAll(" ",""));
-
+      await Future.delayed(const Duration(milliseconds: 500));
       var result = await ExamService(context: context,state: state).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
