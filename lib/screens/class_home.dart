@@ -284,12 +284,39 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
             ),
           ),
           SizedBox(
-            width: 50.sp,
+            width: 0.sp,
           ),
-          Icon(widget.unit.reminder?
-            Icons.notifications_outlined:Icons.notifications_off_outlined,
-            color: secondaryThemeColor,
-            size: 18.sp,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 5.sp,),
+              Icon(
+                widget.unit.reminder?
+                Icons.notifications_outlined:Icons.notifications_off_outlined,
+                color: secondaryThemeColor,
+                size: 18.sp,
+              ),
+               MaterialButton(
+                 minWidth: 40,
+                 disabledColor: Color.fromARGB(255, 247, 247, 247),
+                 color: secondaryThemeColor,
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                 onPressed: widget.unit.canJoinMeeting?(){
+              if(widget.unit.classLink!=null){
+
+              launchExternalUrl(widget.unit.classLink!);
+              
+            }else{
+              showModalBottomSheet(
+                backgroundColor: Colors.white,
+                context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
+                shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              );
+            }
+               }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),)
+            ],
+           
           ),
           SizedBox(
             width: 10.sp,

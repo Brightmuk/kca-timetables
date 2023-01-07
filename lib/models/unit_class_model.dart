@@ -20,71 +20,70 @@ class UnitClass {
   final String? meetingId;
   final int accentColor;
 
-  UnitClass({
-    required this.day,
-    this.course,
-    required this.time,
-    required this.venue,
-    required this.unitCode,
-    
-    required this.unitName,
-    required this.lecturer,
-    required this.reminder,
-    required this.reminderSchedule,
-    this.classLink,
-    this.meetingPassCode,
-    this.meetingId,
-    required this.accentColor
-  });
-
+  UnitClass(
+      {required this.day,
+      this.course,
+      required this.time,
+      required this.venue,
+      required this.unitCode,
+      required this.unitName,
+      required this.lecturer,
+      required this.reminder,
+      required this.reminderSchedule,
+      this.classLink,
+      this.meetingPassCode,
+      this.meetingId,
+      required this.accentColor});
 
   ///According to the timetables, the order of fields is day,time, room
   ///unit code,unit name,lecturer so  we assume it will always be the case
   ///therefore the index is relatively constant
 
-  factory UnitClass.fromSheet(List<Data?> row, int dayIndex,String courseName) {
+  factory UnitClass.fromSheet(
+      List<Data?> row, int dayIndex, String courseName) {
     return UnitClass(
       accentColor: 0xff050851,
-      day: row[dayIndex]!=null?row[dayIndex]!.value:'No value',
-      course:courseName,
+      day: row[dayIndex] != null ? row[dayIndex]!.value : 'No value',
+      course: courseName,
       time: Time.fromString(row[dayIndex + 1]!.value),
-      venue: row[dayIndex + 2]!=null?row[dayIndex + 2]!.value:'No value',
-      unitCode: row[dayIndex + 3]!=null?row[dayIndex + 3]!.value:'No value',
-      unitName: row[dayIndex + 4]!=null?row[dayIndex + 4]!.value:'No value',
-      lecturer: row[dayIndex + 5]!=null?row[dayIndex + 5]!.value:'No value',
+      venue: row[dayIndex + 2] != null ? row[dayIndex + 2]!.value : 'No value',
+      unitCode:
+          row[dayIndex + 3] != null ? row[dayIndex + 3]!.value : 'No value',
+      unitName:
+          row[dayIndex + 4] != null ? row[dayIndex + 4]!.value : 'No value',
+      lecturer:
+          row[dayIndex + 5] != null ? row[dayIndex + 5]!.value : 'No value',
       meetingId: null,
-      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0, minute: 0),
       meetingPassCode: null,
       classLink: null,
       reminder: false,
     );
   }
 
-  factory UnitClass.defaultClass(String defaultUnitName, String defaultUnitCode, String defaultCourseName){
+  factory UnitClass.defaultClass(String defaultUnitName, String defaultUnitCode,
+      String defaultCourseName) {
     return UnitClass(
       accentColor: 0xff050851,
       day: Time.dayFromWeekday(DateTime.now().weekday),
-      course:defaultCourseName,
+      course: defaultCourseName,
       time: Time.fromString('0800-1100 HRS'),
       venue: 'VIRTUAL',
       unitCode: defaultUnitCode,
       unitName: defaultUnitName,
       lecturer: 'LECTURER\'S NAME',
       meetingId: null,
-      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0, minute: 0),
       meetingPassCode: null,
       classLink: null,
       reminder: false,
     );
   }
 
-
-
-
   Map<String, dynamic> toMap() {
     return {
       'day': day,
-      'accentColor':accentColor,
+      'accentColor': accentColor,
       'course': course,
       'time': time.toJson(),
       'venue': venue,
@@ -101,10 +100,10 @@ class UnitClass {
 
   factory UnitClass.fromMap(Map<String, dynamic> map) {
     return UnitClass(
-      accentColor: map['accentColor']??0xff050851,
+      accentColor: map['accentColor'] ?? 0xff050851,
       day: map['day'] ?? '',
       course: map['course'],
-      time: Time.fromJson(map['time'] ?? '') ,
+      time: Time.fromJson(map['time'] ?? ''),
       venue: map['venue'] ?? '',
       unitCode: map['unitCode'] ?? '',
       unitName: map['unitName'] ?? '',
@@ -117,11 +116,10 @@ class UnitClass {
     );
   }
 
-
-
   String toJson() => json.encode(toMap());
 
-  factory UnitClass.fromJson(String source) => UnitClass.fromMap(json.decode(source));
+  factory UnitClass.fromJson(String source) =>
+      UnitClass.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -131,48 +129,49 @@ class UnitClass {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is UnitClass &&
-      other.day == day &&
-      other.course == course &&
-      other.time == time &&
-      other.venue == venue &&
-      other.unitCode == unitCode &&
-      other.unitName == unitName &&
-      other.lecturer == lecturer &&
-      other.reminder == reminder &&
-      other.reminderSchedule == reminderSchedule &&
-      other.classLink == classLink &&
-      other.meetingPassCode == meetingPassCode &&
-      other.meetingId == meetingId;
+        other.day == day &&
+        other.course == course &&
+        other.time == time &&
+        other.venue == venue &&
+        other.unitCode == unitCode &&
+        other.unitName == unitName &&
+        other.lecturer == lecturer &&
+        other.reminder == reminder &&
+        other.reminderSchedule == reminderSchedule &&
+        other.classLink == classLink &&
+        other.meetingPassCode == meetingPassCode &&
+        other.meetingId == meetingId;
   }
 
   @override
   int get hashCode {
     return day.hashCode ^
-      course.hashCode ^
-      time.hashCode ^
-      venue.hashCode ^
-      unitCode.hashCode ^
-      unitName.hashCode ^
-      lecturer.hashCode ^
-      reminder.hashCode ^
-      reminderSchedule.hashCode ^
-      classLink.hashCode ^
-      meetingPassCode.hashCode ^
-      meetingId.hashCode;
+        course.hashCode ^
+        time.hashCode ^
+        venue.hashCode ^
+        unitCode.hashCode ^
+        unitName.hashCode ^
+        lecturer.hashCode ^
+        reminder.hashCode ^
+        reminderSchedule.hashCode ^
+        classLink.hashCode ^
+        meetingPassCode.hashCode ^
+        meetingId.hashCode;
   }
 
+  bool get canJoinMeeting {
 
+    int now = TimeOfDay.now().hour;
+    return now > time.start.hour &&
+        now < time.end.hour &&
+        venue == 'VIRTUAL' &&
+        Time.dayIndex(day) == DateTime.now().day;
+  }
 
-bool get canJoinMeeting{
-  int today = DateTime.now().weekday;
-
-  return Time.timeIndex>=time.start.hour&&venue=='VIRTUAL'&&Time.dayIndex(day)== today;
-}
-
-int get weekday{
-      switch (day) {
+  int get weekday {
+    switch (day) {
       case 'MONDAY':
         return 1;
       case 'TUESDAY':
@@ -188,10 +187,10 @@ int get weekday{
       default:
         return 0;
     }
-}
+  }
 
   int get sortIndex {
-    int timeValue=time.end.hour;
+    int timeValue = time.end.hour;
 
     switch (day) {
       case 'MONDAY':
@@ -210,10 +209,10 @@ int get weekday{
         return 0 + timeValue;
     }
   }
-    bool get isNowOrNext{
-      DateTime now = DateTime.now();
-      int todayValue = (now.weekday*1000)+now.hour;
-      return sortIndex>todayValue; 
-}
 
+  bool get isNowOrNext {
+    DateTime now = DateTime.now();
+    int todayValue = (now.weekday * 1000) + now.hour;
+    return sortIndex > todayValue;
+  }
 }

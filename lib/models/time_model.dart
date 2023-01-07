@@ -113,8 +113,9 @@ DateTime getDate(dynamic dayOfWeek, int reminderHrs,int reminderMins){
   return DateTime(now.year,now.month,now.day+dayDifference, start.hour,start.minute).subtract(Duration(hours: reminderHrs,minutes: reminderMins));
 }
 
+  ///Composed of weekday and hour of day
  static int get timeIndex {
-    
+ 
   int weekDay=DateTime.now().weekday;
   int hourOfDay = DateTime.now().hour;
 
