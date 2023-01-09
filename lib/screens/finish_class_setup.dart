@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_unit_details.dart';
@@ -11,14 +12,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class FinishClassSetupScreen extends StatefulWidget {
-  
-  const FinishClassSetupScreen({Key? key}) : super(key: key);
+  final AppState appState;
+  const FinishClassSetupScreen({Key? key, required this.appState}) : super(key: key);
 
   @override
   _FinishClassSetupScreenState createState() => _FinishClassSetupScreenState();
 }
 
 class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
+  late AdmobInterstitial interstitialAd;
+
+  @override
+  void initState(){
+    super.initState();
+    interstitialAd = widget.appState.interstitialAd;
+
+    Future.delayed(const Duration(seconds: 1),(){
+      interstitialAd.load();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     AppState state = Provider.of<AppState>(context);
@@ -207,6 +220,7 @@ class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => EditClassPage(
+                                            appState: state,
                                               unit: _records[index])));
                                 },
                                 leading: Column(

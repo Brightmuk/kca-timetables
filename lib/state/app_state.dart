@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -15,8 +16,20 @@ class AppState extends ChangeNotifier{
   String? currentClassTt;
   String? currentExamTt;
 
+  late AdmobInterstitial interstitialAd;
+  int loadInterval=0;
+
   AppState(){
     init();
+    Admob.requestTrackingAuthorization();
+
+    interstitialAd = AdmobInterstitial(
+      adUnitId: "ca-app-pub-1360540534588513/8322258866",
+      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+        
+        debugPrint("Loading ad with: "+ args.toString());
+      },
+    );
   }
   
 
@@ -46,6 +59,16 @@ class AppState extends ChangeNotifier{
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     _prefs.setString('currentClassTt', currentTt);
     currentClassTt=currentTt;
+  }
+
+  void loadInterstitialAd(){
+    debugPrint("Determining if to load Ad at: "+loadInterval.toString());
+    if(loadInterval<4){
+      loadInterval+=1;
+    }else{
+      loadInterval=0;
+      interstitialAd.load();
+    }
   }
 
 

@@ -18,7 +18,8 @@ import 'package:provider/provider.dart';
 
 class EditClassPage extends StatefulWidget {
   final UnitClass unit;
-  const EditClassPage({Key? key, required this.unit}) : super(key: key);
+  final AppState appState;
+  const EditClassPage({Key? key, required this.unit, required this.appState}) : super(key: key);
 
   @override
   _EditClassPageState createState() => _EditClassPageState();
@@ -38,6 +39,7 @@ class _EditClassPageState extends State<EditClassPage> {
 
   void initState() {
     super.initState();
+
     _day = widget.unit.day;
     _time = widget.unit.time;
     _venue = widget.unit.venue;
@@ -48,6 +50,11 @@ class _EditClassPageState extends State<EditClassPage> {
     _reminder = widget.unit.reminder;
     _reminderSchedule = widget.unit.reminderSchedule;
     _accentColor = widget.unit.accentColor;
+    
+
+    Future.delayed(const Duration(seconds: 2),(){
+      widget.appState.loadInterstitialAd();
+    });
   }
 
   @override
@@ -416,7 +423,7 @@ class _EditClassPageState extends State<EditClassPage> {
   Future<void> setReminder() async {
     await NotificationService().zonedScheduleNotification(
         id: widget.unit.sortIndex,
-        title: 'Class is about to start',
+        title: 'Yoh! Class is about to start',
         description:
             'Your ${widget.unit.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}',
         payload: "{'unitCode':${widget.unit.unitCode}}",

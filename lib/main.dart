@@ -23,7 +23,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   payload = await NotificationService().init();
   await configureLocalTimeZone();
-  Admob.initialize();
+  Admob.initialize(testDeviceIds: ['0f4776ef-ce75-43fa-8b97-6a9a90fe35a6']);
 
 
   runApp(

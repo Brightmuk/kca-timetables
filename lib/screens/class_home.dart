@@ -190,11 +190,13 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
 
   @override
   Widget build(BuildContext context) {
+    final AppState state = Provider.of<AppState>(context);
+
     bool isNowOrNext = nowOrNextClass!=null&&nowOrNextClass!.unitCode==widget.unit.unitCode;
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EditClassPage(unit: widget.unit)));
+            MaterialPageRoute(builder: (context) => EditClassPage(unit: widget.unit,appState: state,)));
       },
       child: Container(
         margin: EdgeInsets.zero,
@@ -204,7 +206,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
             width: 85.sp,
-            color: primaryThemeColor,
+            color: Color(widget.unit.accentColor),
             child: Column(
                 mainAxisAlignment:
                     widget.withSameDay ? MainAxisAlignment.end : MainAxisAlignment.center,
@@ -298,7 +300,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
               ),
                MaterialButton(
                  minWidth: 40,
-                 disabledColor: Color.fromARGB(255, 247, 247, 247),
+                 disabledColor: Color.fromARGB(255, 248, 248, 248),
                  color: secondaryThemeColor,
                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                  onPressed: widget.unit.canJoinMeeting?(){

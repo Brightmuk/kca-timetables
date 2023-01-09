@@ -22,7 +22,8 @@ import 'package:provider/provider.dart';
 
 class EditExamPage extends StatefulWidget {
   final ExamModel exam;
-  const EditExamPage({Key? key, required this.exam}) : super(key: key);
+  final AppState appState;
+  const EditExamPage({Key? key, required this.exam, required this.appState}) : super(key: key);
 
   @override
   _EditExamPageState createState() => _EditExamPageState();
@@ -344,7 +345,7 @@ Future<void> setReminder()async{
 
     await NotificationService().zonedScheduleNotification(
       id: widget.exam.sortIndex, 
-      title: 'Class is about to start', 
+      title: 'Yoh! Exam is about to start', 
       description: 'Your ${widget.exam.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}', 
       payload: "{'unitCode':${widget.exam.unitCode}}", 
       date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!.hour, _reminderSchedule!.minute));

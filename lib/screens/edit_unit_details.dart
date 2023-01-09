@@ -134,7 +134,7 @@ class _AddUnitState extends State<AddUnit> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditClassPage(unit: unit)));
+                          builder: (context) => EditClassPage(unit: unit,appState: state,)));
                 }),
           )
         ],
@@ -257,7 +257,7 @@ class _AddExamState extends State<AddExam> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditExamPage(exam: exam)));
+                          builder: (context) => EditExamPage(exam: exam,appState: state,)));
                 }),
           )
         ],

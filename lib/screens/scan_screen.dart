@@ -283,7 +283,7 @@ class _ScanScreenState extends State<ScanScreen> {
                           padding: const EdgeInsets.all(20),
                           minWidth: MediaQuery.of(context).size.width * 0.9,
                           color: const Color.fromARGB(255, 201, 174, 20),
-                          child: Text(
+                          child: loading?circularLoader: const Text(
                             'Next',
                             style: TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.bold),
@@ -291,6 +291,9 @@ class _ScanScreenState extends State<ScanScreen> {
                           onPressed:
                           (excelDoc != null && period != null && course != null)||!isAuto
                               ? (){
+                                setState(() {
+                                  loading=true;
+                                });
                                   if(widget.isClass){
                                     classTimetableScan(state);
                                    
@@ -419,7 +422,7 @@ class _ScanScreenState extends State<ScanScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const FinishClassSetupScreen())
+            builder: (context) => FinishClassSetupScreen(appState: state,))
         );
       }
       return;
@@ -468,7 +471,7 @@ class _ScanScreenState extends State<ScanScreen> {
         }
       }
       state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 200));
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
       debugPrint("\nFound these items: "+_records.length.toString());
       
@@ -480,7 +483,7 @@ class _ScanScreenState extends State<ScanScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const FinishClassSetupScreen()));
+                builder: (context) => FinishClassSetupScreen(appState: state,)));
 
       }
 
@@ -548,7 +551,7 @@ void examTimetableScan(AppState state)async{
 
        debugPrint('Found: '+_exams.length.toString());
         state.setCurrentExamTt((course!+period!.str).replaceAll(" ",""));
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 200));
       var result = await ExamService(context: context,state: state).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);
 
       if(result){
@@ -557,7 +560,7 @@ void examTimetableScan(AppState state)async{
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const FinishExamSetupScreen()));
+                builder: (context) => FinishExamSetupScreen(appState: state,)));
 
       }
 

@@ -176,6 +176,7 @@ class ExamTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppState state = Provider.of<AppState>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
       child: GestureDetector(
@@ -183,7 +184,7 @@ class ExamTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => EditExamPage(exam: exam)));
+                builder: (context) => EditExamPage(exam: exam,appState: state,)));
         },
         child: Container(
          decoration: const BoxDecoration(),
