@@ -20,8 +20,8 @@ class _SettingsPageState extends State<SettingsPage> {
       Uri.parse('market://details?id=com.brightdesigns.kcatimetables');
   final Uri _donateUrl = Uri.parse(
       "https://www.paypal.com/donate/?hosted_button_id=Q2HUSVA4CCTTN");
-  final Uri _privacyUrl = Uri.parse('https://brightdesigns.space/privacy.html');
-  final Uri _helpUrl = Uri.parse('https://brightdesigns.space/#contact');
+  final Uri _privacyUrl = Uri.parse('http://brightdesigns.space/privacy.html');
+  final Uri _helpUrl = Uri.parse('http://brightdesigns.space/#contact');
 
 
   @override
@@ -199,7 +199,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
     void _launchUrl(Uri url) async {
-    if (!await launchUrl(url)) throw 'Could not launch $url';
+    if (!await launchUrl(url,mode: LaunchMode.externalApplication)) throw 'Could not launch $url';
   }
 }
 

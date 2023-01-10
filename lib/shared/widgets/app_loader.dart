@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 const Widget circularLoader = SizedBox(
   height: 10,
+  width: 10,
   child:   CircularProgressIndicator(
     color: Colors.white
   ),

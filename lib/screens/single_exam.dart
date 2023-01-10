@@ -47,6 +47,11 @@ class _EditExamPageState extends State<EditExamPage> {
     _reminder = widget.exam.reminder;
     _reminderSchedule=widget.exam.reminderSchedule;
     _accentColor=widget.exam.accentColor;
+
+
+    Future.delayed(const Duration(seconds: 2),(){
+      widget.appState.loadInterstitialAd();
+    });
   }
 
   @override
