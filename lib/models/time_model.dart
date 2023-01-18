@@ -131,10 +131,10 @@ static String timeLeft(Time time, String day){
 
   DateTime now = DateTime.now();
   int recordDay = dayIndex(day);
-
-if(recordDay-now.weekday==0&&now.hour>=startTime.hour&&now.hour<endTime.hour){
   
-    return 'Ongoing';
+if(recordDay-now.weekday==0 && now.hour+(now.minute)/100>=startTime.hour+(startTime.minute)/100&&now.hour<endTime.hour){
+  
+    return 'ongoing';
   }
 if(recordDay-now.weekday==0&&startTime.hour-now.hour==1){
     return 'in ${60-now.minute} minutes';

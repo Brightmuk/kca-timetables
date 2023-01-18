@@ -17,12 +17,14 @@ class AppState extends ChangeNotifier{
   String? currentExamTt;
 
   late AdmobInterstitial interstitialAd;
-  int loadInterval=0;
+  int showInterval=0;
 
   AppState(){
     init();
     Admob.requestTrackingAuthorization();
-
+    loadInterstitialAd();
+  }
+  void loadInterstitialAd(){
     interstitialAd = AdmobInterstitial(
       adUnitId: "ca-app-pub-1360540534588513/8322258866",
       listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
@@ -30,6 +32,7 @@ class AppState extends ChangeNotifier{
         debugPrint("Loading ad with: "+ args.toString());
       },
     );
+    interstitialAd.load();
   }
   
 
@@ -61,13 +64,19 @@ class AppState extends ChangeNotifier{
     currentClassTt=currentTt;
   }
 
-  void loadInterstitialAd(){
-    debugPrint("Determining if to load Ad at: "+loadInterval.toString());
-    if(loadInterval<4){
-      loadInterval+=1;
+  void instantInterstitialShow(){
+      interstitialAd.show();
+      loadInterstitialAd();
+  }
+
+  void showInterstitialAd(){
+    debugPrint("Determining if to load Ad at: "+showInterval.toString());
+    if(showInterval<4){
+      showInterval+=1;
     }else{
-      loadInterval=0;
-      interstitialAd.load();
+      showInterval=0;
+      interstitialAd.show();
+      loadInterstitialAd();
     }
   }
 

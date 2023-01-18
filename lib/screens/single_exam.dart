@@ -50,7 +50,7 @@ class _EditExamPageState extends State<EditExamPage> {
 
 
     Future.delayed(const Duration(seconds: 2),(){
-      widget.appState.loadInterstitialAd();
+      widget.appState.showInterstitialAd();
     });
   }
 

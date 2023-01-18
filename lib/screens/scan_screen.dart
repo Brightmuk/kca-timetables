@@ -549,7 +549,7 @@ void examTimetableScan(AppState state)async{
         }
         
 
-       debugPrint('Found: '+_exams.length.toString());
+     
         state.setCurrentExamTt((course!+period!.str).replaceAll(" ",""));
       await Future.delayed(const Duration(milliseconds: 200));
       var result = await ExamService(context: context,state: state).saveExamTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), exams: _exams,course:course!);

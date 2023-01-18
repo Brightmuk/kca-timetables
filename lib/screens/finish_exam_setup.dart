@@ -24,15 +24,14 @@ class FinishExamSetupScreen extends StatefulWidget {
 }
 
 class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
-  late AdmobInterstitial interstitialAd;
+
 
   @override
   void initState(){
     super.initState();
-    interstitialAd = widget.appState.interstitialAd;
 
     Future.delayed(const Duration(seconds: 1),(){
-      interstitialAd.load();
+      widget.appState.instantInterstitialShow();
     });
   }
   @override

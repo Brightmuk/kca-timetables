@@ -74,7 +74,7 @@ class _ClassHomeState extends State<ClassHome> {
             ),
           ],
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               color: primaryThemeColor,
             ),
