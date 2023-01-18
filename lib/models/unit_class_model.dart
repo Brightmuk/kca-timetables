@@ -54,7 +54,7 @@ class UnitClass {
       lecturer:
           row[dayIndex + 5] != null ? row[dayIndex + 5]!.value : 'No value',
       meetingId: null,
-      reminderSchedule: const TimeOfDay(hour: 0, minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0, minute: 5),
       meetingPassCode: null,
       classLink: null,
       reminder: false,
@@ -73,7 +73,7 @@ class UnitClass {
       unitName: defaultUnitName,
       lecturer: 'LECTURER\'S NAME',
       meetingId: null,
-      reminderSchedule: const TimeOfDay(hour: 0, minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0, minute: 5),
       meetingPassCode: null,
       classLink: null,
       reminder: false,

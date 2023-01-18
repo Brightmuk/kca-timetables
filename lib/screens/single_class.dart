@@ -421,13 +421,20 @@ class _EditClassPageState extends State<EditClassPage> {
 
 
   Future<void> setReminder() async {
+    try{
+      
     await NotificationService().zonedScheduleNotification(
         id: widget.unit.sortIndex,
         title: 'Yoh! Class is about to start',
         description:
             'Your ${widget.unit.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}',
         payload: "{'unitCode':${widget.unit.unitCode}}",
-        date: _time!.getDate(widget.unit.day, _reminderSchedule!.hour, _reminderSchedule!.minute));
+        date: _time!.getDate(widget.unit.day, _reminderSchedule!)
+        );
+    }catch(e){
+      debugPrint(e.toString());
+    }
+
   }
 
 

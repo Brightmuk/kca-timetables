@@ -348,12 +348,18 @@ class _EditExamPageState extends State<EditExamPage> {
 
 Future<void> setReminder()async{
 
+  try{
+
     await NotificationService().zonedScheduleNotification(
       id: widget.exam.sortIndex, 
       title: 'Yoh! Exam is about to start', 
       description: 'Your ${widget.exam.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}', 
       payload: "{'unitCode':${widget.exam.unitCode}}", 
-      date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!.hour, _reminderSchedule!.minute));
+      date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!));
+  }catch(e){
+    debugPrint(e.toString());
+  }
+
 }
 
   void save(AppState state)async{

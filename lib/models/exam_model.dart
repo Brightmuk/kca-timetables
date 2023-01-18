@@ -41,7 +41,7 @@ class ExamModel {
       unitCode: row[0]!=null?row[0]!.value:'No value',
       unitName: row[1]!=null? row[1]!.value:'No value',
       invigilator: row[8]!=null? row[8]!.value:'No value',
-      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 5),
       reminder: false,
     );
     }catch(e){
@@ -63,7 +63,7 @@ class ExamModel {
       unitCode: unitCode,
       unitName: unitName,
       invigilator: "No invigilator",
-      reminderSchedule: const TimeOfDay(hour: 0,minute: 0),
+      reminderSchedule: const TimeOfDay(hour: 0,minute: 5),
       reminder: false,
     );
   }

@@ -99,7 +99,7 @@ class Time {
   }
 
 
-DateTime getDate(dynamic dayOfWeek, int reminderHrs,int reminderMins){
+DateTime getDate(dynamic dayOfWeek, TimeOfDay reminder){
   DateTime now = DateTime.now();
   int unitDay = getWeekday(dayOfWeek);
   int dayDifference;
@@ -110,7 +110,7 @@ DateTime getDate(dynamic dayOfWeek, int reminderHrs,int reminderMins){
     dayDifference=unitDay-now.weekday;
   }
 
-  return DateTime(now.year,now.month,now.day+dayDifference, start.hour,start.minute).subtract(Duration(hours: reminderHrs,minutes: reminderMins));
+  return DateTime(now.year,now.month, now.day+dayDifference, start.hour, start.minute).subtract(Duration(hours: reminder.hour,minutes: reminder.minute));
 }
 
   ///Composed of weekday and hour of day

@@ -1,6 +1,7 @@
 
 
 import 'package:excel_reader/models/notification.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -77,30 +78,15 @@ class NotificationService {
       required String payload,
       required DateTime date,
       }) async {
-
+        debugPrint("Date came as:"+date.toString());
   tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local,date.year,date.month,date.day,date.hour,date.minute);
 
-  tz.TZDateTime _nextTimeInstance() {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
-  }
-
-  tz.TZDateTime _nextDayInstance() {
-    tz.TZDateTime scheduledDate = _nextTimeInstance();
-    while (DateTime.now().weekday != date.weekday) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
-  }
-        
+   
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         title,
         description,
-        _nextDayInstance(),
+        scheduledDate,
         
         const NotificationDetails(
             android: AndroidNotificationDetails('1', 'Reminders',
@@ -114,7 +100,11 @@ class NotificationService {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
             matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime
-            );
+            ).catchError((e){
+              debugPrint(e.toString());
+            });
+     
+
 
   }
 
