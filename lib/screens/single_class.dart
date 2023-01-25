@@ -4,9 +4,12 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_unit_details.dart';
+import 'package:excel_reader/screens/join_meeting_screen.dart';
 import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/accent_color_selector.dart';
+import 'package:excel_reader/shared/app_colors.dart';
+import 'package:excel_reader/shared/functions.dart';
 import 'package:excel_reader/shared/widgets/confirm_action.dart';
 import 'package:excel_reader/shared/text_styles.dart';
 import 'package:excel_reader/state/app_state.dart';
@@ -157,8 +160,38 @@ class _EditClassPageState extends State<EditClassPage> {
                     style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                   ),
                 ),
+                Center(
+                 child: Opacity(
+                 opacity:  widget.unit.canJoinMeeting?1:0,
+                 child: MaterialButton(
+                   minWidth: 40,
+                  
+                   color: secondaryThemeColor,
+                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                   onPressed: widget.unit.canJoinMeeting?(){
+              if(_link!=null){
+                if(_passCode!=null){
+                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode));
+                    toast('Meeting passscode copied!');
+                }else{
+                  toast('No meeting passcode');
+                }
+              Future.delayed(const Duration(seconds: 1),()=> 
+              launchExternalUrl(_link!));
+              
+            }else{
+              showModalBottomSheet(
+                  backgroundColor: Colors.white,
+                  context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
+                  shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              );
+            }
+                 }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),),
+               ),
+                               ),
                 Divider(
-                  height: 50.sp,
+                  height: 10.sp,
                 ),
                 ListTile(
                   onTap: () async {

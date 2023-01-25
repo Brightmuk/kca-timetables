@@ -258,6 +258,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                             )),
                       ],
                     ),
+
                     const SizedBox(
                       width: 20,
                     ),
@@ -298,25 +299,34 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                 color: secondaryThemeColor,
                 size: 18.sp,
               ),
-               MaterialButton(
-                 minWidth: 40,
-                 disabledColor: Color.fromARGB(255, 248, 248, 248),
-                 color: secondaryThemeColor,
-                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                 onPressed: widget.unit.canJoinMeeting?(){
+               Opacity(
+                 opacity:  widget.unit.canJoinMeeting?1:0,
+                 child: MaterialButton(
+                   minWidth: 40,
+                  
+                   color: secondaryThemeColor,
+                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                   onPressed: widget.unit.canJoinMeeting?(){
               if(widget.unit.classLink!=null){
-
-              launchExternalUrl(widget.unit.classLink!);
+                if(widget.unit.meetingPassCode!=null){
+                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode));
+                    toast('Meeting passscode copied!');
+                }else{
+                  toast('No meeting passcode');
+                }
+               Future.delayed(Duration(seconds: 1),()=> 
+              launchExternalUrl(widget.unit.classLink!));
               
             }else{
               showModalBottomSheet(
-                backgroundColor: Colors.white,
-                context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
-                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: Colors.white,
+                  context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
+                  shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               );
             }
-               }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),)
+                 }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),),
+               )
             ],
            
           ),

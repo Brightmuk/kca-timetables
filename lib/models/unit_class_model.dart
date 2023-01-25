@@ -164,10 +164,10 @@ class UnitClass {
   bool get canJoinMeeting {
 
     int now = TimeOfDay.now().hour;
-    return now > time.start.hour &&
+    return now >= time.start.hour &&
         now < time.end.hour &&
-        venue == 'VIRTUAL' &&
-        Time.dayIndex(day) == DateTime.now().day;
+        venue.toUpperCase() == 'VIRTUAL'&&
+        Time.dayIndex(day) == DateTime.now().weekday;
   }
 
   int get weekday {

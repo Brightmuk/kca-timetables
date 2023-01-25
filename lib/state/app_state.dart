@@ -17,7 +17,6 @@ class AppState extends ChangeNotifier{
   String? currentExamTt;
 
   late AdmobInterstitial interstitialAd;
-  int showInterval=0;
 
   AppState(){
     init();
@@ -69,12 +68,16 @@ class AppState extends ChangeNotifier{
       loadInterstitialAd();
   }
 
-  void showInterstitialAd(){
-    debugPrint("Determining if to load Ad at: "+showInterval.toString());
-    if(showInterval<4){
-      showInterval+=1;
+  void showInterstitialAd()async{
+     SharedPreferences _prefs = await SharedPreferences.getInstance();
+    int showAdInterval = _prefs.getInt('showAdInterval')??0;
+
+    debugPrint("Determining if to load Ad at: "+showAdInterval.toString());
+
+    if(showAdInterval<4){
+      _prefs.setInt('showAdInterval', showAdInterval+=1);
     }else{
-      showInterval=0;
+      _prefs.setInt('showAdInterval', 0);
       interstitialAd.show();
       loadInterstitialAd();
     }
