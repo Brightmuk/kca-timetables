@@ -11,7 +11,15 @@ class Period{
   const Period({required this.str, required this.type, required this.reg});
 
   bool isMatch(String value){
+    if(isTrimType){
+    return reg.stringMatch(value)!=null&&value.toLowerCase().contains('trim');
+    }else{
     return reg.stringMatch(value)!=null;
+    }
+
+  }
+  bool get isTrimType{
+    return type==CourseType.degree||type==CourseType.masters||type==CourseType.phd;
   }
   @override
   String toString(){

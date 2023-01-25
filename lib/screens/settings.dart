@@ -227,7 +227,7 @@ class AboutUs extends StatelessWidget {
       content: const Padding(
         padding: EdgeInsets.all(10.0),
         child: Text(
-            'KCA Timetables allows you to scan KCA University excel sheet timetables into a presentable view of the mobile app. Currently the app is tailored for KCA University timetables only.'),
+            "KCA Timetables is a mobile app that gives a neat and simplified view of the KCA university timetables(Class timetables and exam timetables).It's specifically tailored for KCA university timetables only and allows the students to scan the excel timetable documents to obtain data concerning their respective courses and period."),
       ),
       actions: [
         MaterialButton(

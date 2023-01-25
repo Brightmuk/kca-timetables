@@ -446,7 +446,7 @@ class _ScanScreenState extends State<ScanScreen> {
         debugPrint('period: '+period.toString());
           if (cell != null && period!.isMatch(cell.value.toString())) {
             
-            debugPrint("Found period index:"+cell.cellIndex.toString());
+            debugPrint("Found period index:"+cell.value.toString());
             periodIndex = cell.cellIndex;
             break cellsLoop;
           }
