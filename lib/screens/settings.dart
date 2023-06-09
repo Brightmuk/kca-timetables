@@ -20,8 +20,8 @@ class _SettingsPageState extends State<SettingsPage> {
       Uri.parse('market://details?id=com.brightdesigns.kcatimetables');
   final Uri _donateUrl = Uri.parse(
       "https://www.paypal.com/donate/?hosted_button_id=Q2HUSVA4CCTTN");
-  final Uri _privacyUrl = Uri.parse('http://brightmula.com/privacy.html');
-  final Uri _helpUrl = Uri.parse('http://brightmula.com/#contact');
+  final Uri _privacyUrl = Uri.parse('https://brightmula.com/privacy.html');
+  final Uri _helpUrl = Uri.parse('https://brightmula.com/#contact');
 
 
   @override

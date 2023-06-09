@@ -215,8 +215,9 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                       style: TextStyle(color: Colors.white))
                 ]),
           ),
+          SizedBox(width: 5.sp,),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
+            width: MediaQuery.of(context).size.width * 0.52,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -252,15 +253,17 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                         SizedBox(
                           width: 10.sp,
                         ),
-                        Text(widget.unit.lecturer.capitalise(),
-                            style: TextStyle(
-                              
-                            )),
+                        SizedBox(
+                          width: 110.sp,
+                          child: Text(widget.unit.lecturer.capitalise(),
+                          maxLines: 1,
+                              overflow: TextOverflow.ellipsis,),
+                        ),
                       ],
                     ),
 
                     const SizedBox(
-                      width: 20,
+                      width: 10,
                     ),
                     Row(
                       children: [
@@ -273,9 +276,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                           width: 10.sp,
                         ),
                         Text(widget.unit.venue.capitalise(),
-                            style: TextStyle(
-                              
-                            )),
+                            overflow: TextOverflow.ellipsis,),
                       ],
                     ),
                   ],
@@ -286,9 +287,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
               ],
             ),
           ),
-          SizedBox(
-            width: 0.sp,
-          ),
+         
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -331,7 +330,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
            
           ),
           SizedBox(
-            width: 10.sp,
+            width: 5.sp,
           ),
         ]),
       ),
