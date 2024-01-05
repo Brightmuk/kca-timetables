@@ -171,7 +171,7 @@ class _EditClassPageState extends State<EditClassPage> {
                    onPressed: widget.unit.canJoinMeeting?(){
               if(_link!=null){
                 if(_passCode!=null){
-                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode));
+                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode!));
                     toast('Meeting passscode copied!');
                 }else{
                   toast('No meeting passcode');

@@ -102,7 +102,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
                   color: const Color.fromARGB(255, 201, 174, 20)),
               title: Text('Meeting Id'),
               trailing: meetingId!=null?IconButton(onPressed: (){
-                Clipboard.setData(ClipboardData(text: meetingId));
+                Clipboard.setData(ClipboardData(text: meetingId!));
                 toast('Meeting Id copied!');
               }, icon: Icon(Icons.copy)): const Icon(
                 Icons.arrow_forward_ios,
@@ -133,7 +133,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
                   color: const Color.fromARGB(255, 201, 174, 20)),
               title: Text('Meeting passcode'),
               trailing: meetingId!=null?IconButton(onPressed: (){
-                Clipboard.setData(ClipboardData(text: passCode));
+                Clipboard.setData(ClipboardData(text: passCode!));
                 toast('Meeting passcode copied!');
               }, icon: Icon(Icons.copy)): const Icon(
                 Icons.arrow_forward_ios,

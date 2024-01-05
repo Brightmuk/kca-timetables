@@ -308,7 +308,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                    onPressed: widget.unit.canJoinMeeting?(){
               if(widget.unit.classLink!=null){
                 if(widget.unit.meetingPassCode!=null){
-                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode));
+                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode!));
                     toast('Meeting passscode copied!');
                 }else{
                   toast('No meeting passcode');

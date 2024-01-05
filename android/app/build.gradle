@@ -50,7 +50,7 @@ android {
     defaultConfig {
         applicationId "com.brightdesigns.kcatimetables"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -77,6 +77,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    api 'com.google.firebase:firebase-ads:20.0.0'
 
 }
 
