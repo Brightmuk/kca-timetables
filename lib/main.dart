@@ -16,12 +16,11 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 
-NotificationPayload? payload;
 
 void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
-  payload = await NotificationService().init();
+  await NotificationService().init();
   await configureLocalTimeZone();
   Admob.initialize(testDeviceIds: ['0f4776ef-ce75-43fa-8b97-6a9a90fe35a6']);
 

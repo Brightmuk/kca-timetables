@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:excel_reader/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,11 +23,9 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  NotificationService() {
-    
-    init();
-  }
 
+String navigationActionId = 'id_3';
+final StreamController<String?> selectNotificationStream = StreamController<String?>.broadcast();
   ///Initialise method thats called when the service starts
   Future<NotificationPayload?> init() async {
 
@@ -35,18 +35,31 @@ class NotificationService {
 
     var initializationSettingsAndroid =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
+final DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
     var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsDarwin,
+        );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: (String? payload) {
-        selectedNotificationPayload = NotificationPayload.fromJson(payload!);
-      },
-    );
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse notificationResponse)async {
+      switch (notificationResponse.notificationResponseType) {
+        case NotificationResponseType.selectedNotification:
+          selectNotificationStream.add(notificationResponse.payload);
+          break;
+        case NotificationResponseType.selectedNotificationAction:
+          if (notificationResponse.actionId == navigationActionId) {
+            selectNotificationStream.add(notificationResponse.payload);
+          }
+          break;
+      }
+    },
+   
+  );
     return selectedNotificationPayload;
   }
 
