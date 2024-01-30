@@ -1,4 +1,4 @@
-import 'package:admob_flutter/admob_flutter.dart';
+
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_unit_details.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class FinishClassSetupScreen extends StatefulWidget {
-  final AppState appState;
+  final MyAppState appState;
   const FinishClassSetupScreen({Key? key, required this.appState}) : super(key: key);
 
   @override
@@ -27,14 +27,14 @@ class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
     super.initState();
    
 
-    Future.delayed(const Duration(seconds: 1),(){
-      widget.appState.instantInterstitialShow();
-    });
+    // Future.delayed(const Duration(seconds: 1),(){
+    //   widget.appState.instantInterstitialShow();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return SafeArea(
       child: Scaffold(

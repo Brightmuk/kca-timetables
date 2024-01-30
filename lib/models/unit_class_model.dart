@@ -41,18 +41,19 @@ class UnitClass {
 
   factory UnitClass.fromSheet(
       List<Data?> row, int dayIndex, String courseName) {
+         debugPrint('here');
     return UnitClass(
       accentColor: 0xff050851,
-      day: row[dayIndex] != null ? row[dayIndex]!.value : 'No value',
-      course: courseName,
-      time: Time.fromString(row[dayIndex + 1]!.value),
-      venue: row[dayIndex + 2] != null ? row[dayIndex + 2]!.value : 'No value',
+      day: row[dayIndex] != null ? row[dayIndex]!.value.toString() : 'No value',
+      course: courseName.toString(),
+      time: Time.fromString(row[dayIndex + 1]!.value.toString()),
+      venue: row[dayIndex + 2] != null ? row[dayIndex + 2]!.value.toString() : 'No value',
       unitCode:
-          row[dayIndex + 3] != null ? row[dayIndex + 3]!.value : 'No value',
+          row[dayIndex + 3] != null ? row[dayIndex + 3]!.value.toString() : 'No value',
       unitName:
-          row[dayIndex + 4] != null ? row[dayIndex + 4]!.value : 'No value',
+          row[dayIndex + 4] != null ? row[dayIndex + 4]!.value.toString() : 'No value',
       lecturer:
-          row[dayIndex + 5] != null ? row[dayIndex + 5]!.value : 'No value',
+          row[dayIndex + 5] != null ? row[dayIndex + 5]!.value.toString() : 'No value',
       meetingId: null,
       reminderSchedule: const TimeOfDay(hour: 0, minute: 5),
       meetingPassCode: null,

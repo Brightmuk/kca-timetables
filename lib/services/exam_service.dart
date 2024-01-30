@@ -11,7 +11,7 @@ class ExamService{
 
   final BuildContext context;
   final String? day;
-  AppState state;
+  MyAppState state;
   ExamService({required this.context,this.day ,required this.state});
 
   final db = Localstore.instance;

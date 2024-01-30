@@ -1,4 +1,4 @@
-import 'package:admob_flutter/admob_flutter.dart';
+
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/string_extension.dart';
 import 'package:excel_reader/models/table_model.dart';
@@ -28,7 +28,7 @@ class _ExamsHomeState extends State<ExamsHome> {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -81,7 +81,7 @@ class _ExamsHomeState extends State<ExamsHome> {
                 });
 
               },
-            child: Consumer<AppState>(
+            child: Consumer<MyAppState>(
               
               builder: (context, state, child) {
                 return StreamBuilder<List<ExamModel>>(
@@ -122,17 +122,17 @@ class _ExamsHomeState extends State<ExamsHome> {
               }
             ),
           ),
-            Positioned(
-            bottom: 10,
-            child: AdmobBanner(
-              adUnitId: 'ca-app-pub-1360540534588513/5000702124',
-              adSize: AdmobBannerSize.FULL_BANNER,
-              listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-                debugPrint(args.toString());
-              },
-              onBannerCreated: (AdmobBannerController controller) {},
-            ),
-          )
+          //   Positioned(
+          //   bottom: 10,
+          //   child: AdmobBanner(
+          //     adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+          //     adSize: AdmobBannerSize.FULL_BANNER,
+          //     listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+          //       debugPrint(args.toString());
+          //     },
+          //     onBannerCreated: (AdmobBannerController controller) {},
+          //   ),
+          // )
         ],
       ),
     );
@@ -176,7 +176,7 @@ class ExamTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppState state = Provider.of<AppState>(context);
+    final MyAppState state = Provider.of<MyAppState>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
       child: GestureDetector(

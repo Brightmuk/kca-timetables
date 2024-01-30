@@ -1,4 +1,3 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
@@ -37,7 +36,7 @@ class _ClassHomeState extends State<ClassHome> {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return Scaffold(
         key: _scaffoldKey,
@@ -146,17 +145,17 @@ class _ClassHomeState extends State<ClassHome> {
                         );
                       })),
             ),
-            Positioned(
-              bottom: 10,
-              child: AdmobBanner(
-                adUnitId: 'ca-app-pub-1360540534588513/5000702124',
-                adSize: AdmobBannerSize.FULL_BANNER,
-                listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-                  debugPrint(args.toString());
-                },
-                onBannerCreated: (AdmobBannerController controller) {},
-              ),
-            )
+            // Positioned(
+            //   bottom: 10,
+            //   child: AdmobBanner(
+            //     adUnitId: 'ca-app-pub-1360540534588513/5000702124',
+            //     adSize: AdmobBannerSize.FULL_BANNER,
+            //     listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+            //       debugPrint(args.toString());
+            //     },
+            //     onBannerCreated: (AdmobBannerController controller) {},
+            //   ),
+            // )
           ],
         ));
   }
@@ -166,7 +165,7 @@ class ClassUnitTile extends StatefulWidget {
   final UnitClass unit;
   final bool sameDay;
   final bool withSameDay;
-  final AppState state;
+  final MyAppState state;
   const ClassUnitTile({Key? key, required this.unit, required this.sameDay, required this.withSameDay, required this.state})
       : super(key: key);
 
@@ -190,7 +189,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
 
   @override
   Widget build(BuildContext context) {
-    final AppState state = Provider.of<AppState>(context);
+    final MyAppState state = Provider.of<MyAppState>(context);
 
     bool isNowOrNext = nowOrNextClass!=null&&nowOrNextClass!.unitCode==widget.unit.unitCode;
     return GestureDetector(
@@ -262,8 +261,8 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                       ],
                     ),
 
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: 5.sp,
                     ),
                     Row(
                       children: [
@@ -273,7 +272,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
                           size: 18.sp,
                         ),
                         SizedBox(
-                          width: 10.sp,
+                          width: 5.sp,
                         ),
                         Text(widget.unit.venue.capitalise(),
                             overflow: TextOverflow.ellipsis,),

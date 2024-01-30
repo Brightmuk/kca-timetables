@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
@@ -18,11 +16,11 @@ import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class EditExamPage extends StatefulWidget {
   final ExamModel exam;
-  final AppState appState;
+  final MyAppState appState;
   const EditExamPage({Key? key, required this.exam, required this.appState}) : super(key: key);
 
   @override
@@ -37,6 +35,7 @@ class _EditExamPageState extends State<EditExamPage> {
   bool? _reminder;
   int? _accentColor;
   TimeOfDay? _reminderSchedule;
+  BannerAd? _bannerAd;
 
   void initState() {
     super.initState();
@@ -53,10 +52,30 @@ class _EditExamPageState extends State<EditExamPage> {
       widget.appState.showInterstitialAd();
     });
   }
+    void loadAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-1360540534588513/1644840657',
+      request: const AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+          
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('BannerAd failed to load: $err');
+          // Dispose the ad here to free resources.
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final AppState state = Provider.of<AppState>(context);
+    final MyAppState state = Provider.of<MyAppState>(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -276,7 +295,7 @@ class _EditExamPageState extends State<EditExamPage> {
                       if(val){
                         setReminder();
                       }else{
-                        await NotificationService().cancelReminder(widget.exam.sortIndex);
+                        // await NotificationService().cancelReminder(widget.exam.sortIndex);
                       }
                     }),
                 AnimatedOpacity(
@@ -332,14 +351,12 @@ class _EditExamPageState extends State<EditExamPage> {
             )),
            Positioned(
             bottom: 10,
-            child: AdmobBanner(
-              adUnitId: 'ca-app-pub-1360540534588513/1644840657',
-              adSize: AdmobBannerSize.FULL_BANNER,
-              listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-                debugPrint(args.toString());
-              },
-              onBannerCreated: (AdmobBannerController controller) {},
-            ),
+            child:
+            SizedBox(
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      ),
           )
       ],
     );
@@ -350,19 +367,19 @@ Future<void> setReminder()async{
 
   try{
 
-    await NotificationService().zonedScheduleNotification(
-      id: widget.exam.sortIndex, 
-      title: 'Yoh! Exam is about to start', 
-      description: 'Your ${widget.exam.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}', 
-      payload: "{'unitCode':${widget.exam.unitCode}}", 
-      date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!));
+    // await NotificationService().zonedScheduleNotification(
+    //   id: widget.exam.sortIndex, 
+    //   title: 'Yoh! Exam is about to start', 
+    //   description: 'Your ${widget.exam.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}', 
+    //   payload: "{'unitCode':${widget.exam.unitCode}}", 
+    //   date: _time!.getDate(widget.exam.date.weekday, _reminderSchedule!));
   }catch(e){
     debugPrint(e.toString());
   }
 
 }
 
-  void save(AppState state)async{
+  void save(MyAppState state)async{
     ExamModel _exam = ExamModel(
         accentColor: _accentColor!,
         unitCode: widget.exam.unitCode,

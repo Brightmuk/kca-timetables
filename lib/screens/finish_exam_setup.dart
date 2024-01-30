@@ -1,4 +1,4 @@
-import 'package:admob_flutter/admob_flutter.dart';
+
 import 'package:excel_reader/models/exam_model.dart';
 import 'package:excel_reader/models/table_model.dart';
 import 'package:excel_reader/models/time_model.dart';
@@ -16,7 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class FinishExamSetupScreen extends StatefulWidget {
-  final AppState appState;
+  final MyAppState appState;
   const FinishExamSetupScreen({Key? key, required this.appState}) : super(key: key);
 
   @override
@@ -36,7 +36,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return SafeArea(
       child: Scaffold(
