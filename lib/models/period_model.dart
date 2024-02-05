@@ -2,6 +2,7 @@
 
 
 import 'package:excel_reader/screens/select_period.dart';
+import 'package:flutter/foundation.dart';
 
 class Period{
   final String str;
@@ -11,8 +12,10 @@ class Period{
   const Period({required this.str, required this.type, required this.reg});
 
   bool isMatch(String value){
+
     if(isTrimType){
-    return reg.stringMatch(value)!=null&&value.toLowerCase().contains('trim');
+    return reg.stringMatch(value)!=null;
+    // &&value.toLowerCase().contains('trim');
     }else{
     return reg.stringMatch(value)!=null;
     }

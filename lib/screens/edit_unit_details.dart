@@ -32,7 +32,7 @@ class _AddUnitState extends State<AddUnit> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
@@ -159,7 +159,7 @@ class _AddExamState extends State<AddExam> {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,

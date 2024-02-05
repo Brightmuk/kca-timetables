@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/notification.dart';
 import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/exam_home.dart';
@@ -12,24 +11,27 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:timezone/data/latest_all.dart' as tz;
+// import 'package:timezone/timezone.dart' as tz;
 
 
 
 void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService().init();
-  await configureLocalTimeZone();
-  Admob.initialize(testDeviceIds: ['0f4776ef-ce75-43fa-8b97-6a9a90fe35a6']);
-
+  // payload = await NotificationService().init();
+  // await configureLocalTimeZone();
+  await MobileAds.instance.initialize();
+  await MobileAds.instance.updateRequestConfiguration(
+  RequestConfiguration(testDeviceIds: ['62EFC536D04E7385E751945AFBEF0B1D']));
+  
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppState>.value(
-          value: AppState()
+        ChangeNotifierProvider<MyAppState>.value(
+          value: MyAppState()
           )
     ],
     child: const MyApp(),
@@ -64,11 +66,11 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
-
-    if(state.mode==AppMode.classTimetable){
+    MyAppState state = Provider.of<MyAppState>(context);
+    debugPrint('The '+state.appMode.toString());
+    if(state.appMode==AppMode.classTimetable){
       return const ClassHome();
-    }else if(state.mode==AppMode.examTimetable){
+    }else if(state.appMode==AppMode.examTimetable){
       return const ExamsHome();
     }else{
       return const LandingPage();
@@ -77,8 +79,8 @@ class Wrapper extends StatelessWidget {
 }
 
 ///Configure timezones
-Future<void> configureLocalTimeZone() async {
-  tz.initializeTimeZones();
-  final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(timeZoneName!));
-}
+// Future<void> configureLocalTimeZone() async {
+//   tz.initializeTimeZones();
+//   final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+//   tz.setLocalLocation(tz.getLocation(timeZoneName!));
+// }

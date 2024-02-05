@@ -13,7 +13,7 @@ import 'package:overlay_support/overlay_support.dart';
 class ClassTimeTableService{
   final BuildContext context;
   final String? day;
-  final AppState state;
+  final MyAppState state;
   ClassTimeTableService({required this.context,this.day, required this.state});
   final db = Localstore.instance;
 
@@ -195,7 +195,7 @@ _records.sort((a,b)=>a.sortIndex.compareTo(b.sortIndex));
     return result;
   }
 
-  Future reScanClassTt(AppState state)async{
+  Future reScanClassTt(MyAppState state)async{
     try{
     List<UnitClass> units = await unitsFuture();
 

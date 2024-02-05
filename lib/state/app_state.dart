@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:admob_flutter/admob_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -8,44 +7,51 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppMode{examTimetable, classTimetable, none}
 
-class AppState extends ChangeNotifier{
+class MyAppState extends ChangeNotifier{
 
-  AppMode mode = AppMode.none;
-  bool get isClassMode=>mode==AppMode.classTimetable;
+  AppMode _mode = AppMode.none;
+  
+  AppMode get appMode =>_mode;
+  bool get isClassMode =>_mode==AppMode.classTimetable;
 
   String? currentClassTt;
   String? currentExamTt;
 
-  late AdmobInterstitial interstitialAd;
+  late InterstitialAd _interstitialAd;
 
-  AppState(){
+  MyAppState(){
     init();
-    Admob.requestTrackingAuthorization();
-    loadInterstitialAd();
   }
+
   void loadInterstitialAd(){
-    interstitialAd = AdmobInterstitial(
-      adUnitId: "ca-app-pub-1360540534588513/8322258866",
-      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-        
-        debugPrint("Loading ad with: "+ args.toString());
-      },
-    );
-    interstitialAd.load();
+        InterstitialAd.load(
+        adUnitId: "ca-app-pub-1360540534588513/8322258866",
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+
+          onAdLoaded: (ad) {
+            debugPrint('$ad loaded.');
+            _interstitialAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            debugPrint('InterstitialAd failed to load: $error');
+          },
+        ));
   }
   
 
   void reload(){
     notifyListeners();
   }
-  String get modeStr=> mode==AppMode.classTimetable?'Class timetable':'Exam timetable';
+  String get modeStr=> _mode==AppMode.classTimetable?'Class timetable':'Exam timetable';
 
   void changeMode(AppMode newMode)async{
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    
-      mode=newMode;
-      _prefs.setString('mode', mode.toString());
-      if(mode!=AppMode.none){
+     
+      _mode=newMode;
+      _prefs.setString('mode', _mode.toString());
+      
+      if(_mode!=AppMode.none){
         toast('Changed to '+modeStr+' mode');
       }
     
@@ -64,7 +70,7 @@ class AppState extends ChangeNotifier{
   }
 
   void instantInterstitialShow(){
-      interstitialAd.show();
+      _interstitialAd.show();
       loadInterstitialAd();
   }
 
@@ -78,27 +84,29 @@ class AppState extends ChangeNotifier{
       _prefs.setInt('showAdInterval', showAdInterval+=1);
     }else{
       _prefs.setInt('showAdInterval', 0);
-      interstitialAd.show();
+      _interstitialAd.show();
       loadInterstitialAd();
     }
   }
 
 
-  void init()async{
-  SharedPreferences _prefs = await SharedPreferences.getInstance();
-
-  String? md =_prefs.getString('mode');
-  currentClassTt=_prefs.getString('currentClassTt');
-  currentExamTt=_prefs.getString('currentExamTt');
-
-  if(md=='AppMode.classTimetable'){
-    mode=AppMode.classTimetable;
-  }else if(md=='AppMode.examTimetable'){
-    mode=AppMode.examTimetable;
-  }else{
-    mode=AppMode.none;
-  }
-  notifyListeners();
+  Future<void> init()async{
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? md =_prefs.getString('mode');
+    currentClassTt=_prefs.getString('currentClassTt');
+    currentExamTt=_prefs.getString('currentExamTt');
+    loadInterstitialAd();
+    
+    if(md=='AppMode.classTimetable'){
+      _mode=AppMode.classTimetable;
+    }else if(md=='AppMode.examTimetable'){
+      _mode=AppMode.examTimetable;
+    }else{
+      _mode=AppMode.none;
+    }
+    debugPrint("Initialsed app state!");
+    debugPrint("bg "+appMode.toString());
+    notifyListeners();
   }
   
 }

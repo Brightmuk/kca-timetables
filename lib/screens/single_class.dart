@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/screens/edit_unit_details.dart';
@@ -21,7 +20,7 @@ import 'package:provider/provider.dart';
 
 class EditClassPage extends StatefulWidget {
   final UnitClass unit;
-  final AppState appState;
+  final MyAppState appState;
   const EditClassPage({Key? key, required this.unit, required this.appState}) : super(key: key);
 
   @override
@@ -62,7 +61,7 @@ class _EditClassPageState extends State<EditClassPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AppState state = Provider.of<AppState>(context);
+    final MyAppState state = Provider.of<MyAppState>(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -374,8 +373,8 @@ class _EditClassPageState extends State<EditClassPage> {
                       if (val) {
                         setReminder();
                       } else {
-                        await NotificationService()
-                            .cancelReminder(widget.unit.sortIndex);
+                        // await NotificationService()
+                        //     .cancelReminder(widget.unit.sortIndex);
                       }
                     }),
                 AnimatedOpacity(
@@ -437,17 +436,17 @@ class _EditClassPageState extends State<EditClassPage> {
                 ),
               ],
             )),
-        Positioned(
-          bottom: 10,
-          child: AdmobBanner(
-            adUnitId: 'ca-app-pub-1360540534588513/1644840657',
-            adSize: AdmobBannerSize.FULL_BANNER,
-            listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-              debugPrint(args.toString());
-            },
-            onBannerCreated: (AdmobBannerController controller) {},
-          ),
-        )
+        // Positioned(
+        //   bottom: 10,
+        //   child: AdmobBanner(
+        //     adUnitId: 'ca-app-pub-1360540534588513/1644840657',
+        //     adSize: AdmobBannerSize.FULL_BANNER,
+        //     listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+        //       debugPrint(args.toString());
+        //     },
+        //     onBannerCreated: (AdmobBannerController controller) {},
+        //   ),
+        // )
       ],
     );
   }
@@ -456,14 +455,14 @@ class _EditClassPageState extends State<EditClassPage> {
   Future<void> setReminder() async {
     try{
       
-    await NotificationService().zonedScheduleNotification(
-        id: widget.unit.sortIndex,
-        title: 'Yoh! Class is about to start',
-        description:
-            'Your ${widget.unit.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}',
-        payload: "{'unitCode':${widget.unit.unitCode}}",
-        date: _time!.getDate(widget.unit.day, _reminderSchedule!)
-        );
+    // await NotificationService().zonedScheduleNotification(
+    //     id: widget.unit.sortIndex,
+    //     title: 'Yoh! Class is about to start',
+    //     description:
+    //         'Your ${widget.unit.unitName} class is starting in ${Time.scheduleStr(_reminderSchedule!)}',
+    //     payload: "{'unitCode':${widget.unit.unitCode}}",
+    //     date: _time!.getDate(widget.unit.day, _reminderSchedule!)
+    //     );
     }catch(e){
       debugPrint(e.toString());
     }
@@ -471,7 +470,7 @@ class _EditClassPageState extends State<EditClassPage> {
   }
 
 
-  void save(AppState state) async {
+  void save(MyAppState state) async {
     UnitClass _record = UnitClass(
         accentColor: _accentColor!,
         unitCode: widget.unit.unitCode,

@@ -33,7 +33,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
@@ -148,7 +148,7 @@ class _JoinClassMeetingState extends State<JoinClassMeeting> {
 
     );
   }
-  void save(AppState state)async{
+  void save(MyAppState state)async{
     UnitClass _record = UnitClass(
         accentColor:  widget.unitClass.accentColor ,
         unitCode: widget.unitClass.unitCode,

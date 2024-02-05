@@ -45,7 +45,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AppState state = Provider.of<AppState>(context);
+    MyAppState state = Provider.of<MyAppState>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -273,7 +273,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 ),
                 Positioned(
                   bottom: 5,
-                  child: Consumer<AppState>(
+                  child: Consumer<MyAppState>(
                     
                     builder: (context, state,child) {
                       return MaterialButton(
@@ -413,7 +413,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  void classTimetableScan(AppState state) async{
+  void classTimetableScan(MyAppState state) async{
    
     if(!isAuto){
       await LocalData().setNotFirst();
@@ -443,37 +443,46 @@ class _ScanScreenState extends State<ScanScreen> {
       for (var row in sheet!.rows) {
         cellsLoop:
         for (var cell in row) {
-        debugPrint('period: '+period.toString());
+        // debugPrint('period: '+period.toString());
           if (cell != null && period!.isMatch(cell.value.toString())) {
             
-            debugPrint("Found period index:"+cell.value.toString());
             periodIndex = cell.cellIndex;
+            debugPrint("Found period index:"+periodIndex.toString());
+            // debugPrint(cell.toString());
+            
             break cellsLoop;
           }
-          if (cell != null && periodIndex != null && cell.value == 'DAY') {
+
+          RegExp dayReg = RegExp(r'(^Day$)',caseSensitive: false);
+          if (cell != null && periodIndex != null && dayReg.hasMatch(cell.value.toString())) {
+            
             dayIndex = cell.cellIndex;
             debugPrint("Found day index:"+cell.cellIndex.toString());
+            
             break rowsLoop;
           }
+          
         }
       }
     //Step 4: loop through records to get the values
-    // toast(dayIndex!.rowIndex.toString());
+    
     try {
-      List<UnitClass> _records = [];
-
-      int startIndex = dayIndex!.rowIndex + 1;    
      
+      List<UnitClass> _records = [];
+     
+      int startIndex = dayIndex!.rowIndex + 1;    
+       
       for (var i = startIndex; i<sheet.rows.length&&sheet.rows[i][dayIndex.columnIndex] != null; i++) {
         if (sheet.rows[i][dayIndex.columnIndex] != null) {
-
+          
           _records.add(UnitClass.fromSheet(sheet.rows[i], dayIndex.columnIndex,course!));
+           
         }
       }
       state.setCurrentClassTt((course!+period!.str).replaceAll(" ",""));
       await Future.delayed(const Duration(milliseconds: 200));
       _records.sort((a, b) => a.sortIndex.compareTo(b.sortIndex));
-      debugPrint("\nFound these items: "+_records.length.toString());
+      // debugPrint("\nFound these items: "+_records.length.toString());
       
       var result = await ClassTimeTableService(context: context,state: state).saveClassTimeTable(period:period!.str, tableName: getDocName(excelFile!.path), units: _records,course:course!);
   
@@ -504,7 +513,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   }
 
-void examTimetableScan(AppState state)async{ 
+void examTimetableScan(MyAppState state)async{ 
     Sheet? sheet;
     CellIndex? periodIndex;
     
