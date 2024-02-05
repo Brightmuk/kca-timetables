@@ -41,7 +41,7 @@ class UnitClass {
 
   factory UnitClass.fromSheet(
       List<Data?> row, int dayIndex, String courseName) {
-         debugPrint('here');
+        
     return UnitClass(
       accentColor: 0xff050851,
       day: row[dayIndex] != null ? row[dayIndex]!.value.toString() : 'No value',

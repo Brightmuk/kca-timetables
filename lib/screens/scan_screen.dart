@@ -448,6 +448,7 @@ class _ScanScreenState extends State<ScanScreen> {
             
             periodIndex = cell.cellIndex;
             debugPrint("Found period index:"+periodIndex.toString());
+            // debugPrint(cell.toString());
             
             break cellsLoop;
           }
@@ -464,7 +465,7 @@ class _ScanScreenState extends State<ScanScreen> {
         }
       }
     //Step 4: loop through records to get the values
-    // toast(dayIndex!.rowIndex.toString());
+    
     try {
      
       List<UnitClass> _records = [];

@@ -9,13 +9,19 @@ enum AppMode{examTimetable, classTimetable, none}
 
 class MyAppState extends ChangeNotifier{
 
-  AppMode mode = AppMode.none;
-  bool get isClassMode=>mode==AppMode.classTimetable;
+  AppMode _mode = AppMode.none;
+  
+  AppMode get appMode =>_mode;
+  bool get isClassMode =>_mode==AppMode.classTimetable;
 
   String? currentClassTt;
   String? currentExamTt;
 
   late InterstitialAd _interstitialAd;
+
+  MyAppState(){
+    init();
+  }
 
   void loadInterstitialAd(){
         InterstitialAd.load(
@@ -37,14 +43,15 @@ class MyAppState extends ChangeNotifier{
   void reload(){
     notifyListeners();
   }
-  String get modeStr=> mode==AppMode.classTimetable?'Class timetable':'Exam timetable';
+  String get modeStr=> _mode==AppMode.classTimetable?'Class timetable':'Exam timetable';
 
   void changeMode(AppMode newMode)async{
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    
-      mode=newMode;
-      _prefs.setString('mode', mode.toString());
-      if(mode!=AppMode.none){
+     
+      _mode=newMode;
+      _prefs.setString('mode', _mode.toString());
+      
+      if(_mode!=AppMode.none){
         toast('Changed to '+modeStr+' mode');
       }
     
@@ -89,14 +96,16 @@ class MyAppState extends ChangeNotifier{
     currentClassTt=_prefs.getString('currentClassTt');
     currentExamTt=_prefs.getString('currentExamTt');
     loadInterstitialAd();
+    
     if(md=='AppMode.classTimetable'){
-      mode=AppMode.classTimetable;
+      _mode=AppMode.classTimetable;
     }else if(md=='AppMode.examTimetable'){
-      mode=AppMode.examTimetable;
+      _mode=AppMode.examTimetable;
     }else{
-      mode=AppMode.none;
+      _mode=AppMode.none;
     }
     debugPrint("Initialsed app state!");
+    debugPrint("bg "+appMode.toString());
     notifyListeners();
   }
   

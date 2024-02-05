@@ -26,7 +26,7 @@ void main() async{
   await MobileAds.instance.initialize();
   await MobileAds.instance.updateRequestConfiguration(
   RequestConfiguration(testDeviceIds: ['62EFC536D04E7385E751945AFBEF0B1D']));
-  await MyAppState().init();
+  
 
   runApp(
     MultiProvider(
@@ -68,10 +68,10 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MyAppState state = Provider.of<MyAppState>(context);
-
-    if(state.mode==AppMode.classTimetable){
+    debugPrint('The '+state.appMode.toString());
+    if(state.appMode==AppMode.classTimetable){
       return const ClassHome();
-    }else if(state.mode==AppMode.examTimetable){
+    }else if(state.appMode==AppMode.examTimetable){
       return const ExamsHome();
     }else{
       return const LandingPage();

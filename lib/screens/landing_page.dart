@@ -66,6 +66,7 @@ class _LandingPageState extends State<LandingPage> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.1,
                   ),
