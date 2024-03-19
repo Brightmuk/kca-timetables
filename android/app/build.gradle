@@ -50,7 +50,8 @@ android {
     defaultConfig {
         applicationId "com.brightdesigns.kcatimetables"
         minSdkVersion 21
-        targetSdkVersion 33
+        compileSdkVersion 33
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
