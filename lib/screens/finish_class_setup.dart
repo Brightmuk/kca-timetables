@@ -116,12 +116,12 @@ class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
                         return Column(
                           children: [
                             Text(
-                              table!.course,
+                              table?.course??'Course',
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              table.period,
+                              table?.period??'Period',
                               style: const TextStyle(color: Colors.grey),
                             ),
                           ],
@@ -145,7 +145,7 @@ class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
                               backgroundColor: Colors.white,
                               isScrollControlled: true,
                               context: context,
-                              builder: (context) => const AddExam(),
+                              builder: (context) => const AddUnit(),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                             );
@@ -186,7 +186,7 @@ class _FinishClassSetupScreenState extends State<FinishClassSetupScreen> {
                                     backgroundColor: Colors.white,
                                     isScrollControlled: true,
                                     context: context,
-                                    builder: (context) => const AddExam(),
+                                    builder: (context) => const AddUnit(),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),

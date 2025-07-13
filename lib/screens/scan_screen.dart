@@ -119,13 +119,16 @@ class _ScanScreenState extends State<ScanScreen> {
                       SizedBox(
                         height: 50.sp,
                       ),
+                    ! widget.isClass? Text('The spreadsheet document should be in the KCA University timetable format',
+                          style: TextStyle(
+                              color: Colors.grey, fontSize: 14.sp, fontWeight: FontWeight.w500)):SizedBox(),
                                         
                       widget.isClass? SwitchListTile(
                         activeColor: secondaryThemeColor,
                         activeTrackColor: secondaryThemeColor.withOpacity(0.5),
                         title: const Text('Auto setup'),
                         subtitle:
-                        Text(isAuto?'Scan from excel (KCA university timetable formats only)':'Setup the timetable manually'),
+                        Text(isAuto?'Scan from excel (KCA university timetable formats only. If you dont have it turn this mode off and use manual setup':'Setup the timetable manually'),
                         value: isAuto, onChanged: (val){
                           setState(() {
                             isAuto=val;
@@ -418,12 +421,14 @@ class _ScanScreenState extends State<ScanScreen> {
     if(!isAuto){
       await LocalData().setNotFirst();
       if(_formKey.currentState!.validate()){
-      await ClassTimeTableService(context: context,state: state).saveTableDetails(name: 'Custom timetable', period: period!.str, course: _courseNameC.value.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => FinishClassSetupScreen(appState: state,))
-        );
+      await ClassTimeTableService(context: context,state: state).saveTableDetails(name: 'Custom timetable', period: period?.str??'', course: _courseNameC.value.text);
+       state.setCurrentClassTt(('Current').replaceAll(" ",""));
+             state.changeMode(AppMode.classTimetable);
+         
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FinishClassSetupScreen(appState: state,)));
       }
       return;
     }

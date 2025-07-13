@@ -115,7 +115,7 @@ class ClassTimeTableService{
   ///Get record list
   Stream<List<UnitClass>> get unitsStream {
 
-    return db.collection(state.currentClassTt!)
+    return db.collection(state.currentClassTt??'class-tt')
     .stream
         
         .where((r) => day!=null?r['day']==day:true)

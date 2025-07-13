@@ -353,9 +353,15 @@ class _EditExamPageState extends State<EditExamPage> {
             bottom: 10,
             child:
             SizedBox(
-        width: _bannerAd!.size.width.toDouble(),
-        height: _bannerAd!.size.height.toDouble(),
-        child: AdWidget(ad: _bannerAd!),
+        width: _bannerAd?.size.width.toDouble(),
+        height: _bannerAd?.size.height.toDouble(),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.transparent,
+          ),
+          
+        ),
       ),
           )
       ],

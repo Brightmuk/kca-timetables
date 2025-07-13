@@ -7,7 +7,7 @@ import 'package:excel_reader/services/local_data.dart';
 import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';

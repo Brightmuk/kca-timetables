@@ -35,12 +35,12 @@ class ExamModel {
     try{
     return ExamModel(
       accentColor: 0xff050851,
-      date: DateTime.parse(row[5]!=null?row[5]!.value:DateTime.now().toString()),
-      time: Time.fromString(row[6]!=null?row[6]!.value:''),
-      venue: row[10]!=null? row[10]!.value:'No value',
-      unitCode: row[0]!=null?row[0]!.value:'No value',
-      unitName: row[1]!=null? row[1]!.value:'No value',
-      invigilator: row[8]!=null? row[8]!.value:'No value',
+      date: DateTime.parse(row[5] != null ? row[5]!.value.toString() : DateTime.now().toString()),
+      time: Time.fromString(row[6] != null ? row[6]!.value.toString() : ''),
+      venue: row[10] != null ? row[10]!.value.toString() : 'No value',
+      unitCode: row[0] != null ? row[0]!.value.toString() : 'No value',
+      unitName: row[1] != null ? row[1]!.value.toString() : 'No value',
+      invigilator: row[8] != null ? row[8]!.value.toString() : 'No value',
       reminderSchedule: const TimeOfDay(hour: 0,minute: 5),
       reminder: false,
     );

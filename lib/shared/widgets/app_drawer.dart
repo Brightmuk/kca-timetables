@@ -172,10 +172,7 @@ class AppDrawer extends StatelessWidget {
                             textMargin: const EdgeInsets.symmetric(horizontal: 15),
                             minTouchTargetSize: MediaQuery.of(context).size.width*0.4,
                             indicatorSize: Size(100,45),
-                            innerColor: primaryThemeColor,
-                            indicatorColor: secondaryThemeColor,
                             
-                            borderColor:primaryThemeColor,
                             
                             textBuilder: (value) {
                               return Text(state.modeStr, style: TextStyle(color: Colors.white),);

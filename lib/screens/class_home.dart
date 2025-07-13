@@ -228,6 +228,7 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
       child: Container(
         margin: EdgeInsets.zero,
         height: 120.sp,
+       
         color:  isNowOrNext?secondaryThemeColor.withOpacity(0.1): Colors.white,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -315,47 +316,47 @@ class _ClassUnitTileState extends State<ClassUnitTile> {
             ),
           ),
          
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 5.sp,),
-              Icon(
-                widget.unit.reminder?
-                Icons.notifications_outlined:Icons.notifications_off_outlined,
-                color: secondaryThemeColor,
-                size: 18.sp,
-              ),
-               Opacity(
-                 opacity:  widget.unit.canJoinMeeting?1:0,
-                 child: MaterialButton(
-                   minWidth: 40,
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     SizedBox(height: 5.sp,),
+          //     Icon(
+          //       widget.unit.reminder?
+          //       Icons.notifications_outlined:Icons.notifications_off_outlined,
+          //       color: secondaryThemeColor,
+          //       size: 18.sp,
+          //     ),
+          //      Opacity(
+          //        opacity:  widget.unit.canJoinMeeting?1:0,
+          //        child: MaterialButton(
+          //          minWidth: 40,
                   
-                   color: secondaryThemeColor,
-                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                   onPressed: widget.unit.canJoinMeeting?(){
-              if(widget.unit.classLink!=null){
-                if(widget.unit.meetingPassCode!=null){
-                    Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode!));
-                    toast('Meeting passscode copied!');
-                }else{
-                  toast('No meeting passcode');
-                }
-               Future.delayed(Duration(seconds: 1),()=> 
-              launchExternalUrl(widget.unit.classLink!));
+          //          color: secondaryThemeColor,
+          //          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          //          onPressed: widget.unit.canJoinMeeting?(){
+          //     if(widget.unit.classLink!=null){
+          //       if(widget.unit.meetingPassCode!=null){
+          //           Clipboard.setData(ClipboardData(text: widget.unit.meetingPassCode!));
+          //           toast('Meeting passscode copied!');
+          //       }else{
+          //         toast('No meeting passcode');
+          //       }
+          //      Future.delayed(Duration(seconds: 1),()=> 
+          //     launchExternalUrl(widget.unit.classLink!));
               
-            }else{
-              showModalBottomSheet(
-                  backgroundColor: Colors.white,
-                  context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
-                  shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              );
-            }
-                 }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),),
-               )
-            ],
+          //   }else{
+          //     showModalBottomSheet(
+          //         backgroundColor: Colors.white,
+          //         context: context, builder: (context)=>JoinClassMeeting(unitClass: widget.unit),
+          //         shape:
+          //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          //     );
+          //   }
+          //        }:null,child: const Text('Join Meeting',style:TextStyle(color: Colors.white)),),
+          //      )
+          //   ],
            
-          ),
+          // ),
           SizedBox(
             width: 5.sp,
           ),
