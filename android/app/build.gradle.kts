@@ -32,7 +32,7 @@ android {
 
         applicationId = "com.brightdesigns.kcatimetables"
         minSdk = 23
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
