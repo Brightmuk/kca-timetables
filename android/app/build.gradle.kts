@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.brightdesigns.kcatimetables"
+    namespace = "com.brimukon.kcatt"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
 
-        applicationId = "com.brightdesigns.kcatimetables"
+        applicationId = "com.brimukon.kcatt"
         minSdk = 23
         targetSdk = 34
         versionCode = flutter.versionCode

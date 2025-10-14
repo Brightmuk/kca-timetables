@@ -1,4 +1,4 @@
-package com.brightdesigns.kcatimetables
+package com.brimukon.kcatt
 
 import io.flutter.embedding.android.FlutterActivity
 
