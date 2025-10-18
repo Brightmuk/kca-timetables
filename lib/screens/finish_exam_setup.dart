@@ -83,11 +83,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
           ),
           elevation: 0,
           backgroundColor: Colors.white,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Color.fromARGB(255, 3, 4, 75),
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light,
-          ),
+
           leading: IconButton(
             padding: const EdgeInsets.all(20),
             onPressed: () async {

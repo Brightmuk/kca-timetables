@@ -91,11 +91,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         elevation: 0,
         backgroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Color.fromARGB(255, 3, 4, 75),
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.light,
-        ),
+
       ),
       body: Stack(
         alignment: Alignment.center,

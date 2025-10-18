@@ -132,11 +132,7 @@ class _EditClassPageState extends State<EditClassPage> {
                 ),
                 elevation: 0,
                 backgroundColor: Colors.white,
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: Brightness.light,
-                  statusBarBrightness: Brightness.light,
-                ),
+
                 leading: Container()),
             body: ListView(
               children: [
