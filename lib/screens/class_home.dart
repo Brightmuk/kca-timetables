@@ -77,11 +77,7 @@ class _ClassHomeState extends State<ClassHome> {
             },
           ),
           backgroundColor: Colors.white,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light,
-          ),
+  
         ),
         drawer: AppDrawer(),
         body: Stack(

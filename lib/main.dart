@@ -55,7 +55,6 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MyAppState state = Provider.of<MyAppState>(context);
-    debugPrint('The '+state.appMode.toString());
     if(state.appMode==AppMode.classTimetable){
       return const ClassHome();
     }else if(state.appMode==AppMode.examTimetable){

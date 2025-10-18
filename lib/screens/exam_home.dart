@@ -61,11 +61,6 @@ class _ExamsHomeState extends State<ExamsHome> {
               _scaffoldKey.currentState!.openDrawer();
             },),
           backgroundColor: Colors.white,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light,
-          ),
         ),
         drawer: const AppDrawer(),
 
