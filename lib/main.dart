@@ -1,17 +1,12 @@
-import 'dart:io';
-import 'package:excel_reader/models/notification.dart';
 import 'package:excel_reader/screens/class_home.dart';
 import 'package:excel_reader/screens/exam_home.dart';
 import 'package:excel_reader/screens/landing_page.dart';
-import 'package:excel_reader/services/local_data.dart';
-import 'package:excel_reader/services/notification_service.dart';
 import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'package:timezone/data/latest_all.dart' as tz;
 // import 'package:timezone/timezone.dart' as tz;
 
@@ -20,13 +15,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
-  // payload = await NotificationService().init();
-  // await configureLocalTimeZone();
-  await MobileAds.instance.initialize();
-  await MobileAds.instance.updateRequestConfiguration(
-  RequestConfiguration(testDeviceIds: ['62EFC536D04E7385E751945AFBEF0B1D']));
-  
-
   runApp(
     MultiProvider(
       providers: [

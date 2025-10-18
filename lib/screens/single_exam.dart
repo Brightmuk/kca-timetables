@@ -16,7 +16,6 @@ import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class EditExamPage extends StatefulWidget {
   final ExamModel exam;
@@ -35,7 +34,7 @@ class _EditExamPageState extends State<EditExamPage> {
   bool? _reminder;
   int? _accentColor;
   TimeOfDay? _reminderSchedule;
-  BannerAd? _bannerAd;
+ 
 
   void initState() {
     super.initState();
@@ -52,26 +51,7 @@ class _EditExamPageState extends State<EditExamPage> {
       widget.appState.showInterstitialAd();
     });
   }
-    void loadAd() {
-    _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-1360540534588513/1644840657',
-      request: const AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-          
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -349,21 +329,7 @@ class _EditExamPageState extends State<EditExamPage> {
 
               ],
             )),
-           Positioned(
-            bottom: 10,
-            child:
-            SizedBox(
-        width: _bannerAd?.size.width.toDouble(),
-        height: _bannerAd?.size.height.toDouble(),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.transparent,
-          ),
-          
-        ),
-      ),
-          )
+
       ],
     );
   }

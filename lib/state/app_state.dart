@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -17,27 +17,27 @@ class MyAppState extends ChangeNotifier{
   String? currentClassTt;
   String? currentExamTt;
 
-  late InterstitialAd _interstitialAd;
+  // late InterstitialAd _interstitialAd;
 
   MyAppState(){
     init();
   }
 
-  void loadInterstitialAd(){
-        InterstitialAd.load(
-        adUnitId: "ca-app-pub-1360540534588513/8322258866",
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
+  // void loadInterstitialAd(){
+  //       InterstitialAd.load(
+  //       adUnitId: "ca-app-pub-1360540534588513/8322258866",
+  //       request: const AdRequest(),
+  //       adLoadCallback: InterstitialAdLoadCallback(
 
-          onAdLoaded: (ad) {
-            debugPrint('$ad loaded.');
-            _interstitialAd = ad;
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            debugPrint('InterstitialAd failed to load: $error');
-          },
-        ));
-  }
+  //         onAdLoaded: (ad) {
+  //           debugPrint('$ad loaded.');
+  //           _interstitialAd = ad;
+  //         },
+  //         onAdFailedToLoad: (LoadAdError error) {
+  //           debugPrint('InterstitialAd failed to load: $error');
+  //         },
+  //       ));
+  // }
   
 
   void reload(){
@@ -70,8 +70,8 @@ class MyAppState extends ChangeNotifier{
   }
 
   void instantInterstitialShow(){
-      _interstitialAd.show();
-      loadInterstitialAd();
+      // _interstitialAd.show();
+      // loadInterstitialAd();
   }
 
   void showInterstitialAd()async{
@@ -84,18 +84,20 @@ class MyAppState extends ChangeNotifier{
       _prefs.setInt('showAdInterval', showAdInterval+=1);
     }else{
       _prefs.setInt('showAdInterval', 0);
-      _interstitialAd.show();
-      loadInterstitialAd();
+      // _interstitialAd.show();
+      // loadInterstitialAd();
     }
   }
 
 
   Future<void> init()async{
+    debugPrint("Start init");
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String? md =_prefs.getString('mode');
     currentClassTt=_prefs.getString('currentClassTt');
     currentExamTt=_prefs.getString('currentExamTt');
-    loadInterstitialAd();
+    // loadInterstitialAd();
+    debugPrint("After loading ad");
     
     if(md=='AppMode.classTimetable'){
       _mode=AppMode.classTimetable;

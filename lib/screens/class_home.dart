@@ -1,29 +1,18 @@
-import 'dart:io';
-
 import 'package:excel_reader/models/time_model.dart';
 import 'package:excel_reader/models/unit_class_model.dart';
 import 'package:excel_reader/models/table_model.dart';
-import 'package:excel_reader/screens/exam_home.dart';
-import 'package:excel_reader/screens/join_meeting_screen.dart';
-import 'package:excel_reader/screens/scan_screen.dart';
 import 'package:excel_reader/screens/settings.dart';
 import 'package:excel_reader/screens/single_class.dart';
 import 'package:excel_reader/services/class_service.dart';
 import 'package:excel_reader/shared/app_colors.dart';
 import 'package:excel_reader/shared/widgets/app_drawer.dart';
-import 'package:excel_reader/shared/widgets/app_loader.dart';
-import 'package:excel_reader/shared/functions.dart';
 import 'package:excel_reader/shared/text_styles.dart';
-import 'package:excel_reader/shared/unit_painter.dart';
 import 'package:excel_reader/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:excel_reader/models/string_extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ClassHome extends StatefulWidget {
   const ClassHome({
@@ -36,34 +25,8 @@ class ClassHome extends StatefulWidget {
 
 class _ClassHomeState extends State<ClassHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  BannerAd? _bannerAd;
-
-
-  final adUnitId = Platform.isAndroid
-    ? 'ca-app-pub-3940256099942544/6300978111'
-    : 'ca-app-pub-3940256099942544/2934735716';
 
   
-  void loadAd() {
-    _bannerAd = BannerAd(
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-          
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
-  }
 
 
   @override
@@ -178,12 +141,7 @@ class _ClassHomeState extends State<ClassHome> {
                         );
                       })),
             ),
-            _bannerAd!=null? Positioned(
-              bottom: 10,
-              width: _bannerAd!.size.width.toDouble(),
-              height: _bannerAd!.size.height.toDouble(),
-              child: AdWidget(ad: _bannerAd!),
-            ):Container()
+            
           ],
         ));
   }
