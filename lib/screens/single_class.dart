@@ -55,7 +55,7 @@ class _EditClassPageState extends State<EditClassPage> {
     
 
     Future.delayed(const Duration(seconds: 2),(){
-      widget.appState.showInterstitialAd();
+      // widget.appState.showInterstitialAd();
     });
   }
 

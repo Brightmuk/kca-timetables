@@ -31,7 +31,7 @@ class _FinishExamSetupScreenState extends State<FinishExamSetupScreen> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 1),(){
-      widget.appState.instantInterstitialShow();
+      // widget.appState.instantInterstitialShow();
     });
   }
   @override

@@ -17,11 +17,11 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool notificationsRing=false;
     final Uri _playStoreUrl =
-      Uri.parse('market://details?id=com.brightdesigns.kcatimetables');
+      Uri.parse('market://details?id=com.brimukon.kcatt');
   final Uri _donateUrl = Uri.parse(
       "https://www.paypal.com/donate/?hosted_button_id=Q2HUSVA4CCTTN");
-  final Uri _privacyUrl = Uri.parse('https://brightmuk.com/privacy.html');
-  final Uri _helpUrl = Uri.parse('https://brightmuk.com/#contact');
+  final Uri _privacyUrl = Uri.parse('https://brimukon.com/privacy.html');
+  final Uri _helpUrl = Uri.parse('https://brimukon.com/#contact');
 
 
   @override
@@ -164,18 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
 
               ),
-             ListTile(
-                onTap: (){
-                  // NotificationService().showTimeoutNotification(3000);
-                 launchUrl(_donateUrl);
-                },
-                title: Text('Drop a gift',style: tileTitleTextStyle,),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15,
-                ),
 
-              ),
 
             ],),
             Positioned(
